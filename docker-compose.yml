@@ -1,0 +1,81 @@
+# Local development stack. `docker compose up` brings up everything implemented so far.
+# Services marked "placeholder" are wired in later phases (see SPEC.md §10); they sit in the
+# `todo` profile so a plain `docker compose up` doesn't try to build code that doesn't exist yet.
+# MCP servers are internal: they use `expose`, never `ports`.
+
+name: docagent
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-docagent}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-docagent}
+      POSTGRES_DB: ${POSTGRES_DB:-docagent}
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [internal]
+
+  # --- placeholders (Phase 3: MCP servers) ---
+  extraction:
+    profiles: [todo]
+    image: python:3.12-slim
+    command: ["python", "-c", "print('extraction MCP server: not implemented yet')"]
+    expose: ["8101"]
+    networks: [internal]
+
+  validation:
+    profiles: [todo]
+    image: python:3.12-slim
+    command: ["python", "-c", "print('validation MCP server: not implemented yet')"]
+    expose: ["8102"]
+    networks: [internal]
+
+  sqlstore:
+    profiles: [todo]
+    image: python:3.12-slim
+    command: ["python", "-c", "print('sqlstore MCP server: not implemented yet')"]
+    expose: ["8103"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [internal]
+
+  reference:
+    profiles: [todo]
+    image: python:3.12-slim
+    command: ["python", "-c", "print('reference MCP server: not implemented yet')"]
+    expose: ["8104"]
+    networks: [internal]
+
+  # --- placeholder (Phase 5: API, which also hosts the agent graphs) ---
+  api:
+    profiles: [todo]
+    image: python:3.12-slim
+    command: ["python", "-c", "print('api: not implemented yet')"]
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [internal]
+
+  # --- placeholder (Phase 7: Next.js frontend) ---
+  web:
+    profiles: [todo]
+    image: node:22-alpine
+    command: ["node", "-e", "console.log('web: not implemented yet')"]
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks: [internal]
+
+volumes:
+  pgdata:
+
+networks:
+  internal:

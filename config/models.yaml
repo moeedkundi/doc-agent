@@ -1,0 +1,16 @@
+# Model tiers used by packages/gateway. This is the ONLY place model IDs live.
+# Prices are USD per million tokens.
+#
+# TODO(phase-2): fill in current model IDs and prices from the provider's official
+# pricing/models pages when the gateway is built. Placeholders below are intentional.
+tiers:
+  default:
+    model: "TODO-default-model-id"   # cheap vision-capable Gemini Flash-class model
+    input_per_mtok: 0.0
+    output_per_mtok: 0.0
+  strong:
+    model: "TODO-strong-model-id"    # stronger model used on escalation
+    input_per_mtok: 0.0
+    output_per_mtok: 0.0
+
+fallback_order: [default, strong]

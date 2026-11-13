@@ -1,0 +1,10 @@
+[project]
+name = "docagent-gateway"
+version = "0.1.0"
+description = "LLM gateway: tier routing, cost ledger, budget cap."
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.8.0,<0.9.0"]
+build-backend = "uv_build"

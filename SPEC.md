@@ -349,10 +349,10 @@ SSE event shape:
 Each phase ends with "Done when" checks. Tick boxes as you go.
 
 ### Phase 0 — Skeleton
-- [ ] uv workspace, ruff, pyright, pytest configured; `packages/`, `servers/`, `agent/`, `api/` stubs
-- [ ] `docker-compose.yml` with Postgres + placeholders for each service
-- [ ] `.env.example`, `config/models.yaml`, `config/limits.yaml`
-- [ ] GitHub Actions: lint + types + tests
+- [x] uv workspace, ruff, pyright, pytest configured; `packages/`, `servers/`, `agent/`, `api/` stubs
+- [x] `docker-compose.yml` with Postgres + placeholders for each service
+- [x] `.env.example`, `config/models.yaml`, `config/limits.yaml`
+- [x] GitHub Actions: lint + types + tests
 **Done when:** `docker compose up` starts Postgres; `uv run pytest` passes; CI is green.
 
 ### Phase 1 — Schemas, DB, synthetic data
@@ -433,8 +433,9 @@ demo survives budget exhaustion via replay mode.
 ## 11. Environment variables (`.env.example`)
 
 ```
-DATABASE_URL=postgresql://docagent:docagent@localhost:5432/docagent
-DATABASE_READER_URL=postgresql://docagent_reader:...@localhost:5432/docagent
+POSTGRES_HOST_PORT=5433
+DATABASE_URL=postgresql://docagent:docagent@localhost:5433/docagent
+DATABASE_READER_URL=postgresql://docagent_reader:...@localhost:5433/docagent
 GEMINI_API_KEY=
 STRONG_MODEL_API_KEY=            # if the strong tier is a different provider
 MCP_SHARED_SECRET=
@@ -467,3 +468,8 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | Date | Decision | Reason |
 |---|---|---|
 | 2026-11-14 | Replaced ProductSpecSheet with PurchaseOrder + PO↔invoice matching | Spec sheets were too close to NDA-covered work; PO matching adds a cross-document agent step |
+| 2026-11-14 | Compose publishes Postgres on host port 5433 (`POSTGRES_HOST_PORT`), bound to 127.0.0.1 | 5432 is often taken by a locally installed Postgres; container-internal port stays 5432 |
+| 2026-11-14 | Python packages use `docagent_*` module names under `src/` (e.g. `docagent_schemas`, `docagent_mcp_extraction`) | Avoid generic top-level names like `schemas`/`api` clashing across the workspace |
+| 2026-11-14 | Not-yet-built compose services live in a `todo` profile | Plain `docker compose up` stays clean until each service exists; remove the profile as each phase lands |
+| 2026-11-14 | `ruff format` excludes `*.md` | ruff ≥ 0.17 formats Markdown code blocks and would rewrite SPEC.md examples |
+| 2026-11-14 | `config/models.yaml` holds placeholder model IDs until Phase 2 | IDs/prices must be taken from official provider docs when the gateway is built |
