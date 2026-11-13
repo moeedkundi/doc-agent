@@ -1,0 +1,89 @@
+{
+  "note": "Illustrative VAT/sales-tax table for the DocAgent demo, not tax advice. US has no national sales tax; its value is a typical combined state+local rate used by the synthetic documents.",
+  "rates": [
+    {
+      "country": "US",
+      "category": "standard",
+      "rate": "0.0725",
+      "effective_date": "2026-01-01"
+    },
+    {
+      "country": "GB",
+      "category": "standard",
+      "rate": "0.20",
+      "effective_date": "2011-01-04"
+    },
+    {
+      "country": "GB",
+      "category": "reduced",
+      "rate": "0.05",
+      "effective_date": "2011-01-04"
+    },
+    {
+      "country": "DE",
+      "category": "standard",
+      "rate": "0.19",
+      "effective_date": "2007-01-01"
+    },
+    {
+      "country": "DE",
+      "category": "reduced",
+      "rate": "0.07",
+      "effective_date": "2007-01-01"
+    },
+    {
+      "country": "NL",
+      "category": "standard",
+      "rate": "0.21",
+      "effective_date": "2012-10-01"
+    },
+    {
+      "country": "NL",
+      "category": "reduced",
+      "rate": "0.09",
+      "effective_date": "2019-01-01"
+    },
+    {
+      "country": "FR",
+      "category": "standard",
+      "rate": "0.20",
+      "effective_date": "2014-01-01"
+    },
+    {
+      "country": "FR",
+      "category": "reduced",
+      "rate": "0.055",
+      "effective_date": "2014-01-01"
+    },
+    {
+      "country": "IE",
+      "category": "standard",
+      "rate": "0.23",
+      "effective_date": "2012-01-01"
+    },
+    {
+      "country": "IE",
+      "category": "reduced",
+      "rate": "0.135",
+      "effective_date": "2012-01-01"
+    },
+    {
+      "country": "BE",
+      "category": "standard",
+      "rate": "0.21",
+      "effective_date": "1996-01-01"
+    },
+    {
+      "country": "ES",
+      "category": "standard",
+      "rate": "0.21",
+      "effective_date": "2012-09-01"
+    },
+    {
+      "country": "IT",
+      "category": "standard",
+      "rate": "0.22",
+      "effective_date": "2013-10-01"
+    }
+  ]
+}

@@ -60,7 +60,7 @@ select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "S", "ASYNC"]
 known-first-party = ["docagent_*", "evals"]
 
 [tool.ruff.lint.per-file-ignores]
-"**/tests/**" = ["S101", "S105", "S106"]
+"**/tests/**" = ["S101", "S105", "S106", "S608"]  # S608: tests send hostile SQL on purpose
 "evals/generator/**" = ["S311"]  # seeded PRNG is the point: reproducible data
 
 [tool.pyright]

@@ -3,12 +3,14 @@
 from datetime import date
 from decimal import Decimal
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from docagent_schemas.common import DocumentType, RecordDocType
 from docagent_schemas.extracted import Invoice, PurchaseOrder
 from docagent_schemas.fields import Field as ExtractedField
+from docagent_schemas.records import InvoiceRecord, PurchaseOrderRecord
 
 ModelTier = Literal["default", "strong"]
 Severity = Literal["error", "review", "warning"]
@@ -90,3 +92,98 @@ class MatchTolerances(_Out):
     amount: Decimal = Field(default=Decimal("0.01"), ge=0)
     description_min_score: float = Field(default=85, ge=0, le=100)
     description_fallback_score: float = Field(default=60, ge=0, le=100)
+
+
+# -- sqlstore -----------------------------------------------------------------------
+
+JsonScalar = str | int | float | bool | None
+"""SQL values as returned by run_select: numerics and dates are strings (exact, ISO 8601)."""
+
+
+class ColumnInfo(_Out):
+    name: str
+    type: str
+    description: str | None = None
+
+
+class TableInfo(_Out):
+    name: str
+    description: str
+    columns: list[ColumnInfo]
+
+
+class SchemaInfo(_Out):
+    tables: list[TableInfo]
+    notes: list[str]
+    """Rules the SQL must follow (SELECT only, allowed functions, row cap)."""
+
+
+class SelectResult(_Out):
+    sql: str
+    """The statement actually executed (after LIMIT injection)."""
+    columns: list[str]
+    rows: list[list[JsonScalar]]
+    row_count: int
+    truncated: bool
+
+
+class SavedRecord(_Out):
+    record_id: UUID
+
+
+class PriorInvoice(_Out):
+    invoice_id: UUID
+    record: InvoiceRecord
+
+
+class PurchaseOrderLookup(_Out):
+    found: bool
+    po_id: UUID | None = None
+    purchase_order: PurchaseOrderRecord | None = None
+    prior_invoices: list[PriorInvoice] = []
+    """Invoices already saved against this PO number, oldest first (input for matching)."""
+
+
+class SavedMatch(_Out):
+    match_id: UUID
+
+
+# -- reference ----------------------------------------------------------------------
+
+STATIC_SOURCE = "DocAgent static demo table (illustrative values, not market or legal data)"
+
+
+class FxConversion(_Out):
+    amount: Decimal
+    from_currency: str
+    to_currency: str
+    rate: Decimal
+    """Units of to_currency per 1 unit of from_currency."""
+    rate_date: date
+    source: str
+
+
+class VendorRecord(_Out):
+    vendor_id: str
+    legal_name: str
+    tax_id: str
+    country: str
+    default_currency: str
+    payment_terms: str
+
+
+class VendorLookup(_Out):
+    found: bool
+    vendor: VendorRecord | None = None
+    matched_on: Literal["tax_id", "name"] | None = None
+    name_score: float | None = None
+    tax_id_matches: bool | None = None
+    """When both name and tax_id were given: does the tax ID agree with the master record?"""
+
+
+class TaxRate(_Out):
+    country: str
+    category: Literal["standard", "reduced"]
+    rate: Decimal
+    effective_date: date
+    source: str

@@ -1,0 +1,165 @@
+{
+  "note": "Fictional vendor master for the DocAgent demo. Every company is invented.",
+  "vendors": [
+    {
+      "vendor_id": "V-001",
+      "legal_name": "Quillfeather Office Supply Co.",
+      "tax_id": "31-4825097",
+      "country": "US",
+      "default_currency": "USD",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-002",
+      "legal_name": "Tallowmere IT Distribution Inc.",
+      "tax_id": "56-2093318",
+      "country": "US",
+      "default_currency": "USD",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-003",
+      "legal_name": "Inkwell & Ashby Supplies LLC",
+      "tax_id": "06-7734120",
+      "country": "US",
+      "default_currency": "USD",
+      "payment_terms": "Net 45"
+    },
+    {
+      "vendor_id": "V-004",
+      "legal_name": "Bluecairn Networks Inc.",
+      "tax_id": "82-1167045",
+      "country": "US",
+      "default_currency": "USD",
+      "payment_terms": "Net 15"
+    },
+    {
+      "vendor_id": "V-005",
+      "legal_name": "Saltmarsh Print & Toner LLC",
+      "tax_id": "58-3390271",
+      "country": "US",
+      "default_currency": "USD",
+      "payment_terms": "Net 60"
+    },
+    {
+      "vendor_id": "V-006",
+      "legal_name": "Pinewick Data Accessories Inc.",
+      "tax_id": "39-2058816",
+      "country": "US",
+      "default_currency": "USD",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-007",
+      "legal_name": "Glimmerstone Tech Supply LLC",
+      "tax_id": "91-4472390",
+      "country": "US",
+      "default_currency": "USD",
+      "payment_terms": "2/10 Net 30"
+    },
+    {
+      "vendor_id": "V-008",
+      "legal_name": "Harrowfield Paper Company Inc.",
+      "tax_id": "34-1180264",
+      "country": "US",
+      "default_currency": "USD",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-009",
+      "legal_name": "Brightledger Stationers Ltd",
+      "tax_id": "GB284719306",
+      "country": "GB",
+      "default_currency": "GBP",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-010",
+      "legal_name": "Copperkey Computing Ltd",
+      "tax_id": "GB617204958",
+      "country": "GB",
+      "default_currency": "GBP",
+      "payment_terms": "Net 45"
+    },
+    {
+      "vendor_id": "V-011",
+      "legal_name": "Fernhollow Peripherals Ltd",
+      "tax_id": "GB402958173",
+      "country": "GB",
+      "default_currency": "GBP",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-012",
+      "legal_name": "Oakhaven Workplace Supplies Ltd",
+      "tax_id": "GB739160524",
+      "country": "GB",
+      "default_currency": "GBP",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-013",
+      "legal_name": "Marrowgate Furniture & Office Ltd",
+      "tax_id": "GB158392047",
+      "country": "GB",
+      "default_currency": "GBP",
+      "payment_terms": "Net 45"
+    },
+    {
+      "vendor_id": "V-014",
+      "legal_name": "Papierwerk Kessler GmbH",
+      "tax_id": "DE318402765",
+      "country": "DE",
+      "default_currency": "EUR",
+      "payment_terms": "Net 15"
+    },
+    {
+      "vendor_id": "V-015",
+      "legal_name": "Rotkehlchen Bürobedarf GmbH",
+      "tax_id": "DE274915038",
+      "country": "DE",
+      "default_currency": "EUR",
+      "payment_terms": "Net 60"
+    },
+    {
+      "vendor_id": "V-016",
+      "legal_name": "Heidekamp Digitaltechnik GmbH",
+      "tax_id": "DE196530427",
+      "country": "DE",
+      "default_currency": "EUR",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-017",
+      "legal_name": "Sterndorf Kabel & Zubehör GmbH",
+      "tax_id": "DE342081659",
+      "country": "DE",
+      "default_currency": "EUR",
+      "payment_terms": "2/10 Net 30"
+    },
+    {
+      "vendor_id": "V-018",
+      "legal_name": "Van Drieklaver Kantoorartikelen B.V.",
+      "tax_id": "NL853106724B01",
+      "country": "NL",
+      "default_currency": "EUR",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-019",
+      "legal_name": "Lindqvist & Moor Office B.V.",
+      "tax_id": "NL412967380B01",
+      "country": "NL",
+      "default_currency": "EUR",
+      "payment_terms": "Net 30"
+    },
+    {
+      "vendor_id": "V-020",
+      "legal_name": "Kroonveld IT Services B.V.",
+      "tax_id": "NL690243517B01",
+      "country": "NL",
+      "default_currency": "EUR",
+      "payment_terms": "Net 45"
+    }
+  ]
+}

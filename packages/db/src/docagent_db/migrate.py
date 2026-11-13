@@ -88,11 +88,19 @@ def apply_migrations(conn: psycopg.Connection, migrations_dir: Path = DEFAULT_DI
     return done
 
 
-def set_role_passwords(conn: psycopg.Connection, env: dict[str, str] | None = None) -> list[str]:
-    """Set role passwords from the role-specific DSNs in `env`; return roles updated."""
+def set_role_passwords(
+    conn: psycopg.Connection,
+    env: dict[str, str] | None = None,
+    roles: dict[str, str] | None = None,
+) -> list[str]:
+    """Set role passwords from the role-specific DSNs in `env`; return roles updated.
+
+    `roles` maps role name -> env var (default: the app and reader roles). Roles are
+    cluster-wide, so tests pass their own throwaway role instead of the real ones.
+    """
     env = dict(os.environ) if env is None else env
     updated: list[str] = []
-    for role, var in _ROLE_URL_ENV.items():
+    for role, var in (roles or _ROLE_URL_ENV).items():
         dsn = env.get(var)
         if not dsn:
             continue

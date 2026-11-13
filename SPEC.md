@@ -221,21 +221,24 @@ Rules are plain Python, deterministic, no LLM. Examples:
 | Tool | Input | Output |
 |---|---|---|
 | `get_schema` | — | tables, columns, types, descriptions (reader-visible tables only) |
-| `run_select` | `sql, session_id` | `{columns, rows (≤ 200), row_count, truncated}` |
+| `run_select` | `sql, session_id` | `{sql (as executed), columns, rows (≤ 200), row_count, truncated}` |
 | `save_record` | `session_id, document_id, doc_type, record` | `{record_id}` |
-| `get_purchase_order` | `session_id, po_number` | `{purchase_order, already_invoiced_lines[]}` or `null` |
+| `get_purchase_order` | `session_id, po_number, exclude_invoice_id?` | `{found, po_id, purchase_order, prior_invoices[]}` (`found: false` when absent) |
 | `save_match_result` | `session_id, invoice_id, po_id, status, issues` | `{match_id}` |
 
-`run_select` safety pipeline: parse with sqlglot → reject unless single SELECT → reject
-non-allowlisted tables/functions → inject/clamp `LIMIT 200` → run as `docagent_reader` with
-`SET LOCAL app.session_id`, `statement_timeout = 3s`, read-only transaction.
+`run_select` safety pipeline: parse with sqlglot → reject unless single SELECT (and no
+write/lock/INTO node anywhere, e.g. data-modifying CTEs) → reject non-allowlisted
+tables/functions (functions are allowlisted by sqlglot node class, plus a short name list
+for functions sqlglot doesn't model, so `pg_sleep` and friends fail closed) → inject/clamp
+`LIMIT 200` → run as `docagent_reader` with `SET LOCAL app.session_id`,
+`statement_timeout = 3s`, read-only transaction. Each layer is tested on its own too.
 `save_record` uses parameterised inserts only.
 
 ### 6.4 `reference` server
 | Tool | Input | Output |
 |---|---|---|
-| `convert_currency` | `amount, from, to, date` | `{amount, rate, rate_date, source}` |
-| `lookup_vendor` | `name?, tax_id?` | vendor master record `{vendor_id, legal_name, tax_id, country, default_currency, payment_terms}` or `null` |
+| `convert_currency` | `amount, from_currency, to_currency, date` | `{amount, from_currency, to_currency, rate, rate_date, source}` |
+| `lookup_vendor` | `name?, tax_id?` | `{found, vendor?: {vendor_id, legal_name, tax_id, country, default_currency, payment_terms}, matched_on, name_score, tax_id_matches}` |
 | `lookup_tax_rate` | `country, category="standard"` | `{rate, effective_date}` |
 
 Uses **static bundled datasets** (a fixed FX rate table, a fictional vendor master of ~20
@@ -396,10 +399,9 @@ row shows correct cost; budget test raises `BudgetExceeded`.
 ### Phase 3 — MCP servers
 - [x] `extraction` (classify, extract, reextract)
 - [x] `validation` (all rules in §6.2 + `list_rules`)
-- [ ] `sqlstore` (get_schema, run_select with full safety pipeline, save_record)
-- [ ] `reference` (static datasets)
-- [ ] Per-server README; each server runnable alone and testable with MCP Inspector
-      (done for extraction + validation; sqlstore + reference in part B)
+- [x] `sqlstore` (get_schema, run_select with full safety pipeline, save_record)
+- [x] `reference` (static datasets)
+- [x] Per-server README; each server runnable alone and testable with MCP Inspector
 **Done when:** each server's tests pass; sqlglot tests reject INSERT/UPDATE/DELETE/DDL, multi-
 statement, non-allowlisted tables; the MCP Inspector lists all tools for each server.
 
@@ -527,3 +529,9 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | Line pairing: SKU, then rapidfuzz token-set description match at 85, then a fallback pass at 60 (`po_matching.description_match_fallback_score`) | Vendor wording differs a lot ("Colour toner set C/M/Y" vs "Toner cartridge set, cyan/magenta/yellow"); verified 107/107 pairings correct on the dataset |
 | 2026-11-14 | New workspace package `packages/mcp_common` | Auth middleware, serving, errors and limits loading shared by all four servers |
 | 2026-11-14 | `python -m servers.<name>` works from the repo root via a small `__main__.py` shim per server folder | Matches the documented run command; canonical module is `docagent_mcp_<name>` |
+| 2026-11-14 | `get_purchase_order` returns `{found, po_id, purchase_order, prior_invoices[]}` and takes `exclude_invoice_id` | The matcher needs whole earlier invoices (it pairs their lines itself); the invoice being matched is already saved by then and must not count against its own PO |
+| 2026-11-14 | `run_select` returns the executed SQL; numerics/dates come back as exact strings | The UI shows the SQL that actually ran (with LIMIT); money must not pass through floats |
+| 2026-11-14 | sqlstore tests act as `docagent_reader`/`docagent_app` via `SET ROLE` on an admin connection; `set_role_passwords` takes a `roles` map | A Phase 1 test reset the real `docagent_reader` password (roles are cluster-wide), breaking the local dev login; tests now use a throwaway role |
+| 2026-11-14 | DB connection failures surface as `database_unavailable` with no details | Postgres's connect error names host, port and role; the model shouldn't see that |
+| 2026-11-14 | Reference data: monthly USD-based FX table for 2026 (9 currencies), the 20 fictional vendors from the generator (`V-001`…), standard/reduced tax rates for 9 countries; all labelled illustrative | §6.4: static bundled data, no external dependency; tests pin vendors and tax rates to what the synthetic documents use |
+| 2026-11-14 | `lookup_vendor` returns `found` + `matched_on` + `tax_id_matches` instead of record-or-null | §7.1 turns "unknown vendor or tax_id mismatch" into review issues; the agent needs to tell those apart |

@@ -1,8 +1,10 @@
 import shutil
+import uuid
 from pathlib import Path
 
 import psycopg
 import pytest
+from psycopg import sql
 
 from docagent_db import MigrationError, apply_migrations, set_role_passwords
 from docagent_db.migrate import discover
@@ -69,8 +71,20 @@ def test_edited_migration_is_rejected(empty_db_dsn: str, tmp_path: Path) -> None
 
 
 def test_role_passwords_come_from_env(owner: psycopg.Connection) -> None:
-    env = {
-        "DATABASE_READER_URL": "postgresql://docagent_reader:r%40nd@db:5432/docagent",
-        "DATABASE_APP_URL": "postgresql://someone_else:x@db:5432/docagent",  # wrong role: ignored
-    }
-    assert set_role_passwords(owner, env) == ["docagent_reader"]
+    # Roles are cluster-wide: never touch docagent_reader/docagent_app here, or the local
+    # dev database (same cluster) loses its configured passwords.
+    role = f"docagent_test_{uuid.uuid4().hex[:8]}"
+    owner.execute(sql.SQL("CREATE ROLE {} LOGIN").format(sql.Identifier(role)))
+    try:
+        env = {
+            "TEST_ROLE_URL": f"postgresql://{role}:r%40nd@db:5432/docagent",
+            "OTHER_URL": "postgresql://someone_else:x@db:5432/docagent",  # wrong role: ignored
+        }
+        roles = {role: "TEST_ROLE_URL", "docagent_test_absent": "OTHER_URL"}
+        assert set_role_passwords(owner, env, roles) == [role]
+        stored = owner.execute(
+            "SELECT rolpassword IS NOT NULL FROM pg_authid WHERE rolname = %s", (role,)
+        ).fetchone()
+        assert stored == (True,)
+    finally:
+        owner.execute(sql.SQL("DROP ROLE {}").format(sql.Identifier(role)))
