@@ -1,0 +1,63 @@
+{
+  "doc_id": "inv_014",
+  "doc_type": "invoice",
+  "file": "eval/inv_014.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "KIT-2026-4281",
+    "invoice_date": "2026-05-27",
+    "due_date": "2026-07-26",
+    "currency": "EUR",
+    "po_number": "PO-40003",
+    "seller": {
+      "name": "Kroonveld IT Services B.V.",
+      "address": "Havenstraat 58, 2011 CS Haarlem, Netherlands",
+      "tax_id": "NL690243517B01"
+    },
+    "buyer": {
+      "name": "Graafschap Accountants B.V.",
+      "address": "Stationsplein 14, 7511 JD Enschede, Netherlands"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "Copy paper A4 80g (500 sh)",
+        "quantity": "15",
+        "unit_price": "6.18",
+        "line_total": "83.70"
+      },
+      {
+        "sku": null,
+        "description": "HD webcam 1080p",
+        "quantity": "15",
+        "unit_price": "53.51",
+        "line_total": "802.65"
+      },
+      {
+        "sku": null,
+        "description": "Envelope C4 peel & seal x250",
+        "quantity": "6",
+        "unit_price": "24.51",
+        "line_total": "147.06"
+      }
+    ],
+    "subtotal": "1033.41",
+    "tax_amount": "217.02",
+    "total": "1250.43"
+  },
+  "references_po": "po_014",
+  "injected": [
+    {
+      "kind": "arithmetic_line",
+      "detail": "line total 83.70 != qty x unit price 92.70",
+      "line": 0
+    }
+  ],
+  "expected_match": {
+    "status": "partial",
+    "rules": []
+  }
+}

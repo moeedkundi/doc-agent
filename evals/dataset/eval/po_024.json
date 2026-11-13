@@ -1,0 +1,83 @@
+{
+  "doc_id": "po_024",
+  "doc_type": "purchase_order",
+  "file": "eval/po_024.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-53020",
+    "po_date": "2026-04-15",
+    "currency": "USD",
+    "payment_terms": "Net 60",
+    "buyer": {
+      "name": "Meadowbrook Dental Group PC",
+      "address": "140 Sycamore Plaza, Asheville, NC 28801, USA"
+    },
+    "vendor": {
+      "name": "Inkwell & Ashby Supplies LLC",
+      "address": "77 Wexford Street, Hartford, CT 06103, USA",
+      "tax_id": "06-7734120"
+    },
+    "ship_to": "140 Sycamore Plaza, Asheville, NC 28801, USA",
+    "requested_delivery_date": "2026-04-28",
+    "line_items": [
+      {
+        "sku": "USB-64G",
+        "description": "USB flash drive, 64 GB",
+        "quantity": "10",
+        "unit_price": "10.13",
+        "line_total": "101.30"
+      },
+      {
+        "sku": "LBL-A4-21-100",
+        "description": "Address labels, 21 per sheet, 100 sheets",
+        "quantity": "1",
+        "unit_price": "17.82",
+        "line_total": "17.82"
+      },
+      {
+        "sku": "STD-LAP-ALU",
+        "description": "Laptop stand, aluminium, adjustable",
+        "quantity": "6",
+        "unit_price": "37.16",
+        "line_total": "222.96"
+      },
+      {
+        "sku": "CBL-CAT6-3M",
+        "description": "Cat6 patch cable, 3 m",
+        "quantity": "4",
+        "unit_price": "3.93",
+        "line_total": "15.72"
+      },
+      {
+        "sku": "LAM-POU-A4-100",
+        "description": "Laminating pouches, A4, 100 pack",
+        "quantity": "20",
+        "unit_price": "12.14",
+        "line_total": "242.80"
+      },
+      {
+        "sku": "NTE-76-12",
+        "description": "Sticky notes 76x76 mm, pack of 12 pads",
+        "quantity": "24",
+        "unit_price": "8.68",
+        "line_total": "208.32"
+      },
+      {
+        "sku": "KBD-WL-FS",
+        "description": "Wireless keyboard, full size",
+        "quantity": "20",
+        "unit_price": "40.95",
+        "line_total": "819.00"
+      }
+    ],
+    "subtotal": "1627.92",
+    "tax_amount": "118.02",
+    "total": "1745.94"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

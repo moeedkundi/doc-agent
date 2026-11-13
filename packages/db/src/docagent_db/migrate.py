@@ -7,8 +7,8 @@ write a new migration instead of editing an old one.
 After migrating, sets the passwords of the `docagent_app` / `docagent_reader` roles from
 `DATABASE_APP_URL` / `DATABASE_READER_URL` when those are set, so no secret lives in SQL.
 
-    uv run python -m docagent_db.migrate            # uses DATABASE_URL
-    uv run python -m docagent_db.migrate --dsn ... --dir db/migrations
+    uv run python -m docagent_db                    # uses DATABASE_URL
+    uv run python -m docagent_db --dsn ... --dir db/migrations
 """
 
 import argparse

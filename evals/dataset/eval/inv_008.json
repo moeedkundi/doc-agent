@@ -1,0 +1,211 @@
+{
+  "doc_id": "inv_008",
+  "doc_type": "invoice",
+  "file": "eval/inv_008.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 2,
+  "record": {
+    "invoice_number": "2606403",
+    "invoice_date": "2026-07-25",
+    "due_date": "2026-08-24",
+    "currency": "EUR",
+    "po_number": "PO-45889",
+    "seller": {
+      "name": "Sterndorf Kabel & Zubehör GmbH",
+      "address": "Gewerbepark Süd 6, 93053 Regensburg, Germany",
+      "tax_id": "DE342081659"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "HD webcam 1080p",
+        "quantity": "15",
+        "unit_price": "47.00",
+        "line_total": "705.00"
+      },
+      {
+        "sku": null,
+        "description": "Whiteboard magnetic 1200x900mm",
+        "quantity": "8",
+        "unit_price": "116.70",
+        "line_total": "933.60"
+      },
+      {
+        "sku": null,
+        "description": "Wireless mouse, ergonomic vertical",
+        "quantity": "20",
+        "unit_price": "32.06",
+        "line_total": "641.20"
+      },
+      {
+        "sku": null,
+        "description": "Envelope C4 peel & seal x250",
+        "quantity": "2",
+        "unit_price": "22.04",
+        "line_total": "44.08"
+      },
+      {
+        "sku": null,
+        "description": "7-in-1 USB-C hub",
+        "quantity": "1",
+        "unit_price": "39.39",
+        "line_total": "39.39"
+      },
+      {
+        "sku": null,
+        "description": "24\" FHD monitor",
+        "quantity": "5",
+        "unit_price": "139.41",
+        "line_total": "697.05"
+      },
+      {
+        "sku": null,
+        "description": "Adjustable laptop riser (alu)",
+        "quantity": "20",
+        "unit_price": "36.67",
+        "line_total": "733.40"
+      },
+      {
+        "sku": null,
+        "description": "Wi-Fi 6 access point (ceiling)",
+        "quantity": "30",
+        "unit_price": "127.50",
+        "line_total": "3825.00"
+      },
+      {
+        "sku": null,
+        "description": "Highlighter marker asst. 6-pk",
+        "quantity": "30",
+        "unit_price": "5.08",
+        "line_total": "152.40"
+      },
+      {
+        "sku": null,
+        "description": "Colour toner set C/M/Y",
+        "quantity": "40",
+        "unit_price": "189.40",
+        "line_total": "7576.00"
+      },
+      {
+        "sku": null,
+        "description": "Labels 21/sheet, 100 sheets",
+        "quantity": "2",
+        "unit_price": "15.70",
+        "line_total": "31.40"
+      },
+      {
+        "sku": null,
+        "description": "A3 laminating machine",
+        "quantity": "5",
+        "unit_price": "62.86",
+        "line_total": "314.30"
+      },
+      {
+        "sku": null,
+        "description": "Blue ballpoint pen (box 50)",
+        "quantity": "8",
+        "unit_price": "10.86",
+        "line_total": "86.88"
+      },
+      {
+        "sku": null,
+        "description": "Black toner, high-yield cartridge",
+        "quantity": "40",
+        "unit_price": "75.82",
+        "line_total": "3032.80"
+      },
+      {
+        "sku": null,
+        "description": "2-hole punch 30sh",
+        "quantity": "30",
+        "unit_price": "11.06",
+        "line_total": "331.80"
+      },
+      {
+        "sku": null,
+        "description": "DL window envelopes (500)",
+        "quantity": "4",
+        "unit_price": "17.44",
+        "line_total": "69.76"
+      },
+      {
+        "sku": null,
+        "description": "HDMI lead 2.0m",
+        "quantity": "2",
+        "unit_price": "6.76",
+        "line_total": "13.52"
+      },
+      {
+        "sku": null,
+        "description": "8-port Gigabit switch",
+        "quantity": "40",
+        "unit_price": "27.27",
+        "line_total": "1090.80"
+      },
+      {
+        "sku": null,
+        "description": "Lever arch file A4 75mm (10)",
+        "quantity": "10",
+        "unit_price": "25.68",
+        "line_total": "256.80"
+      },
+      {
+        "sku": null,
+        "description": "6-gang surge protector",
+        "quantity": "40",
+        "unit_price": "20.12",
+        "line_total": "804.80"
+      },
+      {
+        "sku": null,
+        "description": "Portable SSD 1TB USB-C",
+        "quantity": "2",
+        "unit_price": "82.70",
+        "line_total": "165.40"
+      },
+      {
+        "sku": null,
+        "description": "AA alkaline battery 24-pk",
+        "quantity": "12",
+        "unit_price": "12.57",
+        "line_total": "150.84"
+      },
+      {
+        "sku": null,
+        "description": "Multipurpose paper Letter 20lb - case/10",
+        "quantity": "25",
+        "unit_price": "48.79",
+        "line_total": "1219.75"
+      },
+      {
+        "sku": null,
+        "description": "Self-stick notes 3x3in, 12 pads",
+        "quantity": "12",
+        "unit_price": "8.15",
+        "line_total": "97.80"
+      },
+      {
+        "sku": null,
+        "description": "Monitor arm, dual, clamp mount",
+        "quantity": "10",
+        "unit_price": "89.73",
+        "line_total": "897.30"
+      }
+    ],
+    "subtotal": "23911.07",
+    "tax_amount": "4543.10",
+    "total": "28454.17"
+  },
+  "references_po": "po_009",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "doc_id": "po_012",
+  "doc_type": "purchase_order",
+  "file": "eval/po_012.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-70443",
+    "po_date": "2026-06-07",
+    "currency": "EUR",
+    "payment_terms": "Net 30",
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "vendor": {
+      "name": "Sterndorf Kabel & Zubehör GmbH",
+      "address": "Gewerbepark Süd 6, 93053 Regensburg, Germany",
+      "tax_id": "DE342081659"
+    },
+    "ship_to": "Industriestraße 72, 70565 Stuttgart, Germany",
+    "requested_delivery_date": "2026-07-06",
+    "line_items": [
+      {
+        "sku": "CBL-CAT6-3M",
+        "description": "Cat6 patch cable, 3 m",
+        "quantity": "40",
+        "unit_price": "3.57",
+        "line_total": "142.80"
+      },
+      {
+        "sku": "NSW-8G",
+        "description": "Network switch, 8-port gigabit, unmanaged",
+        "quantity": "3",
+        "unit_price": "28.23",
+        "line_total": "84.69"
+      },
+      {
+        "sku": "TNR-CMY-SET",
+        "description": "Toner cartridge set, cyan/magenta/yellow",
+        "quantity": "15",
+        "unit_price": "189.40",
+        "line_total": "2841.00"
+      },
+      {
+        "sku": "BND-RNG-25",
+        "description": "Ring binders, 2-ring, pack of 25",
+        "quantity": "15",
+        "unit_price": "26.44",
+        "line_total": "396.60"
+      }
+    ],
+    "subtotal": "3465.09",
+    "tax_amount": "658.37",
+    "total": "4123.46"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

@@ -1,0 +1,188 @@
+{
+  "doc_id": "po_005",
+  "doc_type": "purchase_order",
+  "file": "eval/po_005.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 2,
+  "record": {
+    "po_number": "PO-40706",
+    "po_date": "2026-06-24",
+    "currency": "GBP",
+    "payment_terms": "Net 60",
+    "buyer": {
+      "name": "Silverbirch Academy Trust",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+    },
+    "vendor": {
+      "name": "Copperkey Computing Ltd",
+      "address": "12 Mortlake Yard, Bristol BS1 6TQ, United Kingdom",
+      "tax_id": "GB617204958"
+    },
+    "ship_to": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+    "requested_delivery_date": "2026-07-11",
+    "line_items": [
+      {
+        "sku": "PAP-A4-80-500",
+        "description": "A4 copy paper, 80 gsm, ream of 500 sheets",
+        "quantity": "15",
+        "unit_price": "4.69",
+        "line_total": "70.35"
+      },
+      {
+        "sku": "WAP-AX",
+        "description": "Wireless access point, Wi-Fi 6, ceiling mount",
+        "quantity": "12",
+        "unit_price": "108.60",
+        "line_total": "1303.20"
+      },
+      {
+        "sku": "SHR-CC-P4",
+        "description": "Cross-cut shredder, P-4, 12 sheet",
+        "quantity": "30",
+        "unit_price": "137.52",
+        "line_total": "4125.60"
+      },
+      {
+        "sku": "WBM-ASST-4",
+        "description": "Whiteboard markers, assorted, pack of 4",
+        "quantity": "2",
+        "unit_price": "3.73",
+        "line_total": "7.46"
+      },
+      {
+        "sku": "WBD-120-90",
+        "description": "Magnetic whiteboard, 120 x 90 cm",
+        "quantity": "2",
+        "unit_price": "94.62",
+        "line_total": "189.24"
+      },
+      {
+        "sku": "STR-DESK-25",
+        "description": "Desk stapler, 25-sheet capacity",
+        "quantity": "24",
+        "unit_price": "11.58",
+        "line_total": "277.92"
+      },
+      {
+        "sku": "PNC-2H-30",
+        "description": "Two-hole punch, 30-sheet capacity",
+        "quantity": "12",
+        "unit_price": "9.91",
+        "line_total": "118.92"
+      },
+      {
+        "sku": "LAM-A3",
+        "description": "Laminator, A3",
+        "quantity": "12",
+        "unit_price": "58.19",
+        "line_total": "698.28"
+      },
+      {
+        "sku": "MON-24-FHD",
+        "description": "24-inch monitor, 1920x1080",
+        "quantity": "25",
+        "unit_price": "119.48",
+        "line_total": "2987.00"
+      },
+      {
+        "sku": "PEN-BP-BLU-50",
+        "description": "Ballpoint pens, blue, box of 50",
+        "quantity": "6",
+        "unit_price": "9.29",
+        "line_total": "55.74"
+      },
+      {
+        "sku": "MSE-ERG-WL",
+        "description": "Ergonomic wireless mouse",
+        "quantity": "50",
+        "unit_price": "28.28",
+        "line_total": "1414.00"
+      },
+      {
+        "sku": "NTE-76-12",
+        "description": "Sticky notes 76x76 mm, pack of 12 pads",
+        "quantity": "40",
+        "unit_price": "7.05",
+        "line_total": "282.00"
+      },
+      {
+        "sku": "HLT-ASST-6",
+        "description": "Highlighters, assorted colours, pack of 6",
+        "quantity": "6",
+        "unit_price": "4.26",
+        "line_total": "25.56"
+      },
+      {
+        "sku": "CBL-CAT6-3M",
+        "description": "Cat6 patch cable, 3 m",
+        "quantity": "30",
+        "unit_price": "3.32",
+        "line_total": "99.60"
+      },
+      {
+        "sku": "TNR-CMY-SET",
+        "description": "Toner cartridge set, cyan/magenta/yellow",
+        "quantity": "4",
+        "unit_price": "162.97",
+        "line_total": "651.88"
+      },
+      {
+        "sku": "FIL-LAF-10",
+        "description": "Lever arch files, A4, pack of 10",
+        "quantity": "8",
+        "unit_price": "24.23",
+        "line_total": "193.84"
+      },
+      {
+        "sku": "CAB-FIL-3D",
+        "description": "Filing cabinet, 3 drawer, lockable",
+        "quantity": "6",
+        "unit_price": "199.74",
+        "line_total": "1198.44"
+      },
+      {
+        "sku": "KBD-WL-FS",
+        "description": "Wireless keyboard, full size",
+        "quantity": "25",
+        "unit_price": "30.56",
+        "line_total": "764.00"
+      },
+      {
+        "sku": "STD-LAP-ALU",
+        "description": "Laptop stand, aluminium, adjustable",
+        "quantity": "2",
+        "unit_price": "31.55",
+        "line_total": "63.10"
+      },
+      {
+        "sku": "NSW-8G",
+        "description": "Network switch, 8-port gigabit, unmanaged",
+        "quantity": "3",
+        "unit_price": "23.69",
+        "line_total": "71.07"
+      },
+      {
+        "sku": "SSD-EXT-1T",
+        "description": "External SSD, 1 TB, USB-C",
+        "quantity": "10",
+        "unit_price": "73.05",
+        "line_total": "730.50"
+      },
+      {
+        "sku": "PEN-GEL-BLK-12",
+        "description": "Gel pens, black, pack of 12",
+        "quantity": "3",
+        "unit_price": "8.18",
+        "line_total": "24.54"
+      }
+    ],
+    "subtotal": "15352.24",
+    "tax_amount": "3070.45",
+    "total": "18422.69"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

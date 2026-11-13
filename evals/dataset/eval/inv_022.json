@@ -1,0 +1,43 @@
+{
+  "doc_id": "inv_022",
+  "doc_type": "invoice",
+  "file": "eval/inv_022.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV003181",
+    "invoice_date": "2026-08-05",
+    "due_date": "2026-09-04",
+    "currency": "GBP",
+    "po_number": "PO-89872",
+    "seller": {
+      "name": "Fernhollow Peripherals Ltd",
+      "address": "3 Kestrel Way, Norwich NR3 1HG, United Kingdom",
+      "tax_id": "GB402958173"
+    },
+    "buyer": {
+      "name": "Tidewater Architects LLP",
+      "address": "9 Chandlers Wharf, Southampton SO14 3QB, United Kingdom"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "AA alkaline battery 24-pk",
+        "quantity": "8",
+        "unit_price": "10.39",
+        "line_total": "83.12"
+      }
+    ],
+    "subtotal": "83.12",
+    "tax_amount": "16.62",
+    "total": "99.74"
+  },
+  "references_po": "po_018",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

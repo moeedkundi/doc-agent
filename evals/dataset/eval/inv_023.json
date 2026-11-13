@@ -1,0 +1,71 @@
+{
+  "doc_id": "inv_023",
+  "doc_type": "invoice",
+  "file": "eval/inv_023.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "QOS-2026-2954",
+    "invoice_date": "2026-06-09",
+    "due_date": "2026-07-24",
+    "currency": "USD",
+    "po_number": "PO-66140",
+    "seller": {
+      "name": "Quillfeather Office Supply Co.",
+      "address": "418 Corliss Avenue, Dayton, OH 45402, USA",
+      "tax_id": "31-4825097"
+    },
+    "buyer": {
+      "name": "Larkspur Logistics Inc.",
+      "address": "5500 Wrenfield Road, Columbus, OH 43215, USA"
+    },
+    "line_items": [
+      {
+        "sku": "CBL-CAT6-3M",
+        "description": "Patch cord Cat6 3m",
+        "quantity": "8",
+        "unit_price": "4.18",
+        "line_total": "33.44"
+      },
+      {
+        "sku": "ENV-C4-250",
+        "description": "Envelope C4 peel & seal x250",
+        "quantity": "10",
+        "unit_price": "23.46",
+        "line_total": "234.60"
+      },
+      {
+        "sku": "CAM-1080",
+        "description": "HD webcam 1080p",
+        "quantity": "8",
+        "unit_price": "52.00",
+        "line_total": "416.00"
+      },
+      {
+        "sku": "CHR-TASK-MESH",
+        "description": "Mesh task chair w/ adj. arms",
+        "quantity": "8",
+        "unit_price": "191.08",
+        "line_total": "1528.64"
+      },
+      {
+        "sku": "PWR-6W-SURGE",
+        "description": "6-gang surge protector",
+        "quantity": "6",
+        "unit_price": "22.04",
+        "line_total": "132.24"
+      }
+    ],
+    "subtotal": "2344.92",
+    "tax_amount": "170.01",
+    "total": "2514.93"
+  },
+  "references_po": "po_021",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

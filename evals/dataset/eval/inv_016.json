@@ -1,0 +1,43 @@
+{
+  "doc_id": "inv_016",
+  "doc_type": "invoice",
+  "file": "eval/inv_016.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV001038",
+    "invoice_date": "2026-02-25",
+    "due_date": "2026-03-27",
+    "currency": "GBP",
+    "po_number": "PO-61927",
+    "seller": {
+      "name": "Fernhollow Peripherals Ltd",
+      "address": "3 Kestrel Way, Norwich NR3 1HG, United Kingdom",
+      "tax_id": "GB402958173"
+    },
+    "buyer": {
+      "name": "Silverbirch Academy Trust",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+    },
+    "line_items": [
+      {
+        "sku": "KBD-WL-FS",
+        "description": "Full-size wireless keyboard",
+        "quantity": "12",
+        "unit_price": "33.08",
+        "line_total": "396.96"
+      }
+    ],
+    "subtotal": "396.96",
+    "tax_amount": "79.39",
+    "total": "476.35"
+  },
+  "references_po": "po_016",
+  "injected": [],
+  "expected_match": {
+    "status": "partial",
+    "rules": []
+  }
+}

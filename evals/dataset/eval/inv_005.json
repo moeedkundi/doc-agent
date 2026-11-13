@@ -1,0 +1,43 @@
+{
+  "doc_id": "inv_005",
+  "doc_type": "invoice",
+  "file": "eval/inv_005.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV003061",
+    "invoice_date": "2026-05-06",
+    "due_date": "2026-06-05",
+    "currency": "EUR",
+    "po_number": "PO-1027",
+    "seller": {
+      "name": "Heidekamp Digitaltechnik GmbH",
+      "address": "Ostring 117, 44787 Bochum, Germany",
+      "tax_id": "DE196530427"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "Labels 21/sheet, 100 sheets",
+        "quantity": "1",
+        "unit_price": "15.67",
+        "line_total": "15.67"
+      }
+    ],
+    "subtotal": "15.67",
+    "tax_amount": "2.98",
+    "total": "18.65"
+  },
+  "references_po": "po_007",
+  "injected": [],
+  "expected_match": {
+    "status": "partial",
+    "rules": []
+  }
+}

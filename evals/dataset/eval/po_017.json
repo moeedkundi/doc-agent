@@ -1,0 +1,76 @@
+{
+  "doc_id": "po_017",
+  "doc_type": "purchase_order",
+  "file": "eval/po_017.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-55571",
+    "po_date": "2026-07-20",
+    "currency": "EUR",
+    "payment_terms": "2/10 Net 30",
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "vendor": {
+      "name": "Heidekamp Digitaltechnik GmbH",
+      "address": "Ostring 117, 44787 Bochum, Germany",
+      "tax_id": "DE196530427"
+    },
+    "ship_to": "Industriestraße 72, 70565 Stuttgart, Germany",
+    "requested_delivery_date": "2026-08-07",
+    "line_items": [
+      {
+        "sku": "USB-64G",
+        "description": "USB flash drive, 64 GB",
+        "quantity": "40",
+        "unit_price": "9.41",
+        "line_total": "376.40"
+      },
+      {
+        "sku": "PEN-BP-BLU-50",
+        "description": "Ballpoint pens, blue, box of 50",
+        "quantity": "50",
+        "unit_price": "10.43",
+        "line_total": "521.50"
+      },
+      {
+        "sku": "PAP-LTR-20-5K",
+        "description": "Letter copy paper, 20 lb, case of 10 reams",
+        "quantity": "6",
+        "unit_price": "50.61",
+        "line_total": "303.66"
+      },
+      {
+        "sku": "SHR-CC-P4",
+        "description": "Cross-cut shredder, P-4, 12 sheet",
+        "quantity": "4",
+        "unit_price": "146.03",
+        "line_total": "584.12"
+      },
+      {
+        "sku": "PEN-GEL-BLK-12",
+        "description": "Gel pens, black, pack of 12",
+        "quantity": "4",
+        "unit_price": "8.69",
+        "line_total": "34.76"
+      },
+      {
+        "sku": "ENV-C4-250",
+        "description": "C4 envelopes, self-seal, box of 250",
+        "quantity": "10",
+        "unit_price": "23.37",
+        "line_total": "233.70"
+      }
+    ],
+    "subtotal": "2054.14",
+    "tax_amount": "390.29",
+    "total": "2444.43"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

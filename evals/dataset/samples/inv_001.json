@@ -1,0 +1,64 @@
+{
+  "doc_id": "inv_001",
+  "doc_type": "invoice",
+  "file": "samples/inv_001.pdf",
+  "split": "sample",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "RKB-2026-6186",
+    "invoice_date": "2026-06-26",
+    "due_date": "2026-08-25",
+    "currency": "EUR",
+    "po_number": "PO-27656",
+    "seller": {
+      "name": "Rotkehlchen Bürobedarf GmbH",
+      "address": "Am Kornspeicher 9, 28195 Bremen, Germany",
+      "tax_id": "DE274915038"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "6-gang surge protector",
+        "quantity": "1",
+        "unit_price": "20.04",
+        "line_total": "20.04"
+      },
+      {
+        "sku": null,
+        "description": "HD webcam 1080p",
+        "quantity": "20",
+        "unit_price": "48.09",
+        "line_total": "961.80"
+      },
+      {
+        "sku": null,
+        "description": "Mesh task chair w/ adj. arms",
+        "quantity": "30",
+        "unit_price": "178.75",
+        "line_total": "5362.50"
+      },
+      {
+        "sku": null,
+        "description": "Lever arch file A4 75mm (10)",
+        "quantity": "5",
+        "unit_price": "27.38",
+        "line_total": "136.90"
+      }
+    ],
+    "subtotal": "6481.24",
+    "tax_amount": "1231.44",
+    "total": "7712.68"
+  },
+  "references_po": "po_001",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

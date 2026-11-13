@@ -1,0 +1,48 @@
+{
+  "doc_id": "po_006",
+  "doc_type": "purchase_order",
+  "file": "eval/po_006.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-30389",
+    "po_date": "2026-01-30",
+    "currency": "USD",
+    "payment_terms": "Net 45",
+    "buyer": {
+      "name": "Meadowbrook Dental Group PC",
+      "address": "140 Sycamore Plaza, Asheville, NC 28801, USA"
+    },
+    "vendor": {
+      "name": "Glimmerstone Tech Supply LLC",
+      "address": "58 Orchard Mill Lane, Spokane, WA 99201, USA",
+      "tax_id": "91-4472390"
+    },
+    "ship_to": "140 Sycamore Plaza, Asheville, NC 28801, USA",
+    "requested_delivery_date": "2026-02-14",
+    "line_items": [
+      {
+        "sku": "HLT-ASST-6",
+        "description": "Highlighters, assorted colours, pack of 6",
+        "quantity": "15",
+        "unit_price": "4.95",
+        "line_total": "74.25"
+      },
+      {
+        "sku": "BND-RNG-25",
+        "description": "Ring binders, 2-ring, pack of 25",
+        "quantity": "12",
+        "unit_price": "30.66",
+        "line_total": "367.92"
+      }
+    ],
+    "subtotal": "442.17",
+    "tax_amount": "32.06",
+    "total": "474.23"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

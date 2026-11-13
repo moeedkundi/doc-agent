@@ -155,7 +155,8 @@ look up previously saved data, not just read one document.
 - `invoices(id, session_id, document_id, ...flattened fields)`, `invoice_lines(...)`
 - `purchase_orders(id, session_id, document_id, po_number, ...)`, `po_lines(...)`
 - `invoice_po_matches(id, session_id, invoice_id, po_id, status, issues_json)` — status:
-  `matched | partial | mismatch | po_not_found`
+  `matched | partial | mismatch | po_not_found`. `matched` = all checks pass and the PO has no
+  open quantity left; `partial` = all checks pass but quantity remains open.
 - `runs(id, session_id, document_id, status, started_at, finished_at, total_cost_usd, escalated bool)`
 - `trace_events(id, run_id, seq, ts, node, kind, tool, model, input_json, output_json, tokens_in, tokens_out, latency_ms, cost_usd, error)`
 - `review_actions(id, run_id, field_path, old_value, new_value, action)`
@@ -363,10 +364,10 @@ Each phase ends with "Done when" checks. Tick boxes as you go.
 ### Phase 1 — Schemas, DB, synthetic data
 - [x] Pydantic schemas (§5.1) with JSON-schema export
 - [x] SQL migrations (§5.2) incl. RLS policies, reader role, cleanup function
-- [ ] `evals/generator`: produce N POs + N invoices (most referencing a generated PO; ~30% with
+- [x] `evals/generator`: produce N POs + N invoices (most referencing a generated PO; ~30% with
       injected mismatches: price drift, over-billed qty, wrong vendor, missing PO) as PDFs with varied layouts (≥ 3
       templates each), some scanned-look (rotation/noise), plus ground-truth JSON; seeded & reproducible
-- [ ] Generate 60 docs (30/30): 6 become the public samples, rest the eval set
+- [x] Generate 60 docs (30/30): 6 become the public samples, rest the eval set
 **Done when:** migrations apply cleanly; generator is deterministic for a fixed seed; RLS test
 proves session A cannot read session B's rows.
 
@@ -485,3 +486,10 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | Added `docagent_app` write role under RLS; `session_id` on `trace_events`, `review_actions`, `llm_ledger` | Writes are isolated too, not just reads; enables per-session budget queries |
 | 2026-11-14 | Migration runner + session helper live in a new workspace member `packages/db` (`docagent_db`) | Shared by api, sqlstore and tests; role passwords set from DATABASE_*_URL, never in SQL |
 | 2026-11-14 | Local DSNs use `127.0.0.1`, not `localhost` | On Windows `localhost` tries `::1` first and stalls until timeout |
+| 2026-11-14 | Generator also injects single-document arithmetic defects (2 invoices, 1 PO) | Phase 4 needs a document that "pauses for review"; PO-mismatch docs alone don't trigger validate_record |
+| 2026-11-14 | Mismatching invoices always target a PO no other invoice touches | Expected match outcomes don't depend on how earlier mismatching invoices count against the PO balance |
+| 2026-11-14 | Defined `matched` vs `partial` (§5.2): partial = all checks pass, quantity still open | The spec listed the statuses without defining them; ground truth needs a precise rule |
+| 2026-11-14 | Generated PDFs are committed (3.2 MB), not LFS | Small enough for git; samples must ship with the app; CI regenerates and checks ground truth matches |
+| 2026-11-14 | `evals` is importable from the repo root (pytest `pythonpath = ["."]`), not a workspace package | Keeps the §4 layout (`evals/generator/`, `evals/runner.py`) |
+| 2026-11-14 | Sample PO is numbered PO-1042 | The example question in §2 ("uninvoiced on PO-1042") works on the demo data |
+| 2026-11-14 | Migrations run with `uv run python -m docagent_db` | |

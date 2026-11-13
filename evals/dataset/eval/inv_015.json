@@ -1,0 +1,64 @@
+{
+  "doc_id": "inv_015",
+  "doc_type": "invoice",
+  "file": "eval/inv_015.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "RKB-2026-2426",
+    "invoice_date": "2026-02-21",
+    "due_date": "2026-04-22",
+    "currency": "EUR",
+    "po_number": "PO-15842",
+    "seller": {
+      "name": "Rotkehlchen Bürobedarf GmbH",
+      "address": "Am Kornspeicher 9, 28195 Bremen, Germany",
+      "tax_id": "DE274915038"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "8-port Gigabit switch",
+        "quantity": "30",
+        "unit_price": "26.39",
+        "line_total": "791.70"
+      },
+      {
+        "sku": null,
+        "description": "Full-size wireless keyboard",
+        "quantity": "40",
+        "unit_price": "35.70",
+        "line_total": "1428.00"
+      },
+      {
+        "sku": null,
+        "description": "64GB USB 3.2 flash drive",
+        "quantity": "3",
+        "unit_price": "9.20",
+        "line_total": "27.60"
+      },
+      {
+        "sku": null,
+        "description": "XL black ink cartridge",
+        "quantity": "20",
+        "unit_price": "31.42",
+        "line_total": "628.40"
+      }
+    ],
+    "subtotal": "2875.70",
+    "tax_amount": "546.38",
+    "total": "3422.08"
+  },
+  "references_po": "po_015",
+  "injected": [],
+  "expected_match": {
+    "status": "partial",
+    "rules": []
+  }
+}

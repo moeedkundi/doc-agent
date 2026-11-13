@@ -1,0 +1,55 @@
+{
+  "doc_id": "po_026",
+  "doc_type": "purchase_order",
+  "file": "eval/po_026.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-44289",
+    "po_date": "2026-03-23",
+    "currency": "USD",
+    "payment_terms": "Net 45",
+    "buyer": {
+      "name": "Meadowbrook Dental Group PC",
+      "address": "140 Sycamore Plaza, Asheville, NC 28801, USA"
+    },
+    "vendor": {
+      "name": "Bluecairn Networks Inc.",
+      "address": "1905 Tamarind Drive, Boise, ID 83702, USA",
+      "tax_id": "82-1167045"
+    },
+    "ship_to": "140 Sycamore Plaza, Asheville, NC 28801, USA",
+    "requested_delivery_date": "2026-03-31",
+    "line_items": [
+      {
+        "sku": "HUB-USBC-7",
+        "description": "USB-C hub, 7-port",
+        "quantity": "2",
+        "unit_price": "42.65",
+        "line_total": "85.30"
+      },
+      {
+        "sku": "NTE-76-12",
+        "description": "Sticky notes 76x76 mm, pack of 12 pads",
+        "quantity": "5",
+        "unit_price": "8.91",
+        "line_total": "44.55"
+      },
+      {
+        "sku": "NSW-8G",
+        "description": "Network switch, 8-port gigabit, unmanaged",
+        "quantity": "5",
+        "unit_price": "29.73",
+        "line_total": "148.65"
+      }
+    ],
+    "subtotal": "278.50",
+    "tax_amount": "20.19",
+    "total": "298.69"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

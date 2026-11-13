@@ -1,0 +1,58 @@
+{
+  "doc_id": "inv_006",
+  "doc_type": "invoice",
+  "file": "eval/inv_006.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "BLS-2026-2125",
+    "invoice_date": "2026-02-09",
+    "due_date": "2026-02-24",
+    "currency": "GBP",
+    "po_number": "PO-94619",
+    "seller": {
+      "name": "Brightledger Stationers Ltd",
+      "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom",
+      "tax_id": "GB284719306"
+    },
+    "buyer": {
+      "name": "Tidewater Architects LLP",
+      "address": "9 Chandlers Wharf, Southampton SO14 3QB, United Kingdom"
+    },
+    "line_items": [
+      {
+        "sku": "INK-BLK-XL",
+        "description": "XL black ink cartridge",
+        "quantity": "3",
+        "unit_price": "24.93",
+        "line_total": "74.79"
+      },
+      {
+        "sku": "SHR-CC-P4",
+        "description": "Shredder cross cut P4 12sh",
+        "quantity": "30",
+        "unit_price": "130.35",
+        "line_total": "3910.50"
+      }
+    ],
+    "subtotal": "3985.29",
+    "tax_amount": "797.06",
+    "total": "4782.35"
+  },
+  "references_po": null,
+  "injected": [
+    {
+      "kind": "missing_po",
+      "detail": "cites PO-94619, which does not exist",
+      "line": null
+    }
+  ],
+  "expected_match": {
+    "status": "po_not_found",
+    "rules": [
+      "po_not_found"
+    ]
+  }
+}

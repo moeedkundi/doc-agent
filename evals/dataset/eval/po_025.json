@@ -1,0 +1,55 @@
+{
+  "doc_id": "po_025",
+  "doc_type": "purchase_order",
+  "file": "eval/po_025.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-73910",
+    "po_date": "2026-04-02",
+    "currency": "EUR",
+    "payment_terms": "Net 45",
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "vendor": {
+      "name": "Rotkehlchen Bürobedarf GmbH",
+      "address": "Am Kornspeicher 9, 28195 Bremen, Germany",
+      "tax_id": "DE274915038"
+    },
+    "ship_to": "Industriestraße 72, 70565 Stuttgart, Germany",
+    "requested_delivery_date": "2026-04-28",
+    "line_items": [
+      {
+        "sku": "STD-LAP-ALU",
+        "description": "Laptop stand, aluminium, adjustable",
+        "quantity": "1",
+        "unit_price": "33.29",
+        "line_total": "33.29"
+      },
+      {
+        "sku": "ARM-MON-DUAL",
+        "description": "Dual monitor arm, desk clamp",
+        "quantity": "8",
+        "unit_price": "95.12",
+        "line_total": "760.96"
+      },
+      {
+        "sku": "NSW-8G",
+        "description": "Network switch, 8-port gigabit, unmanaged",
+        "quantity": "1",
+        "unit_price": "26.65",
+        "line_total": "26.65"
+      }
+    ],
+    "subtotal": "820.90",
+    "tax_amount": "155.97",
+    "total": "976.87"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

@@ -1,0 +1,43 @@
+{
+  "doc_id": "inv_002",
+  "doc_type": "invoice",
+  "file": "samples/inv_002.pdf",
+  "split": "sample",
+  "template": "compact",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV004677",
+    "invoice_date": "2026-05-03",
+    "due_date": "2026-06-02",
+    "currency": "USD",
+    "po_number": "PO-1042",
+    "seller": {
+      "name": "Pinewick Data Accessories Inc.",
+      "address": "3125 Ledgerock Parkway, Madison, WI 53703, USA",
+      "tax_id": "39-2058816"
+    },
+    "buyer": {
+      "name": "Larkspur Logistics Inc.",
+      "address": "5500 Wrenfield Road, Columbus, OH 43215, USA"
+    },
+    "line_items": [
+      {
+        "sku": "SSD-EXT-1T",
+        "description": "Portable SSD 1TB USB-C",
+        "quantity": "4",
+        "unit_price": "84.64",
+        "line_total": "338.56"
+      }
+    ],
+    "subtotal": "338.56",
+    "tax_amount": "24.55",
+    "total": "363.11"
+  },
+  "references_po": "po_002",
+  "injected": [],
+  "expected_match": {
+    "status": "partial",
+    "rules": []
+  }
+}

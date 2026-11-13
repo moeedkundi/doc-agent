@@ -1,0 +1,62 @@
+{
+  "doc_id": "po_014",
+  "doc_type": "purchase_order",
+  "file": "eval/po_014.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-40003",
+    "po_date": "2026-05-10",
+    "currency": "EUR",
+    "payment_terms": "Net 60",
+    "buyer": {
+      "name": "Graafschap Accountants B.V.",
+      "address": "Stationsplein 14, 7511 JD Enschede, Netherlands"
+    },
+    "vendor": {
+      "name": "Kroonveld IT Services B.V.",
+      "address": "Havenstraat 58, 2011 CS Haarlem, Netherlands",
+      "tax_id": "NL690243517B01"
+    },
+    "ship_to": "Stationsplein 14, 7511 JD Enschede, Netherlands",
+    "requested_delivery_date": "2026-05-24",
+    "line_items": [
+      {
+        "sku": "PAP-A4-80-500",
+        "description": "A4 copy paper, 80 gsm, ream of 500 sheets",
+        "quantity": "15",
+        "unit_price": "6.18",
+        "line_total": "92.70"
+      },
+      {
+        "sku": "LAM-POU-A4-100",
+        "description": "Laminating pouches, A4, 100 pack",
+        "quantity": "30",
+        "unit_price": "12.59",
+        "line_total": "377.70"
+      },
+      {
+        "sku": "CAM-1080",
+        "description": "Webcam, 1080p, with privacy shutter",
+        "quantity": "15",
+        "unit_price": "53.51",
+        "line_total": "802.65"
+      },
+      {
+        "sku": "ENV-C4-250",
+        "description": "C4 envelopes, self-seal, box of 250",
+        "quantity": "6",
+        "unit_price": "24.51",
+        "line_total": "147.06"
+      }
+    ],
+    "subtotal": "1420.11",
+    "tax_amount": "298.22",
+    "total": "1718.33"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

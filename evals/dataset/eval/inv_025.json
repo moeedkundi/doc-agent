@@ -1,0 +1,66 @@
+{
+  "doc_id": "inv_025",
+  "doc_type": "invoice",
+  "file": "eval/inv_025.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "RKB-2026-9475",
+    "invoice_date": "2026-05-03",
+    "due_date": "2026-06-17",
+    "currency": "EUR",
+    "po_number": "PO-73910",
+    "seller": {
+      "name": "Rotkehlchen Bürobedarf GmbH",
+      "address": "Am Kornspeicher 9, 28195 Bremen, Germany",
+      "tax_id": "DE274915038"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "Adjustable laptop riser (alu)",
+        "quantity": "1",
+        "unit_price": "33.29",
+        "line_total": "33.29"
+      },
+      {
+        "sku": null,
+        "description": "Monitor arm, dual, clamp mount",
+        "quantity": "8",
+        "unit_price": "95.12",
+        "line_total": "760.96"
+      },
+      {
+        "sku": null,
+        "description": "8-port Gigabit switch",
+        "quantity": "2",
+        "unit_price": "26.65",
+        "line_total": "53.30"
+      }
+    ],
+    "subtotal": "847.55",
+    "tax_amount": "161.03",
+    "total": "1008.58"
+  },
+  "references_po": "po_025",
+  "injected": [
+    {
+      "kind": "over_billed_qty",
+      "detail": "billed qty 2 > ordered 1",
+      "line": 2
+    }
+  ],
+  "expected_match": {
+    "status": "mismatch",
+    "rules": [
+      "qty_exceeds_remaining",
+      "total_exceeds_remaining"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "doc_id": "inv_004",
+  "doc_type": "invoice",
+  "file": "eval/inv_004.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "GTS-2026-1198",
+    "invoice_date": "2026-02-17",
+    "due_date": "2026-04-03",
+    "currency": "USD",
+    "po_number": "PO-30389",
+    "seller": {
+      "name": "Glimmerstone Tech Supply LLC",
+      "address": "58 Orchard Mill Lane, Spokane, WA 99201, USA",
+      "tax_id": "91-4472390"
+    },
+    "buyer": {
+      "name": "Meadowbrook Dental Group PC",
+      "address": "140 Sycamore Plaza, Asheville, NC 28801, USA"
+    },
+    "line_items": [
+      {
+        "sku": "HLT-ASST-6",
+        "description": "Highlighter marker asst. 6-pk",
+        "quantity": "15",
+        "unit_price": "4.95",
+        "line_total": "74.25"
+      },
+      {
+        "sku": "BND-RNG-25",
+        "description": "2-ring binder, box of 25",
+        "quantity": "12",
+        "unit_price": "30.66",
+        "line_total": "367.92"
+      }
+    ],
+    "subtotal": "442.17",
+    "tax_amount": "32.06",
+    "total": "464.23"
+  },
+  "references_po": "po_006",
+  "injected": [
+    {
+      "kind": "arithmetic_total",
+      "detail": "printed total 464.23 != subtotal + tax 474.23",
+      "line": null
+    }
+  ],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

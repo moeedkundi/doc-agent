@@ -1,0 +1,50 @@
+{
+  "doc_id": "inv_010",
+  "doc_type": "invoice",
+  "file": "eval/inv_010.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV008049",
+    "invoice_date": "2026-05-19",
+    "due_date": "2026-06-18",
+    "currency": "EUR",
+    "po_number": "PO-1027",
+    "seller": {
+      "name": "Heidekamp Digitaltechnik GmbH",
+      "address": "Ostring 117, 44787 Bochum, Germany",
+      "tax_id": "DE196530427"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": "LBL-A4-21-100",
+        "description": "Labels 21/sheet, 100 sheets",
+        "quantity": "2",
+        "unit_price": "15.67",
+        "line_total": "31.34"
+      },
+      {
+        "sku": "KBD-WL-FS",
+        "description": "Full-size wireless keyboard",
+        "quantity": "24",
+        "unit_price": "39.37",
+        "line_total": "944.88"
+      }
+    ],
+    "subtotal": "976.22",
+    "tax_amount": "185.48",
+    "total": "1161.70"
+  },
+  "references_po": "po_007",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

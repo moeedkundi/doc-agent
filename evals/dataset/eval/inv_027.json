@@ -1,0 +1,86 @@
+{
+  "doc_id": "inv_027",
+  "doc_type": "invoice",
+  "file": "eval/inv_027.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "2604295",
+    "invoice_date": "2026-03-14",
+    "due_date": "2026-05-13",
+    "currency": "EUR",
+    "po_number": "PO-73198",
+    "seller": {
+      "name": "Sterndorf Kabel & Zubehör GmbH",
+      "address": "Gewerbepark Süd 6, 93053 Regensburg, Germany",
+      "tax_id": "DE342081659"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "Labels 21/sheet, 100 sheets",
+        "quantity": "3",
+        "unit_price": "14.35",
+        "line_total": "43.05"
+      },
+      {
+        "sku": null,
+        "description": "Multipurpose paper Letter 20lb - case/10",
+        "quantity": "3",
+        "unit_price": "46.57",
+        "line_total": "139.71"
+      },
+      {
+        "sku": null,
+        "description": "Mesh task chair w/ adj. arms",
+        "quantity": "25",
+        "unit_price": "163.10",
+        "line_total": "4077.50"
+      },
+      {
+        "sku": null,
+        "description": "Lever arch file A4 75mm (10)",
+        "quantity": "25",
+        "unit_price": "24.09",
+        "line_total": "602.25"
+      },
+      {
+        "sku": null,
+        "description": "AA alkaline battery 24-pk",
+        "quantity": "6",
+        "unit_price": "12.82",
+        "line_total": "76.92"
+      },
+      {
+        "sku": null,
+        "description": "DL window envelopes (500)",
+        "quantity": "50",
+        "unit_price": "17.82",
+        "line_total": "891.00"
+      }
+    ],
+    "subtotal": "5830.43",
+    "tax_amount": "1107.78",
+    "total": "6938.21"
+  },
+  "references_po": "po_027",
+  "injected": [
+    {
+      "kind": "wrong_vendor",
+      "detail": "billed by Sterndorf Kabel & Zubehör GmbH; PO was issued to Papierwerk Kessler GmbH",
+      "line": null
+    }
+  ],
+  "expected_match": {
+    "status": "mismatch",
+    "rules": [
+      "vendor_mismatch"
+    ]
+  }
+}

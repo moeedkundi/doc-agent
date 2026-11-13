@@ -1,0 +1,83 @@
+{
+  "doc_id": "po_016",
+  "doc_type": "purchase_order",
+  "file": "eval/po_016.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-61927",
+    "po_date": "2026-01-30",
+    "currency": "GBP",
+    "payment_terms": "2/10 Net 30",
+    "buyer": {
+      "name": "Silverbirch Academy Trust",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+    },
+    "vendor": {
+      "name": "Fernhollow Peripherals Ltd",
+      "address": "3 Kestrel Way, Norwich NR3 1HG, United Kingdom",
+      "tax_id": "GB402958173"
+    },
+    "ship_to": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+    "requested_delivery_date": "2026-02-21",
+    "line_items": [
+      {
+        "sku": "NTE-76-12",
+        "description": "Sticky notes 76x76 mm, pack of 12 pads",
+        "quantity": "4",
+        "unit_price": "7.00",
+        "line_total": "28.00"
+      },
+      {
+        "sku": "ARM-MON-DUAL",
+        "description": "Dual monitor arm, desk clamp",
+        "quantity": "20",
+        "unit_price": "81.30",
+        "line_total": "1626.00"
+      },
+      {
+        "sku": "BND-RNG-25",
+        "description": "Ring binders, 2-ring, pack of 25",
+        "quantity": "2",
+        "unit_price": "24.51",
+        "line_total": "49.02"
+      },
+      {
+        "sku": "CHR-TASK-MESH",
+        "description": "Task chair, mesh back, adjustable arms",
+        "quantity": "1",
+        "unit_price": "151.70",
+        "line_total": "151.70"
+      },
+      {
+        "sku": "WBM-ASST-4",
+        "description": "Whiteboard markers, assorted, pack of 4",
+        "quantity": "24",
+        "unit_price": "3.77",
+        "line_total": "90.48"
+      },
+      {
+        "sku": "PWR-6W-SURGE",
+        "description": "Power strip, 6-way, surge protected",
+        "quantity": "6",
+        "unit_price": "17.46",
+        "line_total": "104.76"
+      },
+      {
+        "sku": "KBD-WL-FS",
+        "description": "Wireless keyboard, full size",
+        "quantity": "12",
+        "unit_price": "33.08",
+        "line_total": "396.96"
+      }
+    ],
+    "subtotal": "2446.92",
+    "tax_amount": "489.38",
+    "total": "2936.30"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

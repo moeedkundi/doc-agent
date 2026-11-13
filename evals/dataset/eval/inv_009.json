@@ -1,0 +1,71 @@
+{
+  "doc_id": "inv_009",
+  "doc_type": "invoice",
+  "file": "eval/inv_009.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV008804",
+    "invoice_date": "2026-08-05",
+    "due_date": "2026-09-19",
+    "currency": "USD",
+    "po_number": "PO-22826",
+    "seller": {
+      "name": "Pinewick Data Accessories Inc.",
+      "address": "3125 Ledgerock Parkway, Madison, WI 53703, USA",
+      "tax_id": "39-2058816"
+    },
+    "buyer": {
+      "name": "Meadowbrook Dental Group PC",
+      "address": "140 Sycamore Plaza, Asheville, NC 28801, USA"
+    },
+    "line_items": [
+      {
+        "sku": "HLT-ASST-6",
+        "description": "Highlighter marker asst. 6-pk",
+        "quantity": "6",
+        "unit_price": "4.88",
+        "line_total": "29.28"
+      },
+      {
+        "sku": "CBL-HDMI-2M",
+        "description": "HDMI lead 2.0m",
+        "quantity": "12",
+        "unit_price": "8.22",
+        "line_total": "98.64"
+      },
+      {
+        "sku": "PEN-GEL-BLK-12",
+        "description": "Gel ink pen black x12",
+        "quantity": "25",
+        "unit_price": "9.31",
+        "line_total": "232.75"
+      },
+      {
+        "sku": "PAP-A4-80-500",
+        "description": "Copy paper A4 80g (500 sh)",
+        "quantity": "5",
+        "unit_price": "6.23",
+        "line_total": "31.15"
+      },
+      {
+        "sku": "PAP-LTR-20-5K",
+        "description": "Multipurpose paper Letter 20lb - case/10",
+        "quantity": "50",
+        "unit_price": "54.63",
+        "line_total": "2731.50"
+      }
+    ],
+    "subtotal": "3123.32",
+    "tax_amount": "226.44",
+    "total": "3349.76"
+  },
+  "references_po": "po_010",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

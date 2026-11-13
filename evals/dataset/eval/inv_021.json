@@ -1,0 +1,66 @@
+{
+  "doc_id": "inv_021",
+  "doc_type": "invoice",
+  "file": "eval/inv_021.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV009719",
+    "invoice_date": "2026-08-23",
+    "due_date": "2026-09-22",
+    "currency": "USD",
+    "po_number": "PO-80959",
+    "seller": {
+      "name": "Harrowfield Paper Company Inc.",
+      "address": "900 Kilnworth Boulevard, Akron, OH 44308, USA",
+      "tax_id": "34-1180264"
+    },
+    "buyer": {
+      "name": "Redfern Analytics Inc.",
+      "address": "88 Granary Square, Floor 6, Minneapolis, MN 55401, USA"
+    },
+    "line_items": [
+      {
+        "sku": "PAP-LTR-20-5K",
+        "description": "Multipurpose paper Letter 20lb - case/10",
+        "quantity": "40",
+        "unit_price": "58.58",
+        "line_total": "2343.20"
+      },
+      {
+        "sku": "ARM-MON-DUAL",
+        "description": "Monitor arm, dual, clamp mount",
+        "quantity": "25",
+        "unit_price": "97.82",
+        "line_total": "2445.50"
+      },
+      {
+        "sku": "PAP-A4-80-500",
+        "description": "Copy paper A4 80g (500 sh)",
+        "quantity": "2",
+        "unit_price": "7.01",
+        "line_total": "14.02"
+      }
+    ],
+    "subtotal": "4802.72",
+    "tax_amount": "348.20",
+    "total": "5150.92"
+  },
+  "references_po": "po_020",
+  "injected": [
+    {
+      "kind": "price_drift",
+      "detail": "unit price 6.53 -> 7.01 (+7.4%, tolerance 2.0%)",
+      "line": 2
+    }
+  ],
+  "expected_match": {
+    "status": "mismatch",
+    "rules": [
+      "unit_price_out_of_tolerance",
+      "total_exceeds_remaining"
+    ]
+  }
+}

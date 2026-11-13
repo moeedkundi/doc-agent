@@ -1,0 +1,62 @@
+{
+  "doc_id": "po_029",
+  "doc_type": "purchase_order",
+  "file": "eval/po_029.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-15978",
+    "po_date": "2026-02-06",
+    "currency": "GBP",
+    "payment_terms": "Net 45",
+    "buyer": {
+      "name": "Tidewater Architects LLP",
+      "address": "9 Chandlers Wharf, Southampton SO14 3QB, United Kingdom"
+    },
+    "vendor": {
+      "name": "Brightledger Stationers Ltd",
+      "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom",
+      "tax_id": "GB284719306"
+    },
+    "ship_to": "9 Chandlers Wharf, Southampton SO14 3QB, United Kingdom",
+    "requested_delivery_date": "2026-02-28",
+    "line_items": [
+      {
+        "sku": "CBL-HDMI-2M",
+        "description": "HDMI cable, 2 m",
+        "quantity": "24",
+        "unit_price": "5.70",
+        "line_total": "136.80"
+      },
+      {
+        "sku": "TNR-CMY-SET",
+        "description": "Toner cartridge set, cyan/magenta/yellow",
+        "quantity": "6",
+        "unit_price": "176.84",
+        "line_total": "1061.04"
+      },
+      {
+        "sku": "WBD-120-90",
+        "description": "Magnetic whiteboard, 120 x 90 cm",
+        "quantity": "20",
+        "unit_price": "90.98",
+        "line_total": "1819.60"
+      },
+      {
+        "sku": "HLT-ASST-6",
+        "description": "Highlighters, assorted colours, pack of 6",
+        "quantity": "8",
+        "unit_price": "3.80",
+        "line_total": "30.40"
+      }
+    ],
+    "subtotal": "3047.84",
+    "tax_amount": "609.57",
+    "total": "3657.41"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

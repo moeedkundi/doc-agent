@@ -1,0 +1,55 @@
+{
+  "doc_id": "po_013",
+  "doc_type": "purchase_order",
+  "file": "eval/po_013.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-66112",
+    "po_date": "2026-06-20",
+    "currency": "GBP",
+    "payment_terms": "Net 30",
+    "buyer": {
+      "name": "Silverbirch Academy Trust",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+    },
+    "vendor": {
+      "name": "Copperkey Computing Ltd",
+      "address": "12 Mortlake Yard, Bristol BS1 6TQ, United Kingdom",
+      "tax_id": "GB617204958"
+    },
+    "ship_to": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+    "requested_delivery_date": "2026-07-08",
+    "line_items": [
+      {
+        "sku": "ENV-DL-500",
+        "description": "DL envelopes, window, box of 500",
+        "quantity": "50",
+        "unit_price": "15.84",
+        "line_total": "792.00"
+      },
+      {
+        "sku": "STR-DESK-25",
+        "description": "Desk stapler, 25-sheet capacity",
+        "quantity": "30",
+        "unit_price": "10.80",
+        "line_total": "324.00"
+      },
+      {
+        "sku": "CBL-HDMI-2M",
+        "description": "HDMI cable, 2 m",
+        "quantity": "6",
+        "unit_price": "6.62",
+        "line_total": "39.72"
+      }
+    ],
+    "subtotal": "1155.72",
+    "tax_amount": "231.14",
+    "total": "1386.86"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

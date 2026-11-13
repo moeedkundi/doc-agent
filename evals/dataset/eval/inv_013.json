@@ -1,0 +1,57 @@
+{
+  "doc_id": "inv_013",
+  "doc_type": "invoice",
+  "file": "eval/inv_013.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "2607549",
+    "invoice_date": "2026-07-25",
+    "due_date": "2026-08-24",
+    "currency": "EUR",
+    "po_number": "PO-70443",
+    "seller": {
+      "name": "Sterndorf Kabel & Zubehör GmbH",
+      "address": "Gewerbepark Süd 6, 93053 Regensburg, Germany",
+      "tax_id": "DE342081659"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "Patch cord Cat6 3m",
+        "quantity": "40",
+        "unit_price": "3.57",
+        "line_total": "142.80"
+      },
+      {
+        "sku": null,
+        "description": "Colour toner set C/M/Y",
+        "quantity": "8",
+        "unit_price": "189.40",
+        "line_total": "1515.20"
+      },
+      {
+        "sku": null,
+        "description": "2-ring binder, box of 25",
+        "quantity": "8",
+        "unit_price": "26.44",
+        "line_total": "211.52"
+      }
+    ],
+    "subtotal": "1869.52",
+    "tax_amount": "355.21",
+    "total": "2224.73"
+  },
+  "references_po": "po_012",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

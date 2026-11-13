@@ -1,0 +1,83 @@
+{
+  "doc_id": "po_023",
+  "doc_type": "purchase_order",
+  "file": "eval/po_023.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-27249",
+    "po_date": "2026-07-02",
+    "currency": "USD",
+    "payment_terms": "Net 15",
+    "buyer": {
+      "name": "Meadowbrook Dental Group PC",
+      "address": "140 Sycamore Plaza, Asheville, NC 28801, USA"
+    },
+    "vendor": {
+      "name": "Quillfeather Office Supply Co.",
+      "address": "418 Corliss Avenue, Dayton, OH 45402, USA",
+      "tax_id": "31-4825097"
+    },
+    "ship_to": "140 Sycamore Plaza, Asheville, NC 28801, USA",
+    "requested_delivery_date": "2026-07-30",
+    "line_items": [
+      {
+        "sku": "WBM-ASST-4",
+        "description": "Whiteboard markers, assorted, pack of 4",
+        "quantity": "15",
+        "unit_price": "4.82",
+        "line_total": "72.30"
+      },
+      {
+        "sku": "NTE-76-12",
+        "description": "Sticky notes 76x76 mm, pack of 12 pads",
+        "quantity": "40",
+        "unit_price": "9.44",
+        "line_total": "377.60"
+      },
+      {
+        "sku": "CHR-TASK-MESH",
+        "description": "Task chair, mesh back, adjustable arms",
+        "quantity": "6",
+        "unit_price": "194.86",
+        "line_total": "1169.16"
+      },
+      {
+        "sku": "LBL-A4-21-100",
+        "description": "Address labels, 21 per sheet, 100 sheets",
+        "quantity": "4",
+        "unit_price": "17.18",
+        "line_total": "68.72"
+      },
+      {
+        "sku": "PAP-A4-80-500",
+        "description": "A4 copy paper, 80 gsm, ream of 500 sheets",
+        "quantity": "20",
+        "unit_price": "6.54",
+        "line_total": "130.80"
+      },
+      {
+        "sku": "BAT-AA-24",
+        "description": "Alkaline batteries AA, pack of 24",
+        "quantity": "40",
+        "unit_price": "13.80",
+        "line_total": "552.00"
+      },
+      {
+        "sku": "ENV-DL-500",
+        "description": "DL envelopes, window, box of 500",
+        "quantity": "3",
+        "unit_price": "18.89",
+        "line_total": "56.67"
+      }
+    ],
+    "subtotal": "2427.25",
+    "tax_amount": "175.98",
+    "total": "2603.23"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

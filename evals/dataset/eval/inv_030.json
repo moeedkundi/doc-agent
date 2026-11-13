@@ -1,0 +1,71 @@
+{
+  "doc_id": "inv_030",
+  "doc_type": "invoice",
+  "file": "eval/inv_030.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV007869",
+    "invoice_date": "2026-05-17",
+    "due_date": "2026-06-01",
+    "currency": "USD",
+    "po_number": "PO-76619",
+    "seller": {
+      "name": "Saltmarsh Print & Toner LLC",
+      "address": "640 Harbor Gate Road, Savannah, GA 31401, USA",
+      "tax_id": "58-3390271"
+    },
+    "buyer": {
+      "name": "Redfern Analytics Inc.",
+      "address": "88 Granary Square, Floor 6, Minneapolis, MN 55401, USA"
+    },
+    "line_items": [
+      {
+        "sku": "SSD-EXT-1T",
+        "description": "Portable SSD 1TB USB-C",
+        "quantity": "4",
+        "unit_price": "84.82",
+        "line_total": "339.28"
+      },
+      {
+        "sku": "NTE-76-12",
+        "description": "Self-stick notes 3x3in, 12 pads",
+        "quantity": "30",
+        "unit_price": "9.30",
+        "line_total": "279.00"
+      },
+      {
+        "sku": "LAM-POU-A4-100",
+        "description": "Laminator pouch A4 125mic x100",
+        "quantity": "40",
+        "unit_price": "13.70",
+        "line_total": "548.00"
+      },
+      {
+        "sku": "STP-266-5K",
+        "description": "Staples no. 26/6 (5,000)",
+        "quantity": "8",
+        "unit_price": "2.43",
+        "line_total": "19.44"
+      },
+      {
+        "sku": "BAT-AA-24",
+        "description": "AA alkaline battery 24-pk",
+        "quantity": "3",
+        "unit_price": "12.85",
+        "line_total": "38.55"
+      }
+    ],
+    "subtotal": "1224.27",
+    "tax_amount": "88.76",
+    "total": "1313.03"
+  },
+  "references_po": "po_030",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

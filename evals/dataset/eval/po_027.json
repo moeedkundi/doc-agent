@@ -1,0 +1,76 @@
+{
+  "doc_id": "po_027",
+  "doc_type": "purchase_order",
+  "file": "eval/po_027.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-73198",
+    "po_date": "2026-03-03",
+    "currency": "EUR",
+    "payment_terms": "Net 60",
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "vendor": {
+      "name": "Papierwerk Kessler GmbH",
+      "address": "Lindenhofstraße 44, 34117 Kassel, Germany",
+      "tax_id": "DE318402765"
+    },
+    "ship_to": "Industriestraße 72, 70565 Stuttgart, Germany",
+    "requested_delivery_date": "2026-03-13",
+    "line_items": [
+      {
+        "sku": "LBL-A4-21-100",
+        "description": "Address labels, 21 per sheet, 100 sheets",
+        "quantity": "3",
+        "unit_price": "14.35",
+        "line_total": "43.05"
+      },
+      {
+        "sku": "PAP-LTR-20-5K",
+        "description": "Letter copy paper, 20 lb, case of 10 reams",
+        "quantity": "3",
+        "unit_price": "46.57",
+        "line_total": "139.71"
+      },
+      {
+        "sku": "CHR-TASK-MESH",
+        "description": "Task chair, mesh back, adjustable arms",
+        "quantity": "25",
+        "unit_price": "163.10",
+        "line_total": "4077.50"
+      },
+      {
+        "sku": "FIL-LAF-10",
+        "description": "Lever arch files, A4, pack of 10",
+        "quantity": "25",
+        "unit_price": "24.09",
+        "line_total": "602.25"
+      },
+      {
+        "sku": "BAT-AA-24",
+        "description": "Alkaline batteries AA, pack of 24",
+        "quantity": "6",
+        "unit_price": "12.82",
+        "line_total": "76.92"
+      },
+      {
+        "sku": "ENV-DL-500",
+        "description": "DL envelopes, window, box of 500",
+        "quantity": "50",
+        "unit_price": "17.82",
+        "line_total": "891.00"
+      }
+    ],
+    "subtotal": "5830.43",
+    "tax_amount": "1107.78",
+    "total": "6938.21"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

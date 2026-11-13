@@ -1,0 +1,87 @@
+{
+  "doc_id": "inv_028",
+  "doc_type": "invoice",
+  "file": "eval/inv_028.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "KIT-2026-2806",
+    "invoice_date": "2026-06-23",
+    "due_date": "2026-07-23",
+    "currency": "EUR",
+    "po_number": "PO-72813",
+    "seller": {
+      "name": "Kroonveld IT Services B.V.",
+      "address": "Havenstraat 58, 2011 CS Haarlem, Netherlands",
+      "tax_id": "NL690243517B01"
+    },
+    "buyer": {
+      "name": "Graafschap Accountants B.V.",
+      "address": "Stationsplein 14, 7511 JD Enschede, Netherlands"
+    },
+    "line_items": [
+      {
+        "sku": "CAB-FIL-3D",
+        "description": "Lockable 3-drawer filing cabinet",
+        "quantity": "60",
+        "unit_price": "224.50",
+        "line_total": "13470.00"
+      },
+      {
+        "sku": "LAM-A3",
+        "description": "A3 laminating machine",
+        "quantity": "20",
+        "unit_price": "62.07",
+        "line_total": "1241.40"
+      },
+      {
+        "sku": "HDS-USB-ST",
+        "description": "Stereo USB headset w/ NC mic",
+        "quantity": "1",
+        "unit_price": "44.94",
+        "line_total": "44.94"
+      },
+      {
+        "sku": "SHR-CC-P4",
+        "description": "Shredder cross cut P4 12sh",
+        "quantity": "3",
+        "unit_price": "142.69",
+        "line_total": "428.07"
+      },
+      {
+        "sku": "WBD-120-90",
+        "description": "Whiteboard magnetic 1200x900mm",
+        "quantity": "6",
+        "unit_price": "106.28",
+        "line_total": "637.68"
+      },
+      {
+        "sku": "CBL-CAT6-3M",
+        "description": "Patch cord Cat6 3m",
+        "quantity": "40",
+        "unit_price": "3.69",
+        "line_total": "147.60"
+      }
+    ],
+    "subtotal": "15969.69",
+    "tax_amount": "3353.63",
+    "total": "19323.32"
+  },
+  "references_po": "po_028",
+  "injected": [
+    {
+      "kind": "over_billed_qty",
+      "detail": "billed qty 60 > ordered 50",
+      "line": 0
+    }
+  ],
+  "expected_match": {
+    "status": "mismatch",
+    "rules": [
+      "qty_exceeds_remaining",
+      "total_exceeds_remaining"
+    ]
+  }
+}

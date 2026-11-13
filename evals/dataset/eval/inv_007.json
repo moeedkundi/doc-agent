@@ -1,0 +1,72 @@
+{
+  "doc_id": "inv_007",
+  "doc_type": "invoice",
+  "file": "eval/inv_007.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV003095",
+    "invoice_date": "2026-05-27",
+    "due_date": "2026-06-11",
+    "currency": "USD",
+    "po_number": "PO-12326",
+    "seller": {
+      "name": "Bluecairn Networks Inc.",
+      "address": "1905 Tamarind Drive, Boise, ID 83702, USA",
+      "tax_id": "82-1167045"
+    },
+    "buyer": {
+      "name": "Larkspur Logistics Inc.",
+      "address": "5500 Wrenfield Road, Columbus, OH 43215, USA"
+    },
+    "line_items": [
+      {
+        "sku": "SSD-EXT-1T",
+        "description": "Portable SSD 1TB USB-C",
+        "quantity": "40",
+        "unit_price": "92.20",
+        "line_total": "3688.00"
+      },
+      {
+        "sku": "PEN-GEL-BLK-12",
+        "description": "Gel ink pen black x12",
+        "quantity": "24",
+        "unit_price": "10.28",
+        "line_total": "246.72"
+      },
+      {
+        "sku": "ARM-MON-DUAL",
+        "description": "Monitor arm, dual, clamp mount",
+        "quantity": "20",
+        "unit_price": "94.18",
+        "line_total": "1883.60"
+      },
+      {
+        "sku": "PEN-BP-BLU-50",
+        "description": "Blue ballpoint pen (box 50)",
+        "quantity": "50",
+        "unit_price": "11.32",
+        "line_total": "566.00"
+      }
+    ],
+    "subtotal": "6384.32",
+    "tax_amount": "462.86",
+    "total": "6847.18"
+  },
+  "references_po": "po_008",
+  "injected": [
+    {
+      "kind": "wrong_vendor",
+      "detail": "billed by Bluecairn Networks Inc.; PO was issued to Tallowmere IT Distribution Inc.",
+      "line": null
+    }
+  ],
+  "expected_match": {
+    "status": "mismatch",
+    "rules": [
+      "vendor_mismatch"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "doc_id": "po_004",
+  "doc_type": "purchase_order",
+  "file": "eval/po_004.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-64889",
+    "po_date": "2026-09-01",
+    "currency": "GBP",
+    "payment_terms": "Net 45",
+    "buyer": {
+      "name": "Tidewater Architects LLP",
+      "address": "9 Chandlers Wharf, Southampton SO14 3QB, United Kingdom"
+    },
+    "vendor": {
+      "name": "Brightledger Stationers Ltd",
+      "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom",
+      "tax_id": "GB284719306"
+    },
+    "ship_to": "9 Chandlers Wharf, Southampton SO14 3QB, United Kingdom",
+    "requested_delivery_date": "2026-09-14",
+    "line_items": [
+      {
+        "sku": "MSE-ERG-WL",
+        "description": "Ergonomic wireless mouse",
+        "quantity": "15",
+        "unit_price": "28.53",
+        "line_total": "427.95"
+      },
+      {
+        "sku": "HDS-USB-ST",
+        "description": "USB headset, stereo, noise-cancelling mic",
+        "quantity": "3",
+        "unit_price": "37.43",
+        "line_total": "112.29"
+      }
+    ],
+    "subtotal": "540.24",
+    "tax_amount": "108.05",
+    "total": "647.29"
+  },
+  "references_po": null,
+  "injected": [
+    {
+      "kind": "arithmetic_total",
+      "detail": "printed total 647.29 != subtotal + tax 648.29",
+      "line": null
+    }
+  ],
+  "expected_match": null
+}

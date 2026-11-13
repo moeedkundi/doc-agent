@@ -1,0 +1,43 @@
+{
+  "doc_id": "inv_020",
+  "doc_type": "invoice",
+  "file": "eval/inv_020.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV004344",
+    "invoice_date": "2026-07-19",
+    "due_date": "2026-08-18",
+    "currency": "GBP",
+    "po_number": "PO-89872",
+    "seller": {
+      "name": "Fernhollow Peripherals Ltd",
+      "address": "3 Kestrel Way, Norwich NR3 1HG, United Kingdom",
+      "tax_id": "GB402958173"
+    },
+    "buyer": {
+      "name": "Tidewater Architects LLP",
+      "address": "9 Chandlers Wharf, Southampton SO14 3QB, United Kingdom"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "Labels 21/sheet, 100 sheets",
+        "quantity": "15",
+        "unit_price": "13.82",
+        "line_total": "207.30"
+      }
+    ],
+    "subtotal": "207.30",
+    "tax_amount": "41.46",
+    "total": "248.76"
+  },
+  "references_po": "po_018",
+  "injected": [],
+  "expected_match": {
+    "status": "partial",
+    "rules": []
+  }
+}

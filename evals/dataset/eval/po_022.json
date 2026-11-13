@@ -1,0 +1,76 @@
+{
+  "doc_id": "po_022",
+  "doc_type": "purchase_order",
+  "file": "eval/po_022.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-70641",
+    "po_date": "2026-02-16",
+    "currency": "EUR",
+    "payment_terms": "Net 30",
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "vendor": {
+      "name": "Heidekamp Digitaltechnik GmbH",
+      "address": "Ostring 117, 44787 Bochum, Germany",
+      "tax_id": "DE196530427"
+    },
+    "ship_to": "Industriestraße 72, 70565 Stuttgart, Germany",
+    "requested_delivery_date": "2026-03-09",
+    "line_items": [
+      {
+        "sku": "STR-DESK-25",
+        "description": "Desk stapler, 25-sheet capacity",
+        "quantity": "50",
+        "unit_price": "12.56",
+        "line_total": "628.00"
+      },
+      {
+        "sku": "PAP-A4-80-500",
+        "description": "A4 copy paper, 80 gsm, ream of 500 sheets",
+        "quantity": "20",
+        "unit_price": "5.49",
+        "line_total": "109.80"
+      },
+      {
+        "sku": "STD-LAP-ALU",
+        "description": "Laptop stand, aluminium, adjustable",
+        "quantity": "50",
+        "unit_price": "36.88",
+        "line_total": "1844.00"
+      },
+      {
+        "sku": "CAB-FIL-3D",
+        "description": "Filing cabinet, 3 drawer, lockable",
+        "quantity": "25",
+        "unit_price": "236.67",
+        "line_total": "5916.75"
+      },
+      {
+        "sku": "MON-24-FHD",
+        "description": "24-inch monitor, 1920x1080",
+        "quantity": "15",
+        "unit_price": "129.27",
+        "line_total": "1939.05"
+      },
+      {
+        "sku": "WBD-120-90",
+        "description": "Magnetic whiteboard, 120 x 90 cm",
+        "quantity": "3",
+        "unit_price": "99.98",
+        "line_total": "299.94"
+      }
+    ],
+    "subtotal": "10737.54",
+    "tax_amount": "2040.13",
+    "total": "12777.67"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

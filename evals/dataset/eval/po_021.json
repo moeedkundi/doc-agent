@@ -1,0 +1,69 @@
+{
+  "doc_id": "po_021",
+  "doc_type": "purchase_order",
+  "file": "eval/po_021.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-66140",
+    "po_date": "2026-05-25",
+    "currency": "USD",
+    "payment_terms": "Net 45",
+    "buyer": {
+      "name": "Larkspur Logistics Inc.",
+      "address": "5500 Wrenfield Road, Columbus, OH 43215, USA"
+    },
+    "vendor": {
+      "name": "Quillfeather Office Supply Co.",
+      "address": "418 Corliss Avenue, Dayton, OH 45402, USA",
+      "tax_id": "31-4825097"
+    },
+    "ship_to": "5500 Wrenfield Road, Columbus, OH 43215, USA",
+    "requested_delivery_date": "2026-06-08",
+    "line_items": [
+      {
+        "sku": "CBL-CAT6-3M",
+        "description": "Cat6 patch cable, 3 m",
+        "quantity": "8",
+        "unit_price": "4.18",
+        "line_total": "33.44"
+      },
+      {
+        "sku": "ENV-C4-250",
+        "description": "C4 envelopes, self-seal, box of 250",
+        "quantity": "10",
+        "unit_price": "23.46",
+        "line_total": "234.60"
+      },
+      {
+        "sku": "CAM-1080",
+        "description": "Webcam, 1080p, with privacy shutter",
+        "quantity": "8",
+        "unit_price": "52.00",
+        "line_total": "416.00"
+      },
+      {
+        "sku": "CHR-TASK-MESH",
+        "description": "Task chair, mesh back, adjustable arms",
+        "quantity": "8",
+        "unit_price": "191.08",
+        "line_total": "1528.64"
+      },
+      {
+        "sku": "PWR-6W-SURGE",
+        "description": "Power strip, 6-way, surge protected",
+        "quantity": "6",
+        "unit_price": "22.04",
+        "line_total": "132.24"
+      }
+    ],
+    "subtotal": "2344.92",
+    "tax_amount": "170.01",
+    "total": "2514.93"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

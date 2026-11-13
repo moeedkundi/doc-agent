@@ -1,0 +1,59 @@
+{
+  "doc_id": "inv_003",
+  "doc_type": "invoice",
+  "file": "samples/inv_003.pdf",
+  "split": "sample",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "BLS-2026-2422",
+    "invoice_date": "2026-08-29",
+    "due_date": "2026-09-13",
+    "currency": "GBP",
+    "po_number": "PO-85044",
+    "seller": {
+      "name": "Brightledger Stationers Ltd",
+      "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom",
+      "tax_id": "GB284719306"
+    },
+    "buyer": {
+      "name": "Silverbirch Academy Trust",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "Multipurpose paper Letter 20lb - case/10",
+        "quantity": "24",
+        "unit_price": "41.07",
+        "line_total": "985.68"
+      },
+      {
+        "sku": null,
+        "description": "Whiteboard magnetic 1200x900mm",
+        "quantity": "40",
+        "unit_price": "98.08",
+        "line_total": "3923.20"
+      }
+    ],
+    "subtotal": "4908.88",
+    "tax_amount": "981.78",
+    "total": "5890.66"
+  },
+  "references_po": "po_003",
+  "injected": [
+    {
+      "kind": "price_drift",
+      "detail": "unit price 93.41 -> 98.08 (+5.0%, tolerance 2.0%)",
+      "line": 1
+    }
+  ],
+  "expected_match": {
+    "status": "mismatch",
+    "rules": [
+      "unit_price_out_of_tolerance",
+      "total_exceeds_remaining"
+    ]
+  }
+}

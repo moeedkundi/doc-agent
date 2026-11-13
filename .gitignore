@@ -15,7 +15,6 @@ dist/
 
 # Data
 /data/
-evals/dataset/**/*.pdf
 
 # Node / web
 node_modules/
@@ -27,5 +26,3 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Generator layout previews
-evals/dataset/_preview/

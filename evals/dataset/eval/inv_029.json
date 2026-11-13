@@ -1,0 +1,64 @@
+{
+  "doc_id": "inv_029",
+  "doc_type": "invoice",
+  "file": "eval/inv_029.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "invoice_number": "BLS-2026-1720",
+    "invoice_date": "2026-03-02",
+    "due_date": "2026-04-16",
+    "currency": "GBP",
+    "po_number": "PO-15978",
+    "seller": {
+      "name": "Brightledger Stationers Ltd",
+      "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom",
+      "tax_id": "GB284719306"
+    },
+    "buyer": {
+      "name": "Tidewater Architects LLP",
+      "address": "9 Chandlers Wharf, Southampton SO14 3QB, United Kingdom"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "HDMI lead 2.0m",
+        "quantity": "24",
+        "unit_price": "5.70",
+        "line_total": "136.80"
+      },
+      {
+        "sku": null,
+        "description": "Colour toner set C/M/Y",
+        "quantity": "6",
+        "unit_price": "176.84",
+        "line_total": "1061.04"
+      },
+      {
+        "sku": null,
+        "description": "Whiteboard magnetic 1200x900mm",
+        "quantity": "20",
+        "unit_price": "90.98",
+        "line_total": "1819.60"
+      },
+      {
+        "sku": null,
+        "description": "Highlighter marker asst. 6-pk",
+        "quantity": "8",
+        "unit_price": "3.80",
+        "line_total": "30.40"
+      }
+    ],
+    "subtotal": "3047.84",
+    "tax_amount": "609.57",
+    "total": "3657.41"
+  },
+  "references_po": "po_029",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

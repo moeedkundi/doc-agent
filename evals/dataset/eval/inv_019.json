@@ -1,0 +1,54 @@
+{
+  "doc_id": "inv_019",
+  "doc_type": "invoice",
+  "file": "eval/inv_019.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV000473",
+    "invoice_date": "2026-09-26",
+    "due_date": "2026-10-26",
+    "currency": "EUR",
+    "po_number": null,
+    "seller": {
+      "name": "Lindqvist & Moor Office B.V.",
+      "address": "Zeeltjesweg 210, 5611 HV Eindhoven, Netherlands",
+      "tax_id": "NL412967380B01"
+    },
+    "buyer": {
+      "name": "Graafschap Accountants B.V.",
+      "address": "Stationsplein 14, 7511 JD Enschede, Netherlands"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "7-in-1 USB-C hub",
+        "quantity": "30",
+        "unit_price": "36.19",
+        "line_total": "1085.70"
+      },
+      {
+        "sku": null,
+        "description": "Lockable 3-drawer filing cabinet",
+        "quantity": "20",
+        "unit_price": "233.29",
+        "line_total": "4665.80"
+      },
+      {
+        "sku": null,
+        "description": "A3 laminating machine",
+        "quantity": "10",
+        "unit_price": "63.33",
+        "line_total": "633.30"
+      }
+    ],
+    "subtotal": "6384.80",
+    "tax_amount": "1340.81",
+    "total": "7725.61"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}

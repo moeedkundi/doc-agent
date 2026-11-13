@@ -1,0 +1,62 @@
+{
+  "doc_id": "po_001",
+  "doc_type": "purchase_order",
+  "file": "samples/po_001.pdf",
+  "split": "sample",
+  "template": "classic",
+  "scanned": false,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-27656",
+    "po_date": "2026-06-09",
+    "currency": "EUR",
+    "payment_terms": "Net 60",
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "vendor": {
+      "name": "Rotkehlchen Bürobedarf GmbH",
+      "address": "Am Kornspeicher 9, 28195 Bremen, Germany",
+      "tax_id": "DE274915038"
+    },
+    "ship_to": "Industriestraße 72, 70565 Stuttgart, Germany",
+    "requested_delivery_date": "2026-06-24",
+    "line_items": [
+      {
+        "sku": "PWR-6W-SURGE",
+        "description": "Power strip, 6-way, surge protected",
+        "quantity": "1",
+        "unit_price": "20.04",
+        "line_total": "20.04"
+      },
+      {
+        "sku": "CAM-1080",
+        "description": "Webcam, 1080p, with privacy shutter",
+        "quantity": "20",
+        "unit_price": "48.09",
+        "line_total": "961.80"
+      },
+      {
+        "sku": "CHR-TASK-MESH",
+        "description": "Task chair, mesh back, adjustable arms",
+        "quantity": "30",
+        "unit_price": "178.75",
+        "line_total": "5362.50"
+      },
+      {
+        "sku": "FIL-LAF-10",
+        "description": "Lever arch files, A4, pack of 10",
+        "quantity": "5",
+        "unit_price": "27.38",
+        "line_total": "136.90"
+      }
+    ],
+    "subtotal": "6481.24",
+    "tax_amount": "1231.44",
+    "total": "7712.68"
+  },
+  "references_po": null,
+  "injected": [],
+  "expected_match": null
+}
