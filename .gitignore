@@ -26,3 +26,6 @@ web/.next/
 Thumbs.db
 .idea/
 .vscode/
+
+# Generator layout previews
+evals/dataset/_preview/

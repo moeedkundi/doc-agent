@@ -1,0 +1,290 @@
+{
+  "$defs": {
+    "Buyer": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Address"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        }
+      },
+      "required": [
+        "name",
+        "address"
+      ],
+      "title": "Buyer",
+      "type": "object"
+    },
+    "InvoiceLine": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Description"
+        },
+        "line_total": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Line Total"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "sku": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sku"
+        },
+        "unit_price": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit Price"
+        }
+      },
+      "required": [
+        "sku",
+        "description",
+        "quantity",
+        "unit_price",
+        "line_total"
+      ],
+      "title": "InvoiceLine",
+      "type": "object"
+    },
+    "Seller": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Address"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "tax_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tax Id"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "tax_id"
+      ],
+      "title": "Seller",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "buyer": {
+      "$ref": "#/$defs/Buyer"
+    },
+    "currency": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Currency"
+    },
+    "due_date": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Due Date"
+    },
+    "invoice_date": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Invoice Date"
+    },
+    "invoice_number": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Invoice Number"
+    },
+    "line_items": {
+      "items": {
+        "$ref": "#/$defs/InvoiceLine"
+      },
+      "title": "Line Items",
+      "type": "array"
+    },
+    "po_number": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Po Number"
+    },
+    "seller": {
+      "$ref": "#/$defs/Seller"
+    },
+    "subtotal": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Subtotal"
+    },
+    "tax_amount": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Tax Amount"
+    },
+    "total": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Total"
+    }
+  },
+  "required": [
+    "invoice_number",
+    "invoice_date",
+    "due_date",
+    "currency",
+    "po_number",
+    "seller",
+    "buyer",
+    "line_items",
+    "subtotal",
+    "tax_amount",
+    "total"
+  ],
+  "title": "InvoiceRecord",
+  "type": "object"
+}

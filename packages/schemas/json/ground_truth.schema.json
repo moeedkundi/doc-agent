@@ -1,0 +1,728 @@
+{
+  "$defs": {
+    "Buyer": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Address"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        }
+      },
+      "required": [
+        "name",
+        "address"
+      ],
+      "title": "Buyer",
+      "type": "object"
+    },
+    "ExpectedMatch": {
+      "additionalProperties": false,
+      "properties": {
+        "rules": {
+          "items": {
+            "enum": [
+              "vendor_mismatch",
+              "currency_mismatch",
+              "line_not_on_po",
+              "qty_exceeds_remaining",
+              "unit_price_out_of_tolerance",
+              "total_exceeds_remaining",
+              "po_not_found"
+            ],
+            "type": "string"
+          },
+          "title": "Rules",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "matched",
+            "partial",
+            "mismatch",
+            "po_not_found"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "rules"
+      ],
+      "title": "ExpectedMatch",
+      "type": "object"
+    },
+    "Injection": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "price_drift",
+            "over_billed_qty",
+            "wrong_vendor",
+            "missing_po",
+            "arithmetic_total",
+            "arithmetic_line"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "line": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line"
+        }
+      },
+      "required": [
+        "kind",
+        "detail"
+      ],
+      "title": "Injection",
+      "type": "object"
+    },
+    "InvoiceLine": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Description"
+        },
+        "line_total": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Line Total"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "sku": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sku"
+        },
+        "unit_price": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit Price"
+        }
+      },
+      "required": [
+        "sku",
+        "description",
+        "quantity",
+        "unit_price",
+        "line_total"
+      ],
+      "title": "InvoiceLine",
+      "type": "object"
+    },
+    "InvoiceRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "buyer": {
+          "$ref": "#/$defs/Buyer"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "due_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Due Date"
+        },
+        "invoice_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Invoice Date"
+        },
+        "invoice_number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Invoice Number"
+        },
+        "line_items": {
+          "items": {
+            "$ref": "#/$defs/InvoiceLine"
+          },
+          "title": "Line Items",
+          "type": "array"
+        },
+        "po_number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Po Number"
+        },
+        "seller": {
+          "$ref": "#/$defs/Seller"
+        },
+        "subtotal": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Subtotal"
+        },
+        "tax_amount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tax Amount"
+        },
+        "total": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Total"
+        }
+      },
+      "required": [
+        "invoice_number",
+        "invoice_date",
+        "due_date",
+        "currency",
+        "po_number",
+        "seller",
+        "buyer",
+        "line_items",
+        "subtotal",
+        "tax_amount",
+        "total"
+      ],
+      "title": "InvoiceRecord",
+      "type": "object"
+    },
+    "PurchaseOrderLine": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Description"
+        },
+        "line_total": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Line Total"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "sku": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sku"
+        },
+        "unit_price": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit Price"
+        }
+      },
+      "required": [
+        "sku",
+        "description",
+        "quantity",
+        "unit_price",
+        "line_total"
+      ],
+      "title": "PurchaseOrderLine",
+      "type": "object"
+    },
+    "PurchaseOrderRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "buyer": {
+          "$ref": "#/$defs/Buyer"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "line_items": {
+          "items": {
+            "$ref": "#/$defs/PurchaseOrderLine"
+          },
+          "title": "Line Items",
+          "type": "array"
+        },
+        "payment_terms": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Payment Terms"
+        },
+        "po_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Po Date"
+        },
+        "po_number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Po Number"
+        },
+        "requested_delivery_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Requested Delivery Date"
+        },
+        "ship_to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ship To"
+        },
+        "subtotal": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Subtotal"
+        },
+        "tax_amount": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tax Amount"
+        },
+        "total": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Total"
+        },
+        "vendor": {
+          "$ref": "#/$defs/Vendor"
+        }
+      },
+      "required": [
+        "po_number",
+        "po_date",
+        "currency",
+        "payment_terms",
+        "buyer",
+        "vendor",
+        "ship_to",
+        "requested_delivery_date",
+        "line_items",
+        "subtotal",
+        "tax_amount",
+        "total"
+      ],
+      "title": "PurchaseOrderRecord",
+      "type": "object"
+    },
+    "Seller": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Address"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "tax_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tax Id"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "tax_id"
+      ],
+      "title": "Seller",
+      "type": "object"
+    },
+    "Vendor": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Address"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "tax_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tax Id"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "tax_id"
+      ],
+      "title": "Vendor",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "doc_id": {
+      "title": "Doc Id",
+      "type": "string"
+    },
+    "doc_type": {
+      "enum": [
+        "invoice",
+        "purchase_order"
+      ],
+      "title": "Doc Type",
+      "type": "string"
+    },
+    "expected_match": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpectedMatch"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "file": {
+      "title": "File",
+      "type": "string"
+    },
+    "injected": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Injection"
+      },
+      "title": "Injected",
+      "type": "array"
+    },
+    "pages": {
+      "title": "Pages",
+      "type": "integer"
+    },
+    "record": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/InvoiceRecord"
+        },
+        {
+          "$ref": "#/$defs/PurchaseOrderRecord"
+        }
+      ],
+      "title": "Record"
+    },
+    "references_po": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "References Po"
+    },
+    "scanned": {
+      "title": "Scanned",
+      "type": "boolean"
+    },
+    "split": {
+      "enum": [
+        "sample",
+        "eval"
+      ],
+      "title": "Split",
+      "type": "string"
+    },
+    "template": {
+      "title": "Template",
+      "type": "string"
+    }
+  },
+  "required": [
+    "doc_id",
+    "doc_type",
+    "file",
+    "split",
+    "template",
+    "scanned",
+    "pages",
+    "record"
+  ],
+  "title": "GroundTruth",
+  "type": "object"
+}

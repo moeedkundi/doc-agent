@@ -11,6 +11,20 @@ permissions:
 jobs:
   python:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: docagent
+          POSTGRES_PASSWORD: docagent
+          POSTGRES_DB: docagent
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U docagent -d docagent"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://docagent:docagent@127.0.0.1:5432/docagent
+      REQUIRE_DB_TESTS: "1"
     steps:
       - uses: actions/checkout@v4
 

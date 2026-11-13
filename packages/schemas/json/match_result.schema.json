@@ -1,0 +1,82 @@
+{
+  "$defs": {
+    "MatchIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "invoice_line": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Invoice Line"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "po_line": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Po Line"
+        },
+        "rule": {
+          "enum": [
+            "vendor_mismatch",
+            "currency_mismatch",
+            "line_not_on_po",
+            "qty_exceeds_remaining",
+            "unit_price_out_of_tolerance",
+            "total_exceeds_remaining",
+            "po_not_found"
+          ],
+          "title": "Rule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule",
+        "message"
+      ],
+      "title": "MatchIssue",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/MatchIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "matched",
+        "partial",
+        "mismatch",
+        "po_not_found"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "issues"
+  ],
+  "title": "MatchResult",
+  "type": "object"
+}

@@ -59,13 +59,14 @@ Working name: `docagent` (rename freely). Public URL target: `demo.meetmoeed.com
 | PDF handling | `pypdfium2` (render pages to PNG), `pypdf` (text layer) | |
 | API | FastAPI + SSE (`sse-starlette`) | |
 | DB | Postgres 16 (app data, traces, checkpoints) | Row-level security per session |
+| DB driver | `psycopg` 3 (`psycopg[binary]`) | also what the LangGraph Postgres checkpointer uses; own plain-SQL migration runner in `packages/db` |
 | SQL safety | `sqlglot` | parse/validate SELECT-only |
 | Line matching | `rapidfuzz` | fuzzy description match for PO ↔ invoice lines |
 | Rate limiting | `slowapi` (or Redis-backed limiter if multi-instance) | |
 | Frontend | Next.js (App Router), TypeScript, Tailwind, shadcn/ui | |
 | Tests | pytest, pytest-asyncio, respx (HTTP mocks) | |
 | Evals | own runner in `evals/` | JSON report + markdown summary |
-| Synthetic data | `reportlab` + `Faker` | generates PDFs with ground-truth JSON |
+| Synthetic data | `reportlab` + `Faker` + `Pillow` | generates PDFs with ground-truth JSON; Pillow for the scanned-look degradation |
 | CI | GitHub Actions | lint, types, tests, smoke eval |
 | Deploy | Docker; backend on Fly.io / Railway; Postgres on Neon/Supabase; web on Vercel | |
 
@@ -129,7 +130,7 @@ class Field[T](BaseModel):
 **Invoice**
 - `invoice_number`, `invoice_date`, `due_date`, `currency` (ISO 4217)
 - `seller`: name, address, tax_id · `buyer`: name, address
-- `line_items[]`: description, quantity, unit_price, line_total
+- `line_items[]`: sku (optional), description, quantity, unit_price, line_total
 - `subtotal`, `tax_amount`, `total`
 
   plus `po_number` (optional — links the invoice to a purchase order)
@@ -165,6 +166,10 @@ look up previously saved data, not just read one document.
 `session_id = current_setting('app.session_id')::uuid`. The query role (`docagent_reader`) has
 SELECT only on the document tables, no access to `sessions`, `trace_events`, `llm_ledger`.
 A cleanup job deletes sessions older than 24h (cascade).
+
+Writes go through a separate `docagent_app` role, also under RLS (own session only, never the
+demo session). `trace_events`, `review_actions` and `llm_ledger` carry `session_id` too;
+`llm_ledger` is not under RLS because the global daily budget needs cross-session totals.
 
 Sample documents are pre-loaded into a shared read-only "demo" session that every new session
 can also see (RLS policy allows `session_id = <demo uuid>` too).
@@ -356,8 +361,8 @@ Each phase ends with "Done when" checks. Tick boxes as you go.
 **Done when:** `docker compose up` starts Postgres; `uv run pytest` passes; CI is green.
 
 ### Phase 1 — Schemas, DB, synthetic data
-- [ ] Pydantic schemas (§5.1) with JSON-schema export
-- [ ] SQL migrations (§5.2) incl. RLS policies, reader role, cleanup function
+- [x] Pydantic schemas (§5.1) with JSON-schema export
+- [x] SQL migrations (§5.2) incl. RLS policies, reader role, cleanup function
 - [ ] `evals/generator`: produce N POs + N invoices (most referencing a generated PO; ~30% with
       injected mismatches: price drift, over-billed qty, wrong vendor, missing PO) as PDFs with varied layouts (≥ 3
       templates each), some scanned-look (rotation/noise), plus ground-truth JSON; seeded & reproducible
@@ -434,8 +439,9 @@ demo survives budget exhaustion via replay mode.
 
 ```
 POSTGRES_HOST_PORT=5433
-DATABASE_URL=postgresql://docagent:docagent@localhost:5433/docagent
-DATABASE_READER_URL=postgresql://docagent_reader:...@localhost:5433/docagent
+DATABASE_URL=postgresql://docagent:docagent@127.0.0.1:5433/docagent
+DATABASE_APP_URL=postgresql://docagent_app:...@127.0.0.1:5433/docagent
+DATABASE_READER_URL=postgresql://docagent_reader:...@127.0.0.1:5433/docagent
 GEMINI_API_KEY=
 STRONG_MODEL_API_KEY=            # if the strong tier is a different provider
 MCP_SHARED_SECRET=
@@ -473,3 +479,9 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | Not-yet-built compose services live in a `todo` profile | Plain `docker compose up` stays clean until each service exists; remove the profile as each phase lands |
 | 2026-11-14 | `ruff format` excludes `*.md` | ruff ≥ 0.17 formats Markdown code blocks and would rewrite SPEC.md examples |
 | 2026-11-14 | `config/models.yaml` holds placeholder model IDs until Phase 2 | IDs/prices must be taken from official provider docs when the gateway is built |
+| 2026-11-14 | Added `psycopg` 3 and `Pillow` to §3 (approved) | DB driver for migrations/RLS tests and later the checkpointer; Pillow for scanned-look docs |
+| 2026-11-14 | Invoice lines have an optional `sku` | §6.2 matching is "by SKU, else fuzzy description", which needs SKUs on some invoices |
+| 2026-11-14 | Two model families: `records.py` (plain, saved/ground truth) and `extracted.py` (`Field`-wrapped, floats) with `to_record()` | Keeps confidence/provenance out of the DB and ground truth; floats are what LLMs emit |
+| 2026-11-14 | Added `docagent_app` write role under RLS; `session_id` on `trace_events`, `review_actions`, `llm_ledger` | Writes are isolated too, not just reads; enables per-session budget queries |
+| 2026-11-14 | Migration runner + session helper live in a new workspace member `packages/db` (`docagent_db`) | Shared by api, sqlstore and tests; role passwords set from DATABASE_*_URL, never in SQL |
+| 2026-11-14 | Local DSNs use `127.0.0.1`, not `localhost` | On Windows `localhost` tries `::1` first and stalls until timeout |

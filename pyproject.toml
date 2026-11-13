@@ -12,6 +12,11 @@ dependencies = [
     "docagent-mcp-reference",
     "docagent-agent",
     "docagent-api",
+    "reportlab>=5.1",
+    "faker>=40",
+    "pillow>=13",
+    "pypdfium2>=5.15",
+    "docagent-db",
 ]
 
 [dependency-groups]
@@ -38,6 +43,7 @@ docagent-mcp-sqlstore = { workspace = true }
 docagent-mcp-reference = { workspace = true }
 docagent-agent = { workspace = true }
 docagent-api = { workspace = true }
+docagent-db = { workspace = true }
 
 [tool.ruff]
 target-version = "py312"
@@ -50,19 +56,24 @@ exclude = ["*.md"]
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "S", "ASYNC"]
 
+[tool.ruff.lint.isort]
+known-first-party = ["docagent_*", "evals"]
+
 [tool.ruff.lint.per-file-ignores]
 "**/tests/**" = ["S101"]
+"evals/generator/**" = ["S311"]  # seeded PRNG is the point: reproducible data
 
 [tool.pyright]
 pythonVersion = "3.12"
 typeCheckingMode = "strict"
-include = ["packages", "servers", "agent", "api"]
+include = ["packages", "servers", "agent", "api", "evals"]
 exclude = ["**/.venv", "web", "evals/dataset", "**/__pycache__"]
 venvPath = "."
 venv = ".venv"
 
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib", "-ra"]
-testpaths = ["packages", "servers", "agent", "api"]
+testpaths = ["packages", "servers", "agent", "api", "evals"]
+pythonpath = ["."]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

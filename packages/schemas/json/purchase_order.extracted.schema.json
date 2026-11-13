@@ -1,0 +1,287 @@
+{
+  "$defs": {
+    "ExtractedBuyer": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "name": {
+          "$ref": "#/$defs/Field_str_"
+        }
+      },
+      "required": [
+        "name",
+        "address"
+      ],
+      "title": "ExtractedBuyer",
+      "type": "object"
+    },
+    "ExtractedPurchaseOrderLine": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "line_total": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "quantity": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "sku": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "unit_price": {
+          "$ref": "#/$defs/Field_float_"
+        }
+      },
+      "required": [
+        "sku",
+        "description",
+        "quantity",
+        "unit_price",
+        "line_total"
+      ],
+      "title": "ExtractedPurchaseOrderLine",
+      "type": "object"
+    },
+    "ExtractedVendor": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "name": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "tax_id": {
+          "$ref": "#/$defs/Field_str_"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "tax_id"
+      ],
+      "title": "ExtractedVendor",
+      "type": "object"
+    },
+    "Field_date_": {
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        },
+        "source_page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "confidence"
+      ],
+      "title": "Field[date]",
+      "type": "object"
+    },
+    "Field_float_": {
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        },
+        "source_page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "confidence"
+      ],
+      "title": "Field[float]",
+      "type": "object"
+    },
+    "Field_str_": {
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        },
+        "source_page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "confidence"
+      ],
+      "title": "Field[str]",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "buyer": {
+      "$ref": "#/$defs/ExtractedBuyer"
+    },
+    "currency": {
+      "$ref": "#/$defs/Field_str_"
+    },
+    "line_items": {
+      "items": {
+        "$ref": "#/$defs/ExtractedPurchaseOrderLine"
+      },
+      "title": "Line Items",
+      "type": "array"
+    },
+    "payment_terms": {
+      "$ref": "#/$defs/Field_str_"
+    },
+    "po_date": {
+      "$ref": "#/$defs/Field_date_"
+    },
+    "po_number": {
+      "$ref": "#/$defs/Field_str_"
+    },
+    "requested_delivery_date": {
+      "$ref": "#/$defs/Field_date_"
+    },
+    "ship_to": {
+      "$ref": "#/$defs/Field_str_"
+    },
+    "subtotal": {
+      "$ref": "#/$defs/Field_float_"
+    },
+    "tax_amount": {
+      "$ref": "#/$defs/Field_float_"
+    },
+    "total": {
+      "$ref": "#/$defs/Field_float_"
+    },
+    "vendor": {
+      "$ref": "#/$defs/ExtractedVendor"
+    }
+  },
+  "required": [
+    "po_number",
+    "po_date",
+    "currency",
+    "payment_terms",
+    "buyer",
+    "vendor",
+    "ship_to",
+    "requested_delivery_date",
+    "line_items",
+    "subtotal",
+    "tax_amount",
+    "total"
+  ],
+  "title": "PurchaseOrder",
+  "type": "object"
+}
