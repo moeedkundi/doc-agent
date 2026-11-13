@@ -13,6 +13,12 @@ from docagent_schemas.extracted import Invoice, PurchaseOrder
 from docagent_schemas.ground_truth import GroundTruth
 from docagent_schemas.matching import MatchResult
 from docagent_schemas.records import InvoiceRecord, PurchaseOrderRecord
+from docagent_schemas.tools import (
+    ClassificationResult,
+    ExtractionResult,
+    ReextractResult,
+    ValidationResult,
+)
 
 EXPORTED: dict[str, type[BaseModel]] = {
     "invoice.extracted": Invoice,
@@ -21,6 +27,10 @@ EXPORTED: dict[str, type[BaseModel]] = {
     "purchase_order.record": PurchaseOrderRecord,
     "match_result": MatchResult,
     "ground_truth": GroundTruth,
+    "classification_result": ClassificationResult,
+    "extraction_result": ExtractionResult,
+    "reextract_result": ReextractResult,
+    "validation_result": ValidationResult,
 }
 
 DEFAULT_DIR = Path(__file__).resolve().parents[2] / "json"

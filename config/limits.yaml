@@ -20,10 +20,12 @@ extraction:
 validation:
   review_confidence_threshold: 0.80
   amount_tolerance: 0.01    # arithmetic checks (currency units)
+  po_number_pattern: '^PO-\d{4,6}$'
 
 po_matching:
   unit_price_tolerance_pct: 2.0
-  description_match_min_score: 85   # rapidfuzz score 0..100
+  description_match_min_score: 85   # rapidfuzz score 0..100: confident line pairing
+  description_match_fallback_score: 60  # second pass for lines still unpaired
 
 sql:
   max_rows: 200

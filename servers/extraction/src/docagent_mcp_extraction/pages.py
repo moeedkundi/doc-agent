@@ -39,3 +39,15 @@ def render_pages(pdf_bytes: bytes, dpi: int = DEFAULT_DPI) -> list[PageContent]:
         return pages
     finally:
         doc.close()
+
+
+def page_count(pdf_bytes: bytes) -> int:
+    return len(PdfReader(io.BytesIO(pdf_bytes)).pages)
+
+
+def render_image(data: bytes) -> list[PageContent]:
+    """A PNG/JPEG upload is a one-page document with no text layer (re-encoded as PNG)."""
+    with Image.open(io.BytesIO(data)) as img:
+        buf = io.BytesIO()
+        img.convert("RGB").save(buf, format="PNG", optimize=True)
+    return [PageContent(number=1, png=buf.getvalue(), text="")]

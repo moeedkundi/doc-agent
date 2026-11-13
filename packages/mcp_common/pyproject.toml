@@ -1,0 +1,14 @@
+[project]
+name = "docagent-mcp-common"
+version = "0.1.0"
+description = "Shared plumbing for DocAgent's MCP servers: auth, serving, errors, config."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "mcp>=2.3",
+    "pyyaml>=6.0",
+    "uvicorn>=0.54",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.0,<0.9.0"]
+build-backend = "uv_build"

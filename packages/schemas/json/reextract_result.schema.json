@@ -1,0 +1,147 @@
+{
+  "$defs": {
+    "Field_Union_date__float__str__": {
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        },
+        "source_page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "confidence"
+      ],
+      "title": "Field[Union[date, float, str]]",
+      "type": "object"
+    },
+    "LlmUsage": {
+      "additionalProperties": false,
+      "description": "What one tool call spent through the gateway (the agent logs it as a trace event).",
+      "properties": {
+        "calls": {
+          "title": "Calls",
+          "type": "integer"
+        },
+        "cost_usd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Cost Usd"
+        },
+        "latency_ms": {
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "tier": {
+          "enum": [
+            "default",
+            "strong"
+          ],
+          "title": "Tier",
+          "type": "string"
+        },
+        "tokens_in": {
+          "title": "Tokens In",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "title": "Tokens Out",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tier",
+        "model",
+        "calls",
+        "tokens_in",
+        "tokens_out",
+        "cost_usd",
+        "latency_ms"
+      ],
+      "title": "LlmUsage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "doc_type": {
+      "enum": [
+        "invoice",
+        "purchase_order"
+      ],
+      "title": "Doc Type",
+      "type": "string"
+    },
+    "fields": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Field_Union_date__float__str__"
+      },
+      "title": "Fields",
+      "type": "object"
+    },
+    "usage": {
+      "$ref": "#/$defs/LlmUsage"
+    }
+  },
+  "required": [
+    "doc_type",
+    "fields",
+    "usage"
+  ],
+  "title": "ReextractResult",
+  "type": "object"
+}

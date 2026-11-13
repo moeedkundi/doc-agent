@@ -1,5 +1,39 @@
 {
   "$defs": {
+    "LineMatch": {
+      "additionalProperties": false,
+      "description": "How one invoice line was paired with a PO line (drives the UI's side-by-side diff).",
+      "properties": {
+        "invoice_line": {
+          "title": "Invoice Line",
+          "type": "integer"
+        },
+        "method": {
+          "enum": [
+            "sku",
+            "description"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "po_line": {
+          "title": "Po Line",
+          "type": "integer"
+        },
+        "score": {
+          "title": "Score",
+          "type": "number"
+        }
+      },
+      "required": [
+        "invoice_line",
+        "po_line",
+        "method",
+        "score"
+      ],
+      "title": "LineMatch",
+      "type": "object"
+    },
     "MatchIssue": {
       "additionalProperties": false,
       "properties": {
@@ -60,6 +94,14 @@
         "$ref": "#/$defs/MatchIssue"
       },
       "title": "Issues",
+      "type": "array"
+    },
+    "line_matches": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/LineMatch"
+      },
+      "title": "Line Matches",
       "type": "array"
     },
     "status": {

@@ -179,17 +179,20 @@ can also see (RLS policy allows `session_id = <demo uuid>` too).
 
 ## 6. MCP servers
 
-All use FastMCP, Streamable HTTP, typed inputs/outputs from `packages/schemas`, and return
-structured errors. Each is a separate process/container with its own port; only the agent talks
-to them. Each tool logs a trace event via a shared helper (or the agent logs around the call —
-pick one approach and keep it consistent).
+All use the MCP SDK's `MCPServer` (v2's name for FastMCP) over Streamable HTTP (stateless,
+JSON responses), typed inputs/outputs from `packages/schemas`, and return structured errors
+(`isError` with a JSON `{code, message}` body). Shared plumbing lives in `packages/mcp_common`:
+the `x-mcp-secret` header check, binding to the port in each server's `MCP_*_URL`, and
+DNS-rebinding protection. Each is a separate process/container with its own port; only the
+agent talks to them. **The agent logs trace events around each call**; tools that spend LLM
+tokens return a `usage` block (tier, model, tokens, cost, latency) for it to log.
 
 ### 6.1 `extraction` server
 | Tool | Input | Output |
 |---|---|---|
-| `classify_document` | `document_id` | `{doc_type, confidence, reason}` |
-| `extract_fields` | `document_id, doc_type, model_tier="default", pages?` | `Invoice` or `PurchaseOrder` with `Field` wrappers |
-| `reextract_fields` | `document_id, doc_type, field_paths[], model_tier="strong"` | partial object for those fields only |
+| `classify_document` | `document_id, session_id?, run_id?` | `{doc_type, confidence, reason, usage}` |
+| `extract_fields` | `document_id, doc_type, model_tier="default", pages?, session_id?, run_id?` | `{doc_type, record: Invoice\|PurchaseOrder (Field-wrapped), pages, usage}` |
+| `reextract_fields` | `document_id, doc_type, field_paths[], model_tier="strong", session_id?, run_id?` | `{doc_type, fields: {path: Field}, usage}`, only those paths |
 
 - Renders pages to PNG (pypdfium2, 150 DPI), sends images + text layer (if any) to the gateway.
 - Uses provider structured output / JSON schema mode; on parse failure, one repair attempt.
@@ -198,9 +201,9 @@ pick one approach and keep it consistent).
 ### 6.2 `validation` server
 | Tool | Input | Output |
 |---|---|---|
-| `validate_record` | `doc_type, record` | `{valid, issues[]: {field_path, severity, rule, message}}` |
+| `validate_record` | `doc_type, record` (extraction output or plain record) | `{valid, issues[]: {field_path, severity: error\|review\|warning, rule, message}}` |
 | `list_rules` | `doc_type` | rule catalogue (shown in UI) |
-| `match_invoice_to_po` | `invoice, purchase_order, tolerances?` | `{status, issues[]}` (status as in §5.2) |
+| `match_invoice_to_po` | `invoice, purchase_order, prior_invoices?, tolerances?` | `{status, issues[], line_matches[]}` (status as in §5.2; `po_not_found` is decided by the caller's lookup) |
 
 `match_invoice_to_po` (two-way match, deterministic): vendor name/tax_id agree; currency agrees;
 each invoice line maps to a PO line (by SKU, else fuzzy description match via `rapidfuzz`);
@@ -391,11 +394,12 @@ proves session A cannot read session B's rows.
 row shows correct cost; budget test raises `BudgetExceeded`.
 
 ### Phase 3 — MCP servers
-- [ ] `extraction` (classify, extract, reextract)
-- [ ] `validation` (all rules in §6.2 + `list_rules`)
+- [x] `extraction` (classify, extract, reextract)
+- [x] `validation` (all rules in §6.2 + `list_rules`)
 - [ ] `sqlstore` (get_schema, run_select with full safety pipeline, save_record)
 - [ ] `reference` (static datasets)
 - [ ] Per-server README; each server runnable alone and testable with MCP Inspector
+      (done for extraction + validation; sqlstore + reference in part B)
 **Done when:** each server's tests pass; sqlglot tests reject INSERT/UPDATE/DELETE/DDL, multi-
 statement, non-allowlisted tables; the MCP Inspector lists all tools for each server.
 
@@ -464,7 +468,8 @@ MCP_SQLSTORE_URL=http://sqlstore:8103/mcp
 MCP_REFERENCE_URL=http://reference:8104/mcp
 DAILY_BUDGET_USD=3.00
 SESSION_BUDGET_USD=0.25
-UPLOAD_DIR=/data/uploads
+UPLOAD_DIR=/data/uploads          # compose; data/uploads for local runs
+MCP_BIND_HOST=127.0.0.1          # 0.0.0.0 only on the private compose network
 TURNSTILE_SECRET=                # optional
 ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 ```
@@ -513,3 +518,12 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | Real-API tests are `@pytest.mark.integration`, skipped without `GEMINI_API_KEY`, deselected in CI | Unit tests never hit the network; CI never spends money |
 | 2026-11-14 | Added PyYAML to §3 (approved) | Parse config/*.yaml; already a LiteLLM dependency |
 | 2026-11-14 | Page rendering + extraction prompt live in `servers/extraction` already | Phase 2's end-to-end check needs them; Phase 3 wraps them as MCP tools |
+| 2026-11-14 | MCP SDK 2.3: `MCPServer` (FastMCP was renamed in v2), stateless Streamable HTTP with JSON responses, tool errors as `ToolError` with a JSON `{code, message}` body | Checked against the installed SDK's source and the v2 docs; stateless suits internal request/response tools and horizontal scaling |
+| 2026-11-14 | Shared secret travels in an `x-mcp-secret` header, checked by a pure-ASGI middleware with a constant-time compare; DNS-rebinding allowlist = URL host + localhost | §8.2 asks for a shared secret header; the middleware wraps the SDK app so lifespan still works |
+| 2026-11-14 | Servers take port/path from their `MCP_*_URL` and bind `MCP_BIND_HOST` (default 127.0.0.1) | One source of truth for where a server lives; never bind publicly by default |
+| 2026-11-14 | Trace events are logged by the agent around each call; LLM tools return a `usage` block | §6 asked to pick one approach; keeps servers free of trace-store dependencies |
+| 2026-11-14 | Extraction tools take optional `session_id`/`run_id` | Per-session budget and ledger attribution happen in the gateway, inside the server |
+| 2026-11-14 | `match_invoice_to_po` takes `prior_invoices` and returns `line_matches`; validation severities are error/review/warning | Remaining qty/value needs earlier invoices; line pairing drives the UI diff; review = human, warning = informational |
+| 2026-11-14 | Line pairing: SKU, then rapidfuzz token-set description match at 85, then a fallback pass at 60 (`po_matching.description_match_fallback_score`) | Vendor wording differs a lot ("Colour toner set C/M/Y" vs "Toner cartridge set, cyan/magenta/yellow"); verified 107/107 pairings correct on the dataset |
+| 2026-11-14 | New workspace package `packages/mcp_common` | Auth middleware, serving, errors and limits loading shared by all four servers |
+| 2026-11-14 | `python -m servers.<name>` works from the repo root via a small `__main__.py` shim per server folder | Matches the documented run command; canonical module is `docagent_mcp_<name>` |

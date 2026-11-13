@@ -5,7 +5,9 @@ description = "MCP server: document classification and field extraction."
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "docagent-gateway",
+    "docagent-mcp-common",
     "docagent-schemas",
+    "mcp>=2.3",
     "pillow>=13",
     "pypdf>=7.1",
     "pypdfium2>=5.15",
@@ -18,3 +20,4 @@ build-backend = "uv_build"
 [tool.uv.sources]
 docagent-schemas = { workspace = true }
 docagent-gateway = { workspace = true }
+docagent-mcp-common = { workspace = true }

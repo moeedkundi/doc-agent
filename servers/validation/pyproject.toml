@@ -3,8 +3,17 @@ name = "docagent-mcp-validation"
 version = "0.1.0"
 description = "MCP server: deterministic validation rules and PO matching."
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "docagent-mcp-common",
+    "docagent-schemas",
+    "mcp>=2.3",
+    "rapidfuzz>=3.14.6",
+]
 
 [build-system]
 requires = ["uv_build>=0.8.0,<0.9.0"]
 build-backend = "uv_build"
+
+[tool.uv.sources]
+docagent-schemas = { workspace = true }
+docagent-mcp-common = { workspace = true }

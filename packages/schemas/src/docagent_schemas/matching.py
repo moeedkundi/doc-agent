@@ -33,8 +33,21 @@ class MatchIssue(BaseModel):
     po_line: int | None = None
 
 
+class LineMatch(BaseModel):
+    """How one invoice line was paired with a PO line (drives the UI's side-by-side diff)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    invoice_line: int
+    po_line: int
+    method: Literal["sku", "description"]
+    score: float
+    """100 for SKU matches; the fuzzy description score otherwise."""
+
+
 class MatchResult(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     status: MatchStatus
     issues: list[MatchIssue]
+    line_matches: list[LineMatch] = []

@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "LlmUsage": {
+      "additionalProperties": false,
+      "description": "What one tool call spent through the gateway (the agent logs it as a trace event).",
+      "properties": {
+        "calls": {
+          "title": "Calls",
+          "type": "integer"
+        },
+        "cost_usd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Cost Usd"
+        },
+        "latency_ms": {
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "tier": {
+          "enum": [
+            "default",
+            "strong"
+          ],
+          "title": "Tier",
+          "type": "string"
+        },
+        "tokens_in": {
+          "title": "Tokens In",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "title": "Tokens Out",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tier",
+        "model",
+        "calls",
+        "tokens_in",
+        "tokens_out",
+        "cost_usd",
+        "latency_ms"
+      ],
+      "title": "LlmUsage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "doc_type": {
+      "enum": [
+        "invoice",
+        "purchase_order",
+        "unknown"
+      ],
+      "title": "Doc Type",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "usage": {
+      "$ref": "#/$defs/LlmUsage"
+    }
+  },
+  "required": [
+    "doc_type",
+    "confidence",
+    "reason",
+    "usage"
+  ],
+  "title": "ClassificationResult",
+  "type": "object"
+}

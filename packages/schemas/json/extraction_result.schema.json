@@ -1,0 +1,492 @@
+{
+  "$defs": {
+    "ExtractedBuyer": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "name": {
+          "$ref": "#/$defs/Field_str_"
+        }
+      },
+      "required": [
+        "name",
+        "address"
+      ],
+      "title": "ExtractedBuyer",
+      "type": "object"
+    },
+    "ExtractedInvoiceLine": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "line_total": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "quantity": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "sku": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "unit_price": {
+          "$ref": "#/$defs/Field_float_"
+        }
+      },
+      "required": [
+        "sku",
+        "description",
+        "quantity",
+        "unit_price",
+        "line_total"
+      ],
+      "title": "ExtractedInvoiceLine",
+      "type": "object"
+    },
+    "ExtractedPurchaseOrderLine": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "line_total": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "quantity": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "sku": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "unit_price": {
+          "$ref": "#/$defs/Field_float_"
+        }
+      },
+      "required": [
+        "sku",
+        "description",
+        "quantity",
+        "unit_price",
+        "line_total"
+      ],
+      "title": "ExtractedPurchaseOrderLine",
+      "type": "object"
+    },
+    "ExtractedSeller": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "name": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "tax_id": {
+          "$ref": "#/$defs/Field_str_"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "tax_id"
+      ],
+      "title": "ExtractedSeller",
+      "type": "object"
+    },
+    "ExtractedVendor": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "name": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "tax_id": {
+          "$ref": "#/$defs/Field_str_"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "tax_id"
+      ],
+      "title": "ExtractedVendor",
+      "type": "object"
+    },
+    "Field_date_": {
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        },
+        "source_page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "confidence"
+      ],
+      "title": "Field[date]",
+      "type": "object"
+    },
+    "Field_float_": {
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        },
+        "source_page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "confidence"
+      ],
+      "title": "Field[float]",
+      "type": "object"
+    },
+    "Field_str_": {
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        },
+        "source_page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Page"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "confidence"
+      ],
+      "title": "Field[str]",
+      "type": "object"
+    },
+    "Invoice": {
+      "additionalProperties": false,
+      "properties": {
+        "buyer": {
+          "$ref": "#/$defs/ExtractedBuyer"
+        },
+        "currency": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "due_date": {
+          "$ref": "#/$defs/Field_date_"
+        },
+        "invoice_date": {
+          "$ref": "#/$defs/Field_date_"
+        },
+        "invoice_number": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "line_items": {
+          "items": {
+            "$ref": "#/$defs/ExtractedInvoiceLine"
+          },
+          "title": "Line Items",
+          "type": "array"
+        },
+        "po_number": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "seller": {
+          "$ref": "#/$defs/ExtractedSeller"
+        },
+        "subtotal": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "tax_amount": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "total": {
+          "$ref": "#/$defs/Field_float_"
+        }
+      },
+      "required": [
+        "invoice_number",
+        "invoice_date",
+        "due_date",
+        "currency",
+        "po_number",
+        "seller",
+        "buyer",
+        "line_items",
+        "subtotal",
+        "tax_amount",
+        "total"
+      ],
+      "title": "Invoice",
+      "type": "object"
+    },
+    "LlmUsage": {
+      "additionalProperties": false,
+      "description": "What one tool call spent through the gateway (the agent logs it as a trace event).",
+      "properties": {
+        "calls": {
+          "title": "Calls",
+          "type": "integer"
+        },
+        "cost_usd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Cost Usd"
+        },
+        "latency_ms": {
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "tier": {
+          "enum": [
+            "default",
+            "strong"
+          ],
+          "title": "Tier",
+          "type": "string"
+        },
+        "tokens_in": {
+          "title": "Tokens In",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "title": "Tokens Out",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tier",
+        "model",
+        "calls",
+        "tokens_in",
+        "tokens_out",
+        "cost_usd",
+        "latency_ms"
+      ],
+      "title": "LlmUsage",
+      "type": "object"
+    },
+    "PurchaseOrder": {
+      "additionalProperties": false,
+      "properties": {
+        "buyer": {
+          "$ref": "#/$defs/ExtractedBuyer"
+        },
+        "currency": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "line_items": {
+          "items": {
+            "$ref": "#/$defs/ExtractedPurchaseOrderLine"
+          },
+          "title": "Line Items",
+          "type": "array"
+        },
+        "payment_terms": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "po_date": {
+          "$ref": "#/$defs/Field_date_"
+        },
+        "po_number": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "requested_delivery_date": {
+          "$ref": "#/$defs/Field_date_"
+        },
+        "ship_to": {
+          "$ref": "#/$defs/Field_str_"
+        },
+        "subtotal": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "tax_amount": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "total": {
+          "$ref": "#/$defs/Field_float_"
+        },
+        "vendor": {
+          "$ref": "#/$defs/ExtractedVendor"
+        }
+      },
+      "required": [
+        "po_number",
+        "po_date",
+        "currency",
+        "payment_terms",
+        "buyer",
+        "vendor",
+        "ship_to",
+        "requested_delivery_date",
+        "line_items",
+        "subtotal",
+        "tax_amount",
+        "total"
+      ],
+      "title": "PurchaseOrder",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "doc_type": {
+      "enum": [
+        "invoice",
+        "purchase_order"
+      ],
+      "title": "Doc Type",
+      "type": "string"
+    },
+    "pages": {
+      "items": {
+        "type": "integer"
+      },
+      "title": "Pages",
+      "type": "array"
+    },
+    "record": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Invoice"
+        },
+        {
+          "$ref": "#/$defs/PurchaseOrder"
+        }
+      ],
+      "title": "Record"
+    },
+    "usage": {
+      "$ref": "#/$defs/LlmUsage"
+    }
+  },
+  "required": [
+    "doc_type",
+    "record",
+    "pages",
+    "usage"
+  ],
+  "title": "ExtractionResult",
+  "type": "object"
+}
