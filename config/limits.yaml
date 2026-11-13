@@ -30,5 +30,9 @@ sql:
   statement_timeout_ms: 3000
 
 llm:
-  request_timeout_s: 60
-  max_retries: 3
+  request_timeout_s: 90       # per provider call
+  max_retries: 3              # extra attempts on 429/5xx/timeouts, per tier
+  backoff_base_s: 1.0         # exponential: base * 2^attempt, with jitter
+  backoff_max_s: 20.0
+  max_output_tokens: 16384    # hard cap per call (bounds worst-case cost)
+  call_reserve_usd: 0.05      # a call is refused unless this much budget is still left

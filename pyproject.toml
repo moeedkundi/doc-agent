@@ -66,7 +66,7 @@ known-first-party = ["docagent_*", "evals"]
 [tool.pyright]
 pythonVersion = "3.12"
 typeCheckingMode = "strict"
-include = ["packages", "servers", "agent", "api", "evals"]
+include = ["packages", "servers", "agent", "api", "evals", "scripts"]
 exclude = ["**/.venv", "web", "evals/dataset", "**/__pycache__"]
 venvPath = "."
 venv = ".venv"
@@ -76,4 +76,5 @@ addopts = ["--import-mode=importlib", "-ra"]
 testpaths = ["packages", "servers", "agent", "api", "evals"]
 pythonpath = ["."]
 asyncio_mode = "auto"
+markers = ["integration: calls a real LLM provider; needs GEMINI_API_KEY (never run in CI)"]
 asyncio_default_fixture_loop_scope = "function"

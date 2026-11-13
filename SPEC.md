@@ -54,8 +54,8 @@ Working name: `docagent` (rename freely). Public URL target: `demo.meetmoeed.com
 | Language | Python 3.12, uv workspace | |
 | MCP servers | Official MCP Python SDK (`mcp`, FastMCP API) | Streamable HTTP transport |
 | Agent | LangGraph + `langchain-mcp-adapters` | Postgres checkpointer for interrupt/resume |
-| LLM access | `packages/gateway` (own code) on top of LiteLLM SDK | routing, cost ledger, budget cap |
-| Vision extraction | Gemini (default, cheap tier) → stronger tier on escalation | IDs in `config/models.yaml` |
+| LLM access | `packages/gateway` (own code) on top of LiteLLM SDK | routing, cost ledger, budget cap; `PyYAML` reads `config/*.yaml` |
+| Vision extraction | Gemini for both tiers (one key): Flash-class default → Gemini 4 strong tier | IDs and dated prices in `config/models.yaml` |
 | PDF handling | `pypdfium2` (render pages to PNG), `pypdf` (text layer) | |
 | API | FastAPI + SSE (`sse-starlette`) | |
 | DB | Postgres 16 (app data, traces, checkpoints) | Row-level security per session |
@@ -295,19 +295,31 @@ START → plan (get_schema, decide if conversion/lookup needed)
 ## 8. Gateway, cost and safety
 
 ### 8.1 `packages/gateway`
-- `complete(messages, *, tier, response_schema=None, images=None, run_id)` — single entry point.
+- `complete(messages, *, tier, response_schema=None, images=None, run_id, session_id)` — single entry point.
 - Resolves tier → model from `config/models.yaml`:
   ```yaml
   tiers:
-    default: { model: "<gemini flash-class model id>", input_per_mtok: 0.0, output_per_mtok: 0.0 }
-    strong:  { model: "<stronger model id>",          input_per_mtok: 0.0, output_per_mtok: 0.0 }
+    default:
+      model: gemini-3.6-flash
+      provider: gemini
+      api_key_env: GEMINI_API_KEY
+      reasoning_effort: low
+      prices:                      # dated periods; first whose `until` hasn't passed applies
+        - { until: 2026-12-31, input_per_mtok: 0.75, output_per_mtok: 3.75 }
+        - { input_per_mtok: 1.50, output_per_mtok: 7.50 }
+    strong: { model: gemini-4-argon, ... }
   fallback_order: [default, strong]
   ```
-  (fill in current model IDs and prices at build time — check provider docs.)
+  (re-check model IDs and prices against the provider's docs whenever they change.)
 - Writes every call to `llm_ledger`; computes cost from token usage × price table.
 - **Budget:** global daily cap (`DAILY_BUDGET_USD`) and per-session cap. When exceeded → raise
   `BudgetExceeded`; API returns a friendly message and the UI switches to "replay mode" (see 8.3).
-- Retries with backoff on 429/5xx; timeout per call.
+- Retries with backoff on 429/5xx; timeout per call. A provider retry hint longer than the
+  max backoff (e.g. a daily quota) skips retries and goes straight to the fallback tier.
+- A call is refused unless `call_reserve_usd` (limits.yaml) of budget remains, so overshoot is
+  bounded by one call. Tokens out include thinking tokens (billed at the output price).
+- Provider errors are re-raised as `ProviderError` with keys redacted and the original
+  exception detached; keys are `SecretStr` in config.
 
 ### 8.2 Security / abuse
 - Upload limits from `limits.yaml`: types PDF/PNG/JPG, ≤ 5 MB, ≤ 5 pages; verify magic bytes.
@@ -372,9 +384,9 @@ Each phase ends with "Done when" checks. Tick boxes as you go.
 proves session A cannot read session B's rows.
 
 ### Phase 2 — Gateway
-- [ ] `complete()` with tier routing, structured output, image input, retries, timeouts
-- [ ] Cost ledger + daily and per-session budget enforcement
-- [ ] Unit tests with mocked provider responses
+- [x] `complete()` with tier routing, structured output, image input, retries, timeouts
+- [x] Cost ledger + daily and per-session budget enforcement
+- [x] Unit tests with mocked provider responses
 **Done when:** a script extracts one sample invoice end-to-end through the gateway and the ledger
 row shows correct cost; budget test raises `BudgetExceeded`.
 
@@ -493,3 +505,11 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | `evals` is importable from the repo root (pytest `pythonpath = ["."]`), not a workspace package | Keeps the §4 layout (`evals/generator/`, `evals/runner.py`) |
 | 2026-11-14 | Sample PO is numbered PO-1042 | The example question in §2 ("uninvoiced on PO-1042") works on the demo data |
 | 2026-11-14 | Migrations run with `uv run python -m docagent_db` | |
+| 2026-11-14 | Model IDs + prices checked on aistudio.google.com/docs/models and /docs/pricing (2026-11-14): default `gemini-3.6-flash` ($0.75/$3.75 per 1M in/out until 2026-12-31, then $1.50/$7.50); strong `gemini-4-argon` ($2/$10 until 2026-11-30, then $4/$20) | Gemini for both tiers so one key suffices. No stable "Pro"-named model exists (2.5 Pro deprecated, 3.1 Pro preview-only); Gemini 4 Argon is the efficient frontier model, same price as Carbon with fewer tokens per turn |
+| 2026-11-14 | Default tier uses `gemini-3.6-flash`, not `gemini-3.8-flash` | 3.8 Flash (same price) returned 503 "high demand" on every call for ~15 min while 3.6 answered; one-line switch back in models.yaml |
+| 2026-11-14 | Prices are dated periods in models.yaml | Both models have introductory prices ending within weeks; the ledger must cost each call at the price on its UTC date |
+| 2026-11-14 | `complete()` takes `session_id` | Needed to enforce the per-session cap |
+| 2026-11-14 | Gateway pins `LITELLM_MODE=PRODUCTION` before importing LiteLLM | LiteLLM otherwise runs `load_dotenv()` on import and silently pulls `.env` (API keys) into the process |
+| 2026-11-14 | Real-API tests are `@pytest.mark.integration`, skipped without `GEMINI_API_KEY`, deselected in CI | Unit tests never hit the network; CI never spends money |
+| 2026-11-14 | Added PyYAML to §3 (approved) | Parse config/*.yaml; already a LiteLLM dependency |
+| 2026-11-14 | Page rendering + extraction prompt live in `servers/extraction` already | Phase 2's end-to-end check needs them; Phase 3 wraps them as MCP tools |
