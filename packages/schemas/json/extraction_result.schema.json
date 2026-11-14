@@ -140,6 +140,7 @@
         "source_page": {
           "anyOf": [
             {
+              "maximum": 500,
               "minimum": 1,
               "type": "integer"
             },
@@ -193,6 +194,7 @@
         "source_page": {
           "anyOf": [
             {
+              "maximum": 500,
               "minimum": 1,
               "type": "integer"
             },
@@ -245,6 +247,7 @@
         "source_page": {
           "anyOf": [
             {
+              "maximum": 500,
               "minimum": 1,
               "type": "integer"
             },

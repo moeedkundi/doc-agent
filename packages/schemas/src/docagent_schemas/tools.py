@@ -142,6 +142,9 @@ class PurchaseOrderLookup(_Out):
     purchase_order: PurchaseOrderRecord | None = None
     prior_invoices: list[PriorInvoice] = []
     """Invoices already saved against this PO number, oldest first (input for matching)."""
+    duplicate_invoice_ids: list[UUID] = []
+    """Earlier saves of the invoice being matched (same invoice number): a re-submission,
+    left out of `prior_invoices` so it is not billed against the PO twice."""
 
 
 class SavedMatch(_Out):

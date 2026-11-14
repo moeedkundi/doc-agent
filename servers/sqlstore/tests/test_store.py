@@ -247,3 +247,10 @@ def test_connection_failures_do_not_leak_details(world: World) -> None:
             call()
         assert exc.value.code == "database_unavailable"
         assert "127.0.0.1" not in str(exc.value) and "docagent_reader" not in str(exc.value)
+
+
+def test_resubmitted_invoice_is_reported_not_counted(world: World) -> None:
+    number = sample_invoice("inv_003").invoice_number
+    found = world.store.get_purchase_order(world.a, "PO-85044", exclude_invoice_number=number)
+    assert found.prior_invoices == []
+    assert found.duplicate_invoice_ids == [world.records["inv_003"]]

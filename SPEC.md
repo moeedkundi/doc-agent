@@ -53,7 +53,7 @@ Working name: `docagent` (rename freely). Public URL target: `demo.meetmoeed.com
 |---|---|---|
 | Language | Python 3.12, uv workspace | |
 | MCP servers | Official MCP Python SDK (`mcp`, FastMCP API) | Streamable HTTP transport |
-| Agent | LangGraph + `langchain-mcp-adapters` | Postgres checkpointer for interrupt/resume |
+| Agent | LangGraph + official `mcp` client (own multi-server wrapper) | Postgres checkpointer (`langgraph-checkpoint-postgres`) for interrupt/resume; `langchain-mcp-adapters` dropped: no mcp 2.x support |
 | LLM access | `packages/gateway` (own code) on top of LiteLLM SDK | routing, cost ledger, budget cap; `PyYAML` reads `config/*.yaml` |
 | Vision extraction | Gemini for both tiers (one key): Flash-class default → Gemini 4 strong tier | IDs and dated prices in `config/models.yaml` |
 | PDF handling | `pypdfium2` (render pages to PNG), `pypdf` (text layer) | |
@@ -249,8 +249,11 @@ demo has no external API dependency. Document clearly that rates are illustrativ
 
 ## 7. Agent (LangGraph)
 
-Two graphs in `agent/`, both loading tools from the MCP servers via `langchain-mcp-adapters`
-(`MultiServerMCPClient`), Postgres checkpointer, `thread_id = run_id`.
+Two graphs in `agent/`, both calling the MCP servers through the official `mcp` 2.x `Client`
+(`docagent_agent.tools.McpHub`), Postgres checkpointer, `thread_id = run_id`. Each node gets a
+`NodeTools` view limited to its allowlist (`NODE_TOOLS`): classify/extract cannot reach
+sqlstore. Nodes are deterministic orchestration; the only model calls are inside the
+extraction server.
 
 ### 7.1 Ingest graph
 
@@ -406,10 +409,10 @@ row shows correct cost; budget test raises `BudgetExceeded`.
 statement, non-allowlisted tables; the MCP Inspector lists all tools for each server.
 
 ### Phase 4 — Agent graphs
-- [ ] Ingest graph (§7.1) with escalation, interrupt/resume, Postgres checkpointer
+- [x] Ingest graph (§7.1) with escalation, interrupt/resume, Postgres checkpointer
 - [ ] Ask graph (§7.2) with SQL retry
-- [ ] PO ↔ invoice matching node
-- [ ] Trace event emission from every node
+- [x] PO ↔ invoice matching node
+- [x] Trace event emission from every node (ingest graph; ask graph in part B)
 **Done when:** a CLI command runs a sample doc to completion; a doc with an injected arithmetic
 error pauses for review and resumes correctly; ingesting a PO then its invoice yields `matched`,
 and the mismatch sample yields `mismatch` with the right issue; 5 canned questions return
@@ -535,3 +538,13 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | DB connection failures surface as `database_unavailable` with no details | Postgres's connect error names host, port and role; the model shouldn't see that |
 | 2026-11-14 | Reference data: monthly USD-based FX table for 2026 (9 currencies), the 20 fictional vendors from the generator (`V-001`…), standard/reduced tax rates for 9 countries; all labelled illustrative | §6.4: static bundled data, no external dependency; tests pin vendors and tax rates to what the synthetic documents use |
 | 2026-11-14 | `lookup_vendor` returns `found` + `matched_on` + `tax_id_matches` instead of record-or-null | §7.1 turns "unknown vendor or tax_id mismatch" into review issues; the agent needs to tell those apart |
+| 2026-11-14 | Dropped `langchain-mcp-adapters`; the agent uses the official `mcp` 2.3 `Client` with its own per-node tool allowlist | Adapters 0.3.1 fails to import against mcp 2.x and 0.3.2 pins `mcp<2`; all servers are on mcp 2.3 (user-approved) |
+| 2026-11-14 | Strong tier temporarily `gemini-4-hydrogen` | Free-tier key: gemini-4-argon quota is 0; hydrogen has free quota (user-approved; revert note in models.yaml) |
+| 2026-11-14 | Ingest nodes are deterministic; `validate` always calls `validate_record` + `lookup_vendor` | Predictable cost and behaviour; LLM tool choice is reserved for the ask graph |
+| 2026-11-14 | Re-extraction asks only for failing paths (arithmetic widens to all operands) on the strong tier; if the strong tier reads the same values (or fails), go straight to review instead of retrying | Re-reading a document that is itself inconsistent can't help; saves a second strong call |
+| 2026-11-14 | Graph runs with `durability="sync"` | A real run produced `source_page = 10**300`, which the checkpoint serializer rejected only at the end, after side effects; sync makes such failures stop the run immediately |
+| 2026-11-14 | `Field.source_page` bounded (≤ 500) and the extraction server nulls pages the model wasn't shown | Model provenance can be garbage; never let it reach storage or checkpoints |
+| 2026-11-14 | `get_purchase_order(exclude_invoice_number=…)` reports earlier saves of the same invoice as `duplicate_invoice_ids` instead of prior invoices | Re-uploading an invoice (e.g. a scan of one already saved) must not be billed against its PO twice; the summary flags the re-submission |
+| 2026-11-14 | Checkpointer uses the owner DSN (`DATABASE_URL`) to create/use its tables | `setup()` needs CREATE; revisit with a dedicated role when the API lands (Phase 5) |
+| 2026-11-14 | Local `.env` MCP URLs use 127.0.0.1; compose sets service hostnames | The agent runs on the host in dev; compose overrides per container |
+| 2026-11-14 | CLI: `agent.cli session new`, `ingest <file> [--session] [--no-input]`, `resume <run_id> [--approve \| --set PATH=VALUE]` | Interactive review in a terminal; flags for non-TTY shells; resume works from another process via the checkpointer |

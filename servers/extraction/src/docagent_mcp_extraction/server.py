@@ -5,7 +5,7 @@ The model gets no tools, so text inside a document cannot trigger actions (SPEC 
 """
 
 from dataclasses import dataclass
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, cast
 from uuid import UUID
 
 from mcp.server import MCPServer
@@ -87,6 +87,22 @@ def _parsed[T: BaseModel](c: Completion[T]) -> T:
     if c.parsed is None:  # the gateway always parses when given a schema
         raise tool_error("unparseable_output", "model returned no structured output")
     return c.parsed
+
+
+def _only_real_pages[R: BaseModel](record: R, pages: set[int]) -> R:
+    """Provenance must point at a page the model was shown; anything else becomes unknown."""
+
+    def fix(node: Any) -> Any:
+        if isinstance(node, dict):
+            d = cast(dict[str, Any], node)
+            if "source_page" in d and "value" in d and d["source_page"] not in pages:
+                return {**d, "source_page": None}
+            return {k: fix(v) for k, v in d.items()}
+        if isinstance(node, list):
+            return [fix(v) for v in cast(list[Any], node)]
+        return node
+
+    return type(record).model_validate(fix(record.model_dump()))
 
 
 def _usage(c: Completion[Any]) -> LlmUsage:
@@ -204,7 +220,7 @@ def create_server(
             session_id,
             run_id,
         )
-        parsed = _parsed(out)
+        parsed = _only_real_pages(_parsed(out), {p.number for p in content})
         return ExtractionResult(
             doc_type=doc_type,
             record=parsed,

@@ -83,6 +83,7 @@ async def test_get_purchase_order_over_mcp(world: World) -> None:
         "po_id": None,
         "purchase_order": None,
         "prior_invoices": [],
+        "duplicate_invoice_ids": [],
     }
 
 

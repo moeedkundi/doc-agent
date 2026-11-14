@@ -87,11 +87,20 @@ def create_server(store: SqlStore) -> MCPServer:
         exclude_invoice_id: Annotated[
             UUID | None, Field(description="The invoice being matched, if already saved")
         ] = None,
+        exclude_invoice_number: Annotated[
+            str | None,
+            Field(
+                description="Invoice number being matched; earlier saves of it are "
+                "re-submissions, reported in duplicate_invoice_ids instead"
+            ),
+        ] = None,
     ) -> PurchaseOrderLookup:
         """Look up a PO by number (this session first, then the shared demo samples), with the
         invoices already saved against it, oldest first. `found` is false if there is none."""
         return await _run(
-            lambda: store.get_purchase_order(session_id, po_number, exclude_invoice_id)
+            lambda: store.get_purchase_order(
+                session_id, po_number, exclude_invoice_id, exclude_invoice_number
+            )
         )
 
     @tool(server, WRITE)

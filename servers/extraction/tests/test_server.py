@@ -190,3 +190,28 @@ async def test_page_limit(
             "extract_fields", {"document_id": str(long_doc), "doc_type": "purchase_order"}
         )
     assert _err_code(res) == "too_many_pages"
+
+
+async def test_source_pages_outside_the_document_are_dropped(
+    harness: Callable[..., Harness],
+    tmp_path: Path,
+    docs: Callable[[str], UUID],
+    truth: GroundTruth,
+) -> None:
+    payload = wrap(truth.record.model_dump(mode="json"))
+    payload["invoice_number"]["source_page"] = 7  # a one-page document
+    payload["total"]["source_page"] = 10**300  # seen in a real run; breaks checkpointing
+    h = harness(
+        flash_model=[
+            response(json.dumps(payload)),
+            response(json.dumps({**payload, "total": {**payload["total"], "source_page": 1}})),
+        ]
+    )
+    async with Client(_server(h, tmp_path)) as client:
+        res = await client.call_tool(
+            "extract_fields", {"document_id": str(docs("inv_003")), "doc_type": "invoice"}
+        )
+    record = res.structured_content["record"]
+    assert record["invoice_number"]["source_page"] is None
+    assert record["total"]["source_page"] == 1  # out-of-bound value forced a repair call
+    assert len(h.provider.calls) == 2

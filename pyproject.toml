@@ -38,12 +38,12 @@ members = ["packages/*", "servers/*", "agent", "api"]
 docagent-schemas = { workspace = true }
 docagent-gateway = { workspace = true }
 docagent-mcp-extraction = { workspace = true }
-docagent-mcp-validation = { workspace = true }
 docagent-mcp-sqlstore = { workspace = true }
-docagent-mcp-reference = { workspace = true }
 docagent-agent = { workspace = true }
 docagent-api = { workspace = true }
 docagent-db = { workspace = true }
+docagent-mcp-validation = { workspace = true }
+docagent-mcp-reference = { workspace = true }
 
 [tool.ruff]
 target-version = "py312"

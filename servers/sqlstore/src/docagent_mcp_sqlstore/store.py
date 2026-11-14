@@ -260,7 +260,11 @@ class SqlStore:
         return po_id
 
     def get_purchase_order(
-        self, session_id: UUID, po_number: str, exclude_invoice_id: UUID | None = None
+        self,
+        session_id: UUID,
+        po_number: str,
+        exclude_invoice_id: UUID | None = None,
+        exclude_invoice_number: str | None = None,
     ) -> PurchaseOrderLookup:
         with self._connect_app() as conn, conn.transaction():
             _scope(conn, session_id)
@@ -281,7 +285,11 @@ class SqlStore:
                 (po_number, exclude_invoice_id),
             ).fetchall()
             prior: list[PriorInvoice] = []
+            duplicates: list[UUID] = []
             for inv in invoices:
+                if exclude_invoice_number and inv["invoice_number"] == exclude_invoice_number:
+                    duplicates.append(inv["id"])
+                    continue
                 lines = cur.execute(
                     "SELECT * FROM invoice_lines WHERE invoice_id = %s ORDER BY line_no",
                     (inv["id"],),
@@ -292,6 +300,7 @@ class SqlStore:
             po_id=po["id"],
             purchase_order=_po_record(po, po_lines),
             prior_invoices=prior,
+            duplicate_invoice_ids=duplicates,
         )
 
     def save_match_result(
