@@ -355,6 +355,9 @@ demo always works. Label it clearly: "Replaying a recorded run".
 | GET | `/api/samples` | list sample docs |
 | POST | `/api/samples/{id}/document` | copy a sample into the session → `document_id` |
 | GET | `/api/documents/{id}/file` | the uploaded file (for the viewer) |
+| GET | `/api/documents/{id}` | document metadata (filename, pages, type, sample) |
+| GET | `/api/documents/{id}/pages/{n}` | page *n* (1-based) as PNG for the viewer |
+| GET | `/api/limits` | upload limits and run rate limit shown before upload |
 | POST | `/api/documents` | upload file → `document_id` |
 | POST | `/api/runs` | start ingest run `{document_id, replay?}` → `run_id` (402 `budget_exceeded` / 503 `replay_only` carry `replay_available`) |
 | GET | `/api/runs/{id}/events` | **SSE** stream of trace events + status changes |
@@ -443,10 +446,10 @@ with LLM calls disabled.
 **Done when:** the report reproduces within noise on two consecutive runs; `/api/evals/latest` serves it.
 
 ### Phase 7 — Frontend
-- [ ] Landing with architecture diagram + sample picker + upload
-- [ ] Run view: document viewer (left), live trace timeline (right) with expandable tool calls,
+- [x] Landing with architecture diagram + sample picker + upload
+- [x] Run view: document viewer (left), live trace timeline (right) with expandable tool calls,
       running cost/tokens counter
-- [ ] Review form with flagged fields highlighted, reason, edit/approve
+- [x] Review form with flagged fields highlighted, reason, edit/approve
 - [ ] Ask chat with SQL + result table
 - [ ] Evals tab (charts) and Architecture tab
 - [ ] Mobile-friendly; dark/light; replay-mode banner
@@ -577,3 +580,10 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | Migration 006: `sessions.purpose` (demo\|eval), `llm_ledger.pool`; gateway caps eval sessions with `EVAL_BUDGET_USD` (daily), demo with `DAILY_BUDGET_USD` + session cap; demo totals exclude eval spend | Evals must not use up the public demo's budget |
 | 2026-11-14 | Field match policy: exact IDs/dates/currency; Decimal-equal amounts/quantities; normalised or rapidfuzz ≥ 90 for names/addresses/descriptions | As specified; note ≥ 90 accepts one-letter name misreads |
 | 2026-11-14 | CI gate uses field accuracy only (5-point drop vs smoke baseline) | Match status over the 3 smoke invoices moves 33 points per flip: too coarse to gate on |
+| 2026-11-14 | Web: Next.js 16.4 + React 19 + Tailwind 4 (CSS-first `@theme`), not the portfolio's Next 14 / Tailwind 3; same palette, Inter, 0.5rem radius and light/dark tokens copied from meetmoeed.com, plus `--warning`/`--success` tokens; JetBrains Mono for tool calls/IDs | Current patched releases for a public site; the look matches the portfolio |
+| 2026-11-14 | shadcn/ui-style components written in-repo (cva, clsx, tailwind-merge, lucide-react); no Radix, no next-themes (a 1-line pre-paint theme script does the same job) | Fewer dependencies; only shadcn's own building blocks |
+| 2026-11-14 | Web calls the API directly (`NEXT_PUBLIC_API_URL`, `credentials: include`); web and API must be same-site (localhost:3000 + localhost:8000 locally, meetmoeed.com subdomains in prod) | The session cookie is SameSite=Lax |
+| 2026-11-14 | SSE events carry `args` (tool input, minus `session_id`/`run_id`); replay fixtures backfilled with recorded inputs from their source runs | The trace view shows each tool's args; internal ids are not shown to the browser |
+| 2026-11-14 | Viewer gets page PNGs rendered server-side (pypdfium2, ~108 dpi) instead of embedding the PDF | Inline PDF viewers don't work on most mobile browsers |
+| 2026-11-14 | PO-vs-invoice diff is shown after `po_match`, not inside the review form; the PO side comes from the `get_purchase_order` result in the trace | Review happens before save and matching, so no match exists while paused |
+| 2026-11-14 | Budget exhausted (402) or replay-only (503) on a sample → the UI starts its recorded run automatically and shows "Replaying a recorded run"; uploads get the error message | The demo keeps working when live processing is off (§8.3) |

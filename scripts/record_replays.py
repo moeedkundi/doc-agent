@@ -29,6 +29,7 @@ from docagent_agent.runtime import (
     register_document,
     run_async,
 )
+from docagent_api.events import redact_args
 
 ROOT = Path(__file__).resolve().parents[1]
 SAMPLES = ROOT / "evals" / "dataset" / "samples"
@@ -72,7 +73,7 @@ async def main() -> int:
                                 "WHERE id = %s", (run,)).fetchone()  # fmt: skip
             events = owner.execute(
                 "SELECT ts, node, kind, tool, model, tokens_in, tokens_out, latency_ms, cost_usd, "
-                "output_json, error FROM trace_events WHERE run_id = %s ORDER BY seq",
+                "input_json, output_json, error FROM trace_events WHERE run_id = %s ORDER BY seq",
                 (run,),
             ).fetchall()
             if row is None or row["status"] != "completed" or not events:
@@ -88,7 +89,7 @@ async def main() -> int:
                     {"offset_ms": int((e["ts"] - t0).total_seconds() * 1000),
                      **{k: _jsonable(e[k]) for k in ("node", "kind", "tool", "model",
                         "tokens_in", "tokens_out", "latency_ms", "cost_usd", "error")},
-                     "output": e["output_json"]}
+                     "input": redact_args(e["input_json"]), "output": e["output_json"]}
                     for e in events
                 ],
                 "result": row["result_json"],

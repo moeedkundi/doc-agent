@@ -166,6 +166,7 @@ class RunService:
                         tokens_out=event.get("tokens_out"),
                         latency_ms=event.get("latency_ms"),
                         cost_usd=Decimal(event["cost_usd"]) if event.get("cost_usd") else None,
+                        input=event.get("input"),
                         output=event.get("output"),
                         error=event.get("error"),
                     )

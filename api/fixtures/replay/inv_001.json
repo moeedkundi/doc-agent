@@ -15,6 +15,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -28,6 +29,9 @@
    "latency_ms": 2001,
    "cost_usd": "0.000613",
    "error": null,
+   "input": {
+    "document_id": "8098f974-ebda-4cc1-a37e-1eef493f2361"
+   },
    "output": {
     "usage": {
      "tier": "default",
@@ -54,6 +58,7 @@
    "latency_ms": 2022,
    "cost_usd": "0.000613",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -67,6 +72,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -80,6 +86,11 @@
    "latency_ms": 4962,
    "cost_usd": "0.005269",
    "error": null,
+   "input": {
+    "doc_type": "invoice",
+    "model_tier": "default",
+    "document_id": "8098f974-ebda-4cc1-a37e-1eef493f2361"
+   },
    "output": {
     "pages": [
      1
@@ -321,6 +332,7 @@
    "latency_ms": 4985,
    "cost_usd": "0.005269",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -334,6 +346,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -347,6 +360,223 @@
    "latency_ms": 6,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "record": {
+     "buyer": {
+      "name": {
+       "value": "Ostwind Maschinenbau GmbH",
+       "evidence": "Ostwind Maschinenbau GmbH",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany",
+       "evidence": "Industriestra\u00dfe 72\n70565 Stuttgart\nGermany",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "total": {
+      "value": 7712.68,
+      "evidence": "EUR 7,712.68",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "seller": {
+      "name": {
+       "value": "Rotkehlchen B\u00fcrobedarf GmbH",
+       "evidence": "Rotkehlchen B\u00fcrobedarf GmbH",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "tax_id": {
+       "value": "DE274915038",
+       "evidence": "DE274915038",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "Am Kornspeicher 9, 28195 Bremen, Germany",
+       "evidence": "Am Kornspeicher 9\n28195 Bremen\nGermany",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "currency": {
+      "value": "EUR",
+      "evidence": "EUR",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "due_date": {
+      "value": "2026-08-25",
+      "evidence": "25 Aug 2026",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "subtotal": {
+      "value": 6481.24,
+      "evidence": "EUR 6,481.24",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "po_number": {
+      "value": "PO-27656",
+      "evidence": "PO-27656",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "line_items": [
+      {
+       "sku": {
+        "value": null,
+        "evidence": null,
+        "confidence": 1.0,
+        "source_page": null
+       },
+       "quantity": {
+        "value": 1.0,
+        "evidence": "1",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 20.04,
+        "evidence": "20.04",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 20.04,
+        "evidence": "20.04",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "6-gang surge protector",
+        "evidence": "6-gang surge protector",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": null,
+        "evidence": null,
+        "confidence": 1.0,
+        "source_page": null
+       },
+       "quantity": {
+        "value": 20.0,
+        "evidence": "20",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 961.8,
+        "evidence": "961.80",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 48.09,
+        "evidence": "48.09",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "HD webcam 1080p",
+        "evidence": "HD webcam 1080p",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": null,
+        "evidence": null,
+        "confidence": 1.0,
+        "source_page": null
+       },
+       "quantity": {
+        "value": 30.0,
+        "evidence": "30",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 5362.5,
+        "evidence": "5,362.50",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 178.75,
+        "evidence": "178.75",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Mesh task chair w/ adj. arms",
+        "evidence": "Mesh task chair w/ adj. arms",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": null,
+        "evidence": null,
+        "confidence": 1.0,
+        "source_page": null
+       },
+       "quantity": {
+        "value": 5.0,
+        "evidence": "5",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 136.9,
+        "evidence": "136.90",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 27.38,
+        "evidence": "27.38",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Lever arch file A4 75mm (10)",
+        "evidence": "Lever arch file A4 75mm (10)",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      }
+     ],
+     "tax_amount": {
+      "value": 1231.44,
+      "evidence": "EUR 1,231.44",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "invoice_date": {
+      "value": "2026-06-26",
+      "evidence": "26 Jun 2026",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "invoice_number": {
+      "value": "RKB-2026-6186",
+      "evidence": "RKB-2026-6186",
+      "confidence": 1.0,
+      "source_page": 1
+     }
+    },
+    "doc_type": "invoice"
+   },
    "output": {
     "valid": true,
     "issues": []
@@ -363,6 +593,10 @@
    "latency_ms": 6,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "name": "Rotkehlchen B\u00fcrobedarf GmbH",
+    "tax_id": "DE274915038"
+   },
    "output": {
     "found": true,
     "vendor": {
@@ -389,6 +623,7 @@
    "latency_ms": 54,
    "cost_usd": "0.000000",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -402,6 +637,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -415,6 +651,59 @@
    "latency_ms": 51,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "record": {
+     "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany"
+     },
+     "total": "7712.68",
+     "seller": {
+      "name": "Rotkehlchen B\u00fcrobedarf GmbH",
+      "tax_id": "DE274915038",
+      "address": "Am Kornspeicher 9, 28195 Bremen, Germany"
+     },
+     "currency": "EUR",
+     "due_date": "2026-08-25",
+     "subtotal": "6481.24",
+     "po_number": "PO-27656",
+     "line_items": [
+      {
+       "sku": null,
+       "quantity": "1",
+       "line_total": "20.04",
+       "unit_price": "20.04",
+       "description": "6-gang surge protector"
+      },
+      {
+       "sku": null,
+       "quantity": "20",
+       "line_total": "961.80",
+       "unit_price": "48.09",
+       "description": "HD webcam 1080p"
+      },
+      {
+       "sku": null,
+       "quantity": "30",
+       "line_total": "5362.50",
+       "unit_price": "178.75",
+       "description": "Mesh task chair w/ adj. arms"
+      },
+      {
+       "sku": null,
+       "quantity": "5",
+       "line_total": "136.90",
+       "unit_price": "27.38",
+       "description": "Lever arch file A4 75mm (10)"
+      }
+     ],
+     "tax_amount": "1231.44",
+     "invoice_date": "2026-06-26",
+     "invoice_number": "RKB-2026-6186"
+    },
+    "doc_type": "invoice",
+    "document_id": "8098f974-ebda-4cc1-a37e-1eef493f2361"
+   },
    "output": {
     "record_id": "9d4215aa-8e74-4c74-b7ec-80afe81b4c2e"
    }
@@ -430,6 +719,7 @@
    "latency_ms": 70,
    "cost_usd": "0.000000",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -443,6 +733,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -456,6 +747,11 @@
    "latency_ms": 59,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "po_number": "PO-27656",
+    "exclude_invoice_id": "9d4215aa-8e74-4c74-b7ec-80afe81b4c2e",
+    "exclude_invoice_number": "RKB-2026-6186"
+   },
    "output": {
     "found": true,
     "po_id": "0271cc80-b094-43b1-a923-c15c08a740cf",
@@ -524,6 +820,108 @@
    "latency_ms": 10,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "invoice": {
+     "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany"
+     },
+     "total": "7712.68",
+     "seller": {
+      "name": "Rotkehlchen B\u00fcrobedarf GmbH",
+      "tax_id": "DE274915038",
+      "address": "Am Kornspeicher 9, 28195 Bremen, Germany"
+     },
+     "currency": "EUR",
+     "due_date": "2026-08-25",
+     "subtotal": "6481.24",
+     "po_number": "PO-27656",
+     "line_items": [
+      {
+       "sku": null,
+       "quantity": "1",
+       "line_total": "20.04",
+       "unit_price": "20.04",
+       "description": "6-gang surge protector"
+      },
+      {
+       "sku": null,
+       "quantity": "20",
+       "line_total": "961.80",
+       "unit_price": "48.09",
+       "description": "HD webcam 1080p"
+      },
+      {
+       "sku": null,
+       "quantity": "30",
+       "line_total": "5362.50",
+       "unit_price": "178.75",
+       "description": "Mesh task chair w/ adj. arms"
+      },
+      {
+       "sku": null,
+       "quantity": "5",
+       "line_total": "136.90",
+       "unit_price": "27.38",
+       "description": "Lever arch file A4 75mm (10)"
+      }
+     ],
+     "tax_amount": "1231.44",
+     "invoice_date": "2026-06-26",
+     "invoice_number": "RKB-2026-6186"
+    },
+    "prior_invoices": [],
+    "purchase_order": {
+     "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany"
+     },
+     "total": "7712.68",
+     "vendor": {
+      "name": "Rotkehlchen B\u00fcrobedarf GmbH",
+      "tax_id": "DE274915038",
+      "address": "Am Kornspeicher 9, 28195 Bremen, Germany"
+     },
+     "po_date": "2026-06-09",
+     "ship_to": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany",
+     "currency": "EUR",
+     "subtotal": "6481.24",
+     "po_number": "PO-27656",
+     "line_items": [
+      {
+       "sku": "PWR-6W-SURGE",
+       "quantity": "1.000",
+       "line_total": "20.04",
+       "unit_price": "20.04",
+       "description": "Power strip, 6-way, surge protected"
+      },
+      {
+       "sku": "CAM-1080",
+       "quantity": "20.000",
+       "line_total": "961.80",
+       "unit_price": "48.09",
+       "description": "Webcam, 1080p, with privacy shutter"
+      },
+      {
+       "sku": "CHR-TASK-MESH",
+       "quantity": "30.000",
+       "line_total": "5362.50",
+       "unit_price": "178.75",
+       "description": "Task chair, mesh back, adjustable arms"
+      },
+      {
+       "sku": "FIL-LAF-10",
+       "quantity": "5.000",
+       "line_total": "136.90",
+       "unit_price": "27.38",
+       "description": "Lever arch files, A4, pack of 10"
+      }
+     ],
+     "tax_amount": "1231.44",
+     "payment_terms": "Net 60",
+     "requested_delivery_date": "2026-06-24"
+    }
+   },
    "output": {
     "issues": [],
     "status": "matched",
@@ -566,6 +964,12 @@
    "latency_ms": 36,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "po_id": "0271cc80-b094-43b1-a923-c15c08a740cf",
+    "issues": [],
+    "status": "matched",
+    "invoice_id": "9d4215aa-8e74-4c74-b7ec-80afe81b4c2e"
+   },
    "output": {
     "match_id": "2e260f9d-b4c7-4e37-8e2a-6ba9a4ec389e"
    }
@@ -581,6 +985,7 @@
    "latency_ms": 198,
    "cost_usd": "0.000000",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -594,6 +999,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -607,6 +1013,7 @@
    "latency_ms": 15,
    "cost_usd": "0.000000",
    "error": null,
+   "input": null,
    "output": null
   }
  ],

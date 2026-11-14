@@ -104,6 +104,18 @@ async def test_full_flow_upload_run_review_resume_mismatch_ask(stack_factory: Bu
     assert node_ends == ["classify", "extract", "validate", "save", "summarize"]
     seqs = [int(e["id"]) for e in events if "id" in e]
     assert seqs == list(range(1, len(seqs) + 1))
+    # Tool events carry their args for the trace view, without internal ids.
+    extract = next(e["data"] for e in events if e["data"].get("tool") == "extract_fields")
+    assert extract["args"]["document_id"] == po_doc and extract["args"]["doc_type"]
+    assert "session_id" not in extract["args"] and "run_id" not in extract["args"]
+
+    # The viewer: document metadata and a rendered page.
+    meta = (await c.get(f"/api/documents/{po_doc}")).json()
+    assert meta["type"] == "application/pdf" and meta["pages"] == 1
+    page = await c.get(f"/api/documents/{po_doc}/pages/1")
+    assert page.status_code == 200 and page.headers["content-type"] == "image/png"
+    assert page.content[1:4] == b"PNG"
+    assert (await c.get(f"/api/documents/{po_doc}/pages/2")).status_code == 404
 
     # Reconnect partway: Last-Event-ID resumes after that seq.
     again = parse_sse((await c.get(run["events"], headers={"Last-Event-ID": "5"})).text)
@@ -288,6 +300,7 @@ FIXTURE = {
             "node": "classify",
             "kind": "tool_end",
             "tool": "classify_document",
+            "input": {"document_id": "recorded-doc"},
             "model": "gemini-3.5-flash-lite",
             "tokens_in": 1500,
             "tokens_out": 50,
@@ -316,6 +329,9 @@ async def test_replay_only_serves_recordings_without_llm(stack_factory: Build) -
     assert s.services.runs.runtime is None and s.services.gateway is None
     samples = (await s.client.get("/api/samples")).json()
     assert {x["id"]: x["replay_available"] for x in samples}["po_001"] is True
+    by_id = {x["id"]: x for x in samples}
+    assert by_id["inv_003"]["expected_match"] == "mismatch"
+    assert by_id["inv_003"]["references_po"] == "PO-85044" and by_id["po_001"]["lines"] == 4
     doc = (await s.client.post("/api/samples/po_001/document")).json()["document_id"]
     r = await s.client.post("/api/runs", json={"document_id": doc})
     assert r.status_code == 202 and r.json()["replay"] is True
@@ -323,6 +339,7 @@ async def test_replay_only_serves_recordings_without_llm(stack_factory: Build) -
     assert run["replay"] and run["result"]["summary"] == "recorded"
     events = parse_sse((await s.client.get(r.json()["events"])).text)
     assert [e["event"] for e in events if "id" in e] == ["node_start", "tool_end", "node_end"]
+    assert events[1]["data"]["args"] == {"document_id": "recorded-doc"}
     # Live work is refused with a code the UI understands.
     assert (await s.client.post("/api/ask", json={"question": "x"})).json()[
         "error"
@@ -358,3 +375,19 @@ async def test_evals_latest_serves_json_and_markdown(stack_factory: Build) -> No
     assert (await s.client.get("/api/evals/latest")).json()["metrics"]["field_accuracy"] == 0.9
     md = await s.client.get("/api/evals/latest?format=md")
     assert md.headers["content-type"].startswith("text/markdown") and md.text == "# report"
+
+
+def test_redact_args_drops_internal_ids() -> None:
+    from docagent_api.events import redact_args
+
+    assert redact_args({"session_id": "s", "run_id": "r", "doc_type": "invoice"}) == {
+        "doc_type": "invoice"
+    }
+    assert redact_args(None) is None
+
+
+async def test_limits_come_from_config(stack_factory: Build) -> None:
+    s: Stack = await stack_factory()
+    body = (await s.client.get("/api/limits")).json()
+    assert body["max_pages"] == s.settings.max_pages
+    assert body["runs_per_window"] >= 1 and body["window_minutes"] >= 1

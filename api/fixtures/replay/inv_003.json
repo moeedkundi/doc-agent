@@ -15,6 +15,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -28,6 +29,9 @@
    "latency_ms": 1586,
    "cost_usd": "0.000591",
    "error": null,
+   "input": {
+    "document_id": "b29984b3-ebee-4ee2-9363-d60dd8a0f8b0"
+   },
    "output": {
     "usage": {
      "tier": "default",
@@ -54,6 +58,7 @@
    "latency_ms": 1609,
    "cost_usd": "0.000591",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -67,6 +72,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -80,6 +86,11 @@
    "latency_ms": 4141,
    "cost_usd": "0.004030",
    "error": null,
+   "input": {
+    "doc_type": "invoice",
+    "model_tier": "default",
+    "document_id": "b29984b3-ebee-4ee2-9363-d60dd8a0f8b0"
+   },
    "output": {
     "pages": [
      1
@@ -257,6 +268,7 @@
    "latency_ms": 4178,
    "cost_usd": "0.004030",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -270,6 +282,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -283,6 +296,159 @@
    "latency_ms": 4,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "record": {
+     "buyer": {
+      "name": {
+       "value": "Silverbirch Academy Trust",
+       "evidence": "Silverbirch Academy Trust",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+       "evidence": "Birchfield Campus, Mill Road\nReading RG1 8HX\nUnited Kingdom",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "total": {
+      "value": 5890.66,
+      "evidence": "\u00a35,890.66",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "seller": {
+      "name": {
+       "value": "Brightledger Stationers Ltd",
+       "evidence": "Brightledger Stationers Ltd",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "tax_id": {
+       "value": "GB284719306",
+       "evidence": "GB284719306",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom",
+       "evidence": "Unit 4, Fallowfield Trading Estate\n Leeds LS11 5QR\n United Kingdom",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "currency": {
+      "value": "GBP",
+      "evidence": "\u00a3",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "due_date": {
+      "value": "2026-09-13",
+      "evidence": "2026-09-13",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "subtotal": {
+      "value": 4908.88,
+      "evidence": "\u00a34,908.88",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "po_number": {
+      "value": "PO-85044",
+      "evidence": "PO-85044",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "line_items": [
+      {
+       "sku": {
+        "value": null,
+        "evidence": null,
+        "confidence": 1.0,
+        "source_page": null
+       },
+       "quantity": {
+        "value": 24.0,
+        "evidence": "24",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 985.68,
+        "evidence": "985.68",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 41.07,
+        "evidence": "41.07",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Multipurpose paper Letter 20lb - case/10",
+        "evidence": "Multipurpose paper Letter 20lb - case/10",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": null,
+        "evidence": null,
+        "confidence": 1.0,
+        "source_page": null
+       },
+       "quantity": {
+        "value": 40.0,
+        "evidence": "40",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 3923.2,
+        "evidence": "3,923.20",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 98.08,
+        "evidence": "98.08",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Whiteboard magnetic 1200x900mm",
+        "evidence": "Whiteboard magnetic 1200x900mm",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      }
+     ],
+     "tax_amount": {
+      "value": 981.78,
+      "evidence": "\u00a3981.78",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "invoice_date": {
+      "value": "2026-08-29",
+      "evidence": "2026-08-29",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "invoice_number": {
+      "value": "BLS-2026-2422",
+      "evidence": "BLS-2026-2422",
+      "confidence": 1.0,
+      "source_page": 1
+     }
+    },
+    "doc_type": "invoice"
+   },
    "output": {
     "valid": true,
     "issues": []
@@ -299,6 +465,10 @@
    "latency_ms": 6,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "name": "Brightledger Stationers Ltd",
+    "tax_id": "GB284719306"
+   },
    "output": {
     "found": true,
     "vendor": {
@@ -325,6 +495,7 @@
    "latency_ms": 61,
    "cost_usd": "0.000000",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -338,6 +509,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -351,6 +523,45 @@
    "latency_ms": 29,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "record": {
+     "buyer": {
+      "name": "Silverbirch Academy Trust",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+     },
+     "total": "5890.66",
+     "seller": {
+      "name": "Brightledger Stationers Ltd",
+      "tax_id": "GB284719306",
+      "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom"
+     },
+     "currency": "GBP",
+     "due_date": "2026-09-13",
+     "subtotal": "4908.88",
+     "po_number": "PO-85044",
+     "line_items": [
+      {
+       "sku": null,
+       "quantity": "24",
+       "line_total": "985.68",
+       "unit_price": "41.07",
+       "description": "Multipurpose paper Letter 20lb - case/10"
+      },
+      {
+       "sku": null,
+       "quantity": "40",
+       "line_total": "3923.20",
+       "unit_price": "98.08",
+       "description": "Whiteboard magnetic 1200x900mm"
+      }
+     ],
+     "tax_amount": "981.78",
+     "invoice_date": "2026-08-29",
+     "invoice_number": "BLS-2026-2422"
+    },
+    "doc_type": "invoice",
+    "document_id": "b29984b3-ebee-4ee2-9363-d60dd8a0f8b0"
+   },
    "output": {
     "record_id": "8031d422-6e4c-4dfb-8225-92a8fb0d7dbc"
    }
@@ -366,6 +577,7 @@
    "latency_ms": 47,
    "cost_usd": "0.000000",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -379,6 +591,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -392,6 +605,11 @@
    "latency_ms": 40,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "po_number": "PO-85044",
+    "exclude_invoice_id": "8031d422-6e4c-4dfb-8225-92a8fb0d7dbc",
+    "exclude_invoice_number": "BLS-2026-2422"
+   },
    "output": {
     "found": true,
     "po_id": "2e813e18-8e57-4337-81a9-8cdd4f1ea0c9",
@@ -446,6 +664,80 @@
    "latency_ms": 4,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "invoice": {
+     "buyer": {
+      "name": "Silverbirch Academy Trust",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+     },
+     "total": "5890.66",
+     "seller": {
+      "name": "Brightledger Stationers Ltd",
+      "tax_id": "GB284719306",
+      "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom"
+     },
+     "currency": "GBP",
+     "due_date": "2026-09-13",
+     "subtotal": "4908.88",
+     "po_number": "PO-85044",
+     "line_items": [
+      {
+       "sku": null,
+       "quantity": "24",
+       "line_total": "985.68",
+       "unit_price": "41.07",
+       "description": "Multipurpose paper Letter 20lb - case/10"
+      },
+      {
+       "sku": null,
+       "quantity": "40",
+       "line_total": "3923.20",
+       "unit_price": "98.08",
+       "description": "Whiteboard magnetic 1200x900mm"
+      }
+     ],
+     "tax_amount": "981.78",
+     "invoice_date": "2026-08-29",
+     "invoice_number": "BLS-2026-2422"
+    },
+    "prior_invoices": [],
+    "purchase_order": {
+     "buyer": {
+      "name": "LAURA JONES-MILLER",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+     },
+     "total": "5666.50",
+     "vendor": {
+      "name": "Brightledger Stationers Ltd",
+      "tax_id": "GB284719306",
+      "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom"
+     },
+     "po_date": "2026-08-18",
+     "ship_to": "Silverbirch Academy Trust, Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+     "currency": "GBP",
+     "subtotal": "4722.08",
+     "po_number": "PO-85044",
+     "line_items": [
+      {
+       "sku": "PAP-LTR-20-5K",
+       "quantity": "24.000",
+       "line_total": "985.68",
+       "unit_price": "41.07",
+       "description": "Letter copy paper, 20 lb, case of 10 reams"
+      },
+      {
+       "sku": "WBD-120-90",
+       "quantity": "40.000",
+       "line_total": "3736.40",
+       "unit_price": "93.41",
+       "description": "Magnetic whiteboard, 120 x 90 cm"
+      }
+     ],
+     "tax_amount": "944.42",
+     "payment_terms": "Net 15",
+     "requested_delivery_date": "2026-08-29"
+    }
+   },
    "output": {
     "issues": [
      {
@@ -489,6 +781,25 @@
    "latency_ms": 35,
    "cost_usd": null,
    "error": null,
+   "input": {
+    "po_id": "2e813e18-8e57-4337-81a9-8cdd4f1ea0c9",
+    "issues": [
+     {
+      "rule": "unit_price_out_of_tolerance",
+      "message": "invoice line 2 unit price 98.08 vs PO 93.41 (+5.0%, tolerance +/-2.0%)",
+      "po_line": 1,
+      "invoice_line": 1
+     },
+     {
+      "rule": "total_exceeds_remaining",
+      "message": "invoice total 5890.66 exceeds the PO's remaining value 5666.50 (5666.50 less 0 earlier invoice(s))",
+      "po_line": null,
+      "invoice_line": null
+     }
+    ],
+    "status": "mismatch",
+    "invoice_id": "8031d422-6e4c-4dfb-8225-92a8fb0d7dbc"
+   },
    "output": {
     "match_id": "d85b726e-e0fd-49bd-a726-9a73b30a6654"
    }
@@ -504,6 +815,7 @@
    "latency_ms": 152,
    "cost_usd": "0.000000",
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -517,6 +829,7 @@
    "latency_ms": null,
    "cost_usd": null,
    "error": null,
+   "input": null,
    "output": null
   },
   {
@@ -530,6 +843,7 @@
    "latency_ms": 17,
    "cost_usd": "0.000000",
    "error": null,
+   "input": null,
    "output": null
   }
  ],

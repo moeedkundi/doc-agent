@@ -12,7 +12,7 @@ import asyncio
 import json
 from collections.abc import AsyncIterator, Awaitable, Callable
 from decimal import Decimal
-from typing import Any
+from typing import Any, cast
 from uuid import UUID
 
 from sse_starlette import ServerSentEvent
@@ -22,6 +22,16 @@ from docagent_api.runs import TERMINAL
 
 POLL_SECONDS = 0.3
 RETRY_MS = 2000
+
+
+REDACTED_ARGS = frozenset({"session_id", "run_id"})
+
+
+def redact_args(args: Any) -> Any:
+    """Tool args as shown to the browser: internal ids (session, run) are left out."""
+    if isinstance(args, dict):
+        return {k: v for k, v in cast(dict[str, Any], args).items() if k not in REDACTED_ARGS}
+    return args
 
 
 def _event_json(run_id: UUID, row: Row) -> str:
@@ -40,6 +50,7 @@ def _event_json(run_id: UUID, row: Row) -> str:
             "latency_ms": row["latency_ms"],
             "cost_usd": float(cost) if isinstance(cost, Decimal) else cost,
             "error": row["error"],
+            "args": redact_args(row.get("input_json")),
             "payload": row["output_json"],
         },
         default=str,

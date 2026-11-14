@@ -104,7 +104,7 @@ class Db:
         with self.scoped(sid) as cur:
             return cur.execute(
                 "SELECT seq, ts, node, kind, tool, model, tokens_in, tokens_out, latency_ms, "
-                "cost_usd, output_json, error FROM trace_events "
+                "cost_usd, input_json, output_json, error FROM trace_events "
                 "WHERE run_id = %s AND seq > %s ORDER BY seq",
                 (run_id, seq),
             ).fetchall()

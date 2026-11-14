@@ -29,6 +29,7 @@ from docagent_agent.runtime import AgentConfig, Runtime, build_runtime
 from docagent_agent.tools import McpHub, Server
 from docagent_agent.trace import PgTraceSink
 from docagent_api.db import Db
+from docagent_api.documents import mime_of, render_page_png
 from docagent_api.events import stream_run
 from docagent_api.guards import ApiError, RateLimiter, check_upload, hash_ip, parse_rate
 from docagent_api.runs import ReplayFixtures, RunService
@@ -204,7 +205,9 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
         fixtures = app.state.services.runs.fixtures.by_sample
         for sample_id in SAMPLE_IDS:
             truth = json.loads((settings.samples_dir / f"{sample_id}.json").read_text("utf-8"))
-            record = truth["record"]
+            record: dict[str, Any] = truth["record"]
+            party: dict[str, Any] = record.get("seller") or record.get("vendor") or {}
+            expected: dict[str, Any] = truth.get("expected_match") or {}
             out.append(
                 {
                     "id": sample_id,
@@ -212,6 +215,14 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
                     "template": truth["template"],
                     "scanned": truth["scanned"],
                     "number": record.get("invoice_number") or record.get("po_number"),
+                    "party": party.get("name"),
+                    "currency": record.get("currency"),
+                    "total": record.get("total"),
+                    "lines": len(record.get("line_items") or []),
+                    "references_po": record.get("po_number")
+                    if truth["doc_type"] == "invoice"
+                    else None,
+                    "expected_match": expected.get("status"),
                     "replay_available": sample_id in fixtures,
                 }
             )
@@ -259,12 +270,40 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
             "sample_id": sample_id,
         }
 
-    @app.get("/api/documents/{document_id}/file")
-    async def document_file(document_id: UUID, request: Request) -> FileResponse:
+    async def _document(request: Request, document_id: UUID) -> dict[str, Any]:
         doc = await asyncio.to_thread(svc(request).db.get_document, sid_of(request), document_id)
         if doc is None:
             raise ApiError(404, "document_not_found", "No such document in this session.")
+        return doc
+
+    @app.get("/api/documents/{document_id}")
+    async def document_meta(document_id: UUID, request: Request) -> dict[str, Any]:
+        doc = await _document(request, document_id)
+        return {
+            "document_id": str(doc["id"]),
+            "filename": doc["filename"],
+            "pages": doc["pages"],
+            "type": mime_of(doc["storage_path"]),
+            "sample_id": doc["sample_id"],
+        }
+
+    @app.get("/api/documents/{document_id}/file")
+    async def document_file(document_id: UUID, request: Request) -> FileResponse:
+        doc = await _document(request, document_id)
         return FileResponse(settings.upload_dir / doc["storage_path"], filename=doc["filename"])
+
+    @app.get("/api/documents/{document_id}/pages/{page}")
+    async def document_page(document_id: UUID, page: int, request: Request) -> Response:
+        """One page as PNG for the viewer (PDFs are rendered; images are served as they are)."""
+        doc = await _document(request, document_id)
+        if not 1 <= page <= int(doc["pages"] or 1):
+            raise ApiError(404, "page_not_found", "No such page.")
+        path = settings.upload_dir / doc["storage_path"]
+        headers = {"Cache-Control": "private, max-age=86400"}
+        if mime_of(doc["storage_path"]) != "application/pdf":
+            return FileResponse(path, media_type=mime_of(doc["storage_path"]), headers=headers)
+        png = await asyncio.to_thread(render_page_png, path, page)
+        return Response(png, media_type="image/png", headers=headers)
 
     # -- runs ---------------------------------------------------------------------------------
     @app.post("/api/runs", status_code=202)
@@ -370,6 +409,20 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
             ping=15,
             headers={"X-Run-Id": str(run_id)},
         )
+
+    @app.get("/api/limits")
+    async def limits() -> dict[str, Any]:
+        """What the UI tells visitors before they upload (from config/limits.yaml)."""
+        count, window = parse_rate(settings.run_limit)
+        return {
+            "max_upload_bytes": settings.max_upload_bytes,
+            "max_pages": settings.max_pages,
+            "file_types": ["PDF", "PNG", "JPEG"],
+            "runs_per_window": count,
+            "window_minutes": int(window // 60),
+            "session_ttl_hours": settings.session_ttl_hours,
+            "replay_only": settings.replay_only,
+        }
 
     # -- evals & health -------------------------------------------------------------------------
     @app.get("/api/evals/latest")
