@@ -1,0 +1,449 @@
+{
+ "sample_id": "po_002",
+ "recorded_at": "2026-11-14T10:53:00.581092+00:00",
+ "source_run_id": "105b3cf0-9786-4a7c-b06d-05805a94a1a5",
+ "note": "Recorded from a real run; replayed when live processing is off.",
+ "events": [
+  {
+   "offset_ms": 0,
+   "node": "classify",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 2440,
+   "node": "classify",
+   "kind": "tool_end",
+   "tool": "classify_document",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1567,
+   "tokens_out": 53,
+   "latency_ms": 2418,
+   "cost_usd": "0.000603",
+   "error": null,
+   "output": {
+    "usage": {
+     "tier": "default",
+     "calls": 1,
+     "model": "gemini-3.5-flash-lite",
+     "cost_usd": "0.000603",
+     "tokens_in": 1567,
+     "latency_ms": 2271,
+     "tokens_out": 53
+    },
+    "reason": "The document explicitly states Purchase Order at the top along with a PO number, order date, and supplier details.",
+    "doc_type": "purchase_order",
+    "confidence": 1.0
+   }
+  },
+  {
+   "offset_ms": 2464,
+   "node": "classify",
+   "kind": "node_end",
+   "tool": "classify_document",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1567,
+   "tokens_out": 53,
+   "latency_ms": 2442,
+   "cost_usd": "0.000603",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 2494,
+   "node": "extract",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 6821,
+   "node": "extract",
+   "kind": "tool_end",
+   "tool": "extract_fields",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1924,
+   "tokens_out": 1462,
+   "latency_ms": 4303,
+   "cost_usd": "0.004232",
+   "error": null,
+   "output": {
+    "pages": [
+     1
+    ],
+    "usage": {
+     "tier": "default",
+     "calls": 1,
+     "model": "gemini-3.5-flash-lite",
+     "cost_usd": "0.004232",
+     "tokens_in": 1924,
+     "latency_ms": 4125,
+     "tokens_out": 1462
+    },
+    "record": {
+     "buyer": {
+      "name": {
+       "value": "Larkspur Logistics Inc.",
+       "evidence": "Larkspur Logistics Inc.",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "5500 Wrenfield Road, Columbus, OH 43215, USA",
+       "evidence": "5500 Wrenfield Road\nColumbus, OH 43215\n USA",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "total": {
+      "value": 472.72,
+      "evidence": "USD 472.72",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "vendor": {
+      "name": {
+       "value": "Pinewick Data Accessories Inc.",
+       "evidence": "Pinewick Data Accessories Inc.",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "tax_id": {
+       "value": "39-2058816",
+       "evidence": "EIN 39-2058816",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "3125 Ledgerock Parkway, Madison, WI 53703, USA",
+       "evidence": "3125 Ledgerock Parkway\nMadison, WI 53703\nUSA",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "po_date": {
+      "value": "2026-04-18",
+      "evidence": "2026-04-18",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "ship_to": {
+      "value": "5500 Wrenfield Road, Columbus, OH 43215, USA",
+      "evidence": "5500 Wrenfield Road\nColumbus, OH 43215\nUSA",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "currency": {
+      "value": "USD",
+      "evidence": "USD 440.76",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "subtotal": {
+      "value": 440.76,
+      "evidence": "USD 440.76",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "po_number": {
+      "value": "PO-1042",
+      "evidence": "PO-1042",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "line_items": [
+      {
+       "sku": {
+        "value": "SSD-EXT-1T",
+        "evidence": "SSD-EXT-1T",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "quantity": {
+        "value": 4.0,
+        "evidence": "4",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 338.56,
+        "evidence": "338.56",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 84.64,
+        "evidence": "84.64",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "External SSD, 1 TB, USB-C",
+        "evidence": "External SSD, 1 TB, USB-C",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": "USB-64G",
+        "evidence": "USB-64G",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "quantity": {
+        "value": 10.0,
+        "evidence": "10",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 102.2,
+        "evidence": "102.20",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 10.22,
+        "evidence": "10.22",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "USB flash drive, 64 GB",
+        "evidence": "USB flash drive, 64 GB",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      }
+     ],
+     "tax_amount": {
+      "value": 31.96,
+      "evidence": "USD 31.96",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "payment_terms": {
+      "value": "Net 30",
+      "evidence": "Net 30",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "requested_delivery_date": {
+      "value": "2026-04-29",
+      "evidence": "2026-04-29",
+      "confidence": 1.0,
+      "source_page": 1
+     }
+    },
+    "doc_type": "purchase_order"
+   }
+  },
+  {
+   "offset_ms": 6847,
+   "node": "extract",
+   "kind": "node_end",
+   "tool": "extract_fields",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1924,
+   "tokens_out": 1462,
+   "latency_ms": 4328,
+   "cost_usd": "0.004232",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 6873,
+   "node": "validate",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 6902,
+   "node": "validate",
+   "kind": "tool_end",
+   "tool": "validate_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 6,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "valid": true,
+    "issues": []
+   }
+  },
+  {
+   "offset_ms": 6931,
+   "node": "validate",
+   "kind": "tool_end",
+   "tool": "lookup_vendor",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 5,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "found": true,
+    "vendor": {
+     "tax_id": "39-2058816",
+     "country": "US",
+     "vendor_id": "V-006",
+     "legal_name": "Pinewick Data Accessories Inc.",
+     "payment_terms": "Net 30",
+     "default_currency": "USD"
+    },
+    "matched_on": "tax_id",
+    "name_score": 100.0,
+    "tax_id_matches": true
+   }
+  },
+  {
+   "offset_ms": 6952,
+   "node": "validate",
+   "kind": "node_end",
+   "tool": "validate_record,lookup_vendor",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 57,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 6976,
+   "node": "save",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7042,
+   "node": "save",
+   "kind": "tool_end",
+   "tool": "save_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 47,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "record_id": "176fde01-a99c-4b10-a3e9-107a4aa51cce"
+   }
+  },
+  {
+   "offset_ms": 7060,
+   "node": "save",
+   "kind": "node_end",
+   "tool": "save_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 65,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7082,
+   "node": "summarize",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7141,
+   "node": "summarize",
+   "kind": "node_end",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 39,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  }
+ ],
+ "result": {
+  "notes": [],
+  "issues": [],
+  "record": {
+   "buyer": {
+    "name": "Larkspur Logistics Inc.",
+    "address": "5500 Wrenfield Road, Columbus, OH 43215, USA"
+   },
+   "total": "472.72",
+   "vendor": {
+    "name": "Pinewick Data Accessories Inc.",
+    "tax_id": "39-2058816",
+    "address": "3125 Ledgerock Parkway, Madison, WI 53703, USA"
+   },
+   "po_date": "2026-04-18",
+   "ship_to": "5500 Wrenfield Road, Columbus, OH 43215, USA",
+   "currency": "USD",
+   "subtotal": "440.76",
+   "po_number": "PO-1042",
+   "line_items": [
+    {
+     "sku": "SSD-EXT-1T",
+     "quantity": "4",
+     "line_total": "338.56",
+     "unit_price": "84.64",
+     "description": "External SSD, 1 TB, USB-C"
+    },
+    {
+     "sku": "USB-64G",
+     "quantity": "10",
+     "line_total": "102.20",
+     "unit_price": "10.22",
+     "description": "USB flash drive, 64 GB"
+    }
+   ],
+   "tax_amount": "31.96",
+   "payment_terms": "Net 30",
+   "requested_delivery_date": "2026-04-29"
+  },
+  "summary": "Purchase order PO-1042 saved: USD 472.72. Cost $0.004835 \u00b7 escalated: no.",
+  "cost_usd": "0.004835",
+  "doc_type": "purchase_order",
+  "escalated": false,
+  "record_id": "176fde01-a99c-4b10-a3e9-107a4aa51cce"
+ }
+}

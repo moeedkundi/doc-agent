@@ -25,6 +25,7 @@ from uuid import UUID
 import psycopg
 from langgraph.errors import GraphInterrupt
 from psycopg import sql
+from psycopg.types.json import Jsonb
 from pydantic import BaseModel
 
 from docagent_agent.tools import NodeTools, ToolCaller
@@ -121,14 +122,15 @@ class MemoryTraceSink:
 class PgTraceSink:
     """Writes as `docagent_app` with `app.session_id` set, so RLS scopes every row."""
 
-    _RUN_FIELDS = frozenset({"status", "total_cost_usd", "escalated", "finished_at"})
+    _RUN_FIELDS = frozenset({"status", "total_cost_usd", "escalated", "finished_at",
+                             "error_code", "error", "result_json"})  # fmt: skip
 
-    def __init__(self, dsn: str) -> None:
-        self._dsn = dsn
+    def __init__(self, connect: Callable[[], psycopg.Connection]) -> None:
+        """`connect` returns a new autocommit connection as `docagent_app`."""
+        self._connect = connect
 
     def _tx(self, session_id: UUID) -> psycopg.Connection:
-        conn = psycopg.connect(self._dsn, autocommit=True, connect_timeout=5)
-        return conn
+        return self._connect()
 
     async def write(self, event: TraceEvent) -> TraceEvent:
         return await asyncio.to_thread(self._write, event)
@@ -162,7 +164,8 @@ class PgTraceSink:
         query = sql.SQL("UPDATE runs SET {} WHERE id = %s").format(assignments)
         with self._tx(session_id) as conn, conn.transaction():
             conn.execute("SELECT set_config('app.session_id', %s, true)", (str(session_id),))
-            conn.execute(query, [fields[c] for c in cols] + [run_id])
+            values = [Jsonb(fields[c]) if c == "result_json" else fields[c] for c in cols]
+            conn.execute(query, [*values, run_id])
 
     async def review(self, run_id: UUID, session_id: UUID, actions: list[ReviewAction]) -> None:
         await asyncio.to_thread(self._review, run_id, session_id, actions)

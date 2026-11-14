@@ -94,8 +94,20 @@ class McpHub:
         self._clients: dict[Server, Client] = {}
         self._stack = AsyncExitStack()
 
+    @classmethod
+    def in_process(cls, servers: Mapping[Server, Any]) -> "McpHub":
+        """Connect to MCPServer objects in memory (tests): same calls, no HTTP."""
+        hub = cls({}, "")
+        hub._in_process = dict(servers)
+        return hub
+
+    _in_process: dict[Server, Any] = {}  # noqa: RUF012 - replaced per instance
+
     async def __aenter__(self) -> "McpHub":
         try:
+            for server, mcp_server in self._in_process.items():
+                client = Client(mcp_server)
+                self._clients[server] = await self._stack.enter_async_context(client)
             for server, url in self._urls.items():
                 http = httpx2.AsyncClient(
                     headers={"x-mcp-secret": self._secret}, timeout=self._timeout

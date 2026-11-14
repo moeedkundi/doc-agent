@@ -3,8 +3,26 @@ name = "docagent-api"
 version = "0.1.0"
 description = "FastAPI app: uploads, runs, SSE, review, ask, evals."
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "docagent-agent",
+    "docagent-db",
+    "docagent-gateway",
+    "docagent-schemas",
+    "fastapi>=0.162.7",
+    "psycopg[binary]>=3.3",
+    "pypdf>=7.1",
+    "python-multipart>=0.0.33",
+    "pyyaml>=6.0",
+    "sse-starlette>=3.7",
+    "uvicorn>=0.54",
+]
 
 [build-system]
 requires = ["uv_build>=0.8.0,<0.9.0"]
 build-backend = "uv_build"
+
+[tool.uv.sources]
+docagent-agent = { workspace = true }
+docagent-db = { workspace = true }
+docagent-gateway = { workspace = true }
+docagent-schemas = { workspace = true }

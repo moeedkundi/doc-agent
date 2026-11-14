@@ -264,6 +264,13 @@ class Gateway:
             calls=len(results),
         )
 
+    async def check_budget(self, session_id: UUID | None = None) -> None:
+        """Raise BudgetExceeded if a call now would break the daily or session cap."""
+        await self._check_budget(session_id)
+
+    async def spent_today(self) -> Decimal:
+        return await asyncio.to_thread(self._ledger.spent_since, start_of_utc_day(self._now()))
+
     async def _check_budget(self, session_id: UUID | None) -> None:
         reserve = self._config.limits.call_reserve_usd
         budgets = self._config.budgets

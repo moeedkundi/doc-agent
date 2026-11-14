@@ -57,12 +57,12 @@ Working name: `docagent` (rename freely). Public URL target: `demo.meetmoeed.com
 | LLM access | `packages/gateway` (own code) on top of LiteLLM SDK | routing, cost ledger, budget cap; `PyYAML` reads `config/*.yaml` |
 | Vision extraction | Gemini for both tiers (one key): Flash-class default → Gemini 4 strong tier | IDs and dated prices in `config/models.yaml` |
 | PDF handling | `pypdfium2` (render pages to PNG), `pypdf` (text layer) | |
-| API | FastAPI + SSE (`sse-starlette`) | |
+| API | FastAPI + SSE (`sse-starlette`); `python-multipart` for uploads | |
 | DB | Postgres 16 (app data, traces, checkpoints) | Row-level security per session |
 | DB driver | `psycopg` 3 (`psycopg[binary]`) | also what the LangGraph Postgres checkpointer uses; own plain-SQL migration runner in `packages/db` |
 | SQL safety | `sqlglot` | parse/validate SELECT-only |
 | Line matching | `rapidfuzz` | fuzzy description match for PO ↔ invoice lines |
-| Rate limiting | `slowapi` (or Redis-backed limiter if multi-instance) | |
+| Rate limiting | own in-process sliding window (`docagent_api.guards.RateLimiter`), limits.yaml syntax | swap for Redis-backed if multi-instance; slowapi not needed |
 | Frontend | Next.js (App Router), TypeScript, Tailwind, shadcn/ui | |
 | Tests | pytest, pytest-asyncio, respx (HTTP mocks) | |
 | Evals | own runner in `evals/` | JSON report + markdown summary |
@@ -353,8 +353,10 @@ demo always works. Label it clearly: "Replaying a recorded run".
 |---|---|---|
 | POST | `/api/session` | create anonymous session (cookie) |
 | GET | `/api/samples` | list sample docs |
+| POST | `/api/samples/{id}/document` | copy a sample into the session → `document_id` |
+| GET | `/api/documents/{id}/file` | the uploaded file (for the viewer) |
 | POST | `/api/documents` | upload file → `document_id` |
-| POST | `/api/runs` | start ingest run `{document_id}` → `run_id` |
+| POST | `/api/runs` | start ingest run `{document_id, replay?}` → `run_id` (402 `budget_exceeded` / 503 `replay_only` carry `replay_available`) |
 | GET | `/api/runs/{id}/events` | **SSE** stream of trace events + status changes |
 | GET | `/api/runs/{id}` | run state, record, issues |
 | POST | `/api/runs/{id}/resume` | submit reviewed record → resumes graph |
@@ -420,9 +422,9 @@ correct answers. (`scripts/phase4_done_when.py`; 2026-11-14: all 9 checks pass o
 session spend $0.067; 4.2 needed the "doesn't match = mismatch or po_not_found" prompt rule.)
 
 ### Phase 5 — API
-- [ ] Endpoints in §9, SSE streaming, sessions via cookie
-- [ ] Upload validation, rate limits, budget errors → friendly responses
-- [ ] Replay mode fixtures recorded from real runs
+- [x] Endpoints in §9, SSE streaming, sessions via cookie
+- [x] Upload validation, rate limits, budget errors → friendly responses
+- [x] Replay mode fixtures recorded from real runs
 **Done when:** API integration tests cover upload → run → review → resume → ask; replay works
 with LLM calls disabled.
 
@@ -557,3 +559,11 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | Free tier limits the default model to 20 requests/day; beyond that every call falls back to the strong tier | Observed live; the demo needs a paid key (or a cheaper fallback) to be usable |
 | 2026-11-14 | Default tier → `gemini-3.5-flash-lite` ($0.30/$2.50 per 1M, pricing page checked 2026-11-14) | Free-tier quotas are per model; 3.6-flash's 20 requests/day ran out and 3.8-flash still returns 503. Lite is cheaper; accuracy verified by the Phase 4 checks |
 | 2026-11-14 | Ask prompt: "doesn't match its PO" = status mismatch OR po_not_found | The lite model filtered only on `mismatch`; an invoice citing a missing PO is a matching failure in AP |
+| 2026-11-14 | Own sliding-window rate limiter keyed by salted IP hash; 429 + `Retry-After`; requests count when they arrive | One API instance; avoids a dependency for ~40 lines; same `N/Mminutes` syntax as limits.yaml |
+| 2026-11-14 | Budget exhaustion → HTTP 402 `{error: budget_exceeded, replay_available, replay_samples}`; mid-run → run `failed` with `error_code` | One machine-readable shape the frontend can switch to replay mode on |
+| 2026-11-14 | SSE reads trace_events from Postgres (poll 0.3s): `id: seq`, resume via `Last-Event-ID`/`?after=`; `review_required` once, stream stays open while paused; `end` carries status + result | Works across reconnects, processes and restarts; EventSource reconnects automatically |
+| 2026-11-14 | Migration 005: `documents.sample_id`; `runs.replay`, `error_code`, `error`, `result_json` | API reports runs without reading checkpoints; replays are tied to samples |
+| 2026-11-14 | Graphs write their result together with the final status | A reader saw `completed` before the result was stored (race found by the API test) |
+| 2026-11-14 | Replay: `scripts/record_replays.py` → `api/fixtures/replay/*.json` (events with offsets + result); `REPLAY_ONLY=true` needs no key and no MCP servers; `REPLAY_SPEED` scales timing | Demo survives budget exhaustion or provider outage (§8.3) |
+| 2026-11-14 | API runs uvicorn on a selector event loop on Windows | psycopg's async driver (checkpointer) can't use the Proactor loop |
+| 2026-11-14 | The recorded inv_002 (scanned) shows a real misread: `INVQ04677` for `INV004677` | Kept as recorded; Phase 6 evals measure extraction accuracy |

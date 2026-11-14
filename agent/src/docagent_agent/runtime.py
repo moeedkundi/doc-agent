@@ -11,21 +11,23 @@
 import asyncio
 import os
 import shutil
-from collections.abc import AsyncGenerator, Coroutine, Mapping
+from collections.abc import AsyncGenerator, Callable, Coroutine, Mapping
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
+from functools import partial
 from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
 import psycopg
 import yaml
+from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from langgraph.graph.state import CompiledStateGraph
 
 from docagent_agent.ask import AskState, build_ask_graph
 from docagent_agent.ingest import IngestSettings, IngestState, build_ingest_graph
-from docagent_agent.tools import McpHub, Server
+from docagent_agent.tools import McpHub, Server, ToolCaller
 from docagent_agent.trace import PgTraceSink, Tracer
 from docagent_gateway import Gateway, PostgresLedger, load_config
 
@@ -73,8 +75,11 @@ class AgentConfig:
 
 
 def _scoped(dsn: str, session_id: UUID) -> psycopg.Connection:
-    conn = psycopg.connect(dsn, autocommit=True, connect_timeout=5)
-    return conn
+    return psycopg.connect(dsn, autocommit=True, connect_timeout=5)
+
+
+def app_connector(cfg: AgentConfig) -> Callable[[], psycopg.Connection]:
+    return partial(psycopg.connect, cfg.app_dsn, autocommit=True, connect_timeout=5)
 
 
 def create_session(cfg: AgentConfig) -> UUID:
@@ -149,6 +154,18 @@ class Runtime:
     config: AgentConfig
 
 
+def build_runtime(
+    cfg: AgentConfig,
+    hub: ToolCaller,
+    checkpointer: BaseCheckpointSaver[Any],
+    gateway: Gateway | None,
+    connect: Callable[[], psycopg.Connection],
+) -> Runtime:
+    tracer = Tracer(PgTraceSink(connect), hub, gateway)
+    graph = build_ingest_graph(tracer, checkpointer, IngestSettings(cfg.max_reextract_attempts))
+    return Runtime(graph, build_ask_graph(tracer, checkpointer), tracer, cfg)
+
+
 @asynccontextmanager
 async def open_runtime(cfg: AgentConfig) -> AsyncGenerator[Runtime]:
     async with (
@@ -158,9 +175,7 @@ async def open_runtime(cfg: AgentConfig) -> AsyncGenerator[Runtime]:
         await checkpointer.setup()
         # All LLM calls go through the gateway (budget caps + ledger), never a provider SDK.
         gateway = Gateway(load_config(), PostgresLedger(cfg.app_dsn))
-        tracer = Tracer(PgTraceSink(cfg.app_dsn), hub, gateway)
-        graph = build_ingest_graph(tracer, checkpointer, IngestSettings(cfg.max_reextract_attempts))
-        yield Runtime(graph, build_ask_graph(tracer, checkpointer), tracer, cfg)
+        yield build_runtime(cfg, hub, checkpointer, gateway, app_connector(cfg))
 
 
 def run_async(coro: Coroutine[Any, Any, int]) -> int:

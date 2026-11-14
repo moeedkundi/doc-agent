@@ -293,7 +293,16 @@ def build_ask_graph(
                 if conv and "error" not in conv:
                     figure = (str(conv["amount"]), str(conv["to_currency"]))
             cost += ctx.cost
+            res = state.get("result") or {}
+            result_json: Json = {
+                "question": state["question"], "answer": answer, "plan": plan,
+                "sql": res.get("sql") or state.get("sql"), "columns": res.get("columns"),
+                "rows": res.get("rows"), "truncated": res.get("truncated"),
+                "sql_error": state.get("sql_error"), "conversion": conv or None,
+                "figure_amount": figure[0], "figure_currency": figure[1], "cost_usd": str(cost),
+            }  # fmt: skip
             await tracer.sink.set_run(run_id, sid, status="completed", total_cost_usd=cost,
+                                      result_json=result_json,
                                       finished_at=datetime.now(UTC))  # fmt: skip
         turn: Turn = {"question": state["question"], "answer": answer, "sql": state.get("sql"),
                       "figure_amount": figure[0], "figure_currency": figure[1]}  # fmt: skip

@@ -25,6 +25,7 @@ can persist it across the human-review pause (thread_id = run_id).
 # pyright: reportTypedDictNotRequiredAccess=false, reportMissingTypeStubs=false
 
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -173,6 +174,13 @@ def reextract_paths(issues: list[Json]) -> list[str]:
     return list(dict.fromkeys(paths))
 
 
+def result_of(state: Mapping[str, Any]) -> Json:
+    """What the API reports for a finished ingest run."""
+    keys = ("doc_type", "record", "issues", "final_issues", "match", "summary", "notes",
+            "review_edits", "record_id", "cost_usd", "escalated", "reviewed")  # fmt: skip
+    return {k: state[k] for k in keys if k in state}
+
+
 def blocking(issues: list[Json]) -> list[Json]:
     return [i for i in issues if i["severity"] in ("error", "review")]
 
@@ -208,6 +216,7 @@ def build_ingest_graph(
             summary = f"Rejected: not an invoice or purchase order ({reason})"
             await tracer.sink.set_run(run_id, sid, status="rejected",
                                       total_cost_usd=Decimal(state.get("cost_usd", "0")),
+                                      result_json=result_of({**state, "summary": summary}),
                                       finished_at=datetime.now(UTC))  # fmt: skip
         return {"summary": summary}
 
@@ -396,8 +405,11 @@ def build_ingest_graph(
             total = Decimal(state.get("cost_usd", "0"))
             lines.append(f"Cost ${total} · escalated: {'yes' if state.get('escalated') else 'no'}.")
             summary = " ".join(lines)
+            result = result_of({**state, "summary": summary, "cost_usd": str(total)})
+            # Result and final status in one update: a reader never sees "completed" without it.
             await tracer.sink.set_run(run_id, sid, status="completed", total_cost_usd=total,
                                       escalated=bool(state.get("escalated")),
+                                      result_json=result,
                                       finished_at=datetime.now(UTC))  # fmt: skip
         return {"summary": summary}
 

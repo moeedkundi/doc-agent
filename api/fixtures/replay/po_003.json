@@ -1,0 +1,449 @@
+{
+ "sample_id": "po_003",
+ "recorded_at": "2026-11-14T10:53:07.789613+00:00",
+ "source_run_id": "847e970c-8634-409f-a1ba-1c862ef5c8c4",
+ "note": "Recorded from a real run; replayed when live processing is off.",
+ "events": [
+  {
+   "offset_ms": 0,
+   "node": "classify",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 1816,
+   "node": "classify",
+   "kind": "tool_end",
+   "tool": "classify_document",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1589,
+   "tokens_out": 51,
+   "latency_ms": 1798,
+   "cost_usd": "0.000604",
+   "error": null,
+   "output": {
+    "usage": {
+     "tier": "default",
+     "calls": 1,
+     "model": "gemini-3.5-flash-lite",
+     "cost_usd": "0.000604",
+     "tokens_in": 1589,
+     "latency_ms": 1653,
+     "tokens_out": 51
+    },
+    "reason": "The document is explicitly titled PURCHASE ORDER and contains order details, line items, and a vendor section.",
+    "doc_type": "purchase_order",
+    "confidence": 1.0
+   }
+  },
+  {
+   "offset_ms": 1837,
+   "node": "classify",
+   "kind": "node_end",
+   "tool": "classify_document",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1589,
+   "tokens_out": 51,
+   "latency_ms": 1819,
+   "cost_usd": "0.000604",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 1866,
+   "node": "extract",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 6841,
+   "node": "extract",
+   "kind": "tool_end",
+   "tool": "extract_fields",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1946,
+   "tokens_out": 1490,
+   "latency_ms": 4953,
+   "cost_usd": "0.004309",
+   "error": null,
+   "output": {
+    "pages": [
+     1
+    ],
+    "usage": {
+     "tier": "default",
+     "calls": 1,
+     "model": "gemini-3.5-flash-lite",
+     "cost_usd": "0.004309",
+     "tokens_in": 1946,
+     "latency_ms": 4807,
+     "tokens_out": 1490
+    },
+    "record": {
+     "buyer": {
+      "name": {
+       "value": "LAURA JONES-MILLER",
+       "evidence": "LAURA JONES-MILLER",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+       "evidence": "Birchfield Campus, Mill Road / Reading RG1 8HX / United Kingdom",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "total": {
+      "value": 5666.5,
+      "evidence": "5,666.50",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "vendor": {
+      "name": {
+       "value": "Brightledger Stationers Ltd",
+       "evidence": "Brightledger Stationers Ltd",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "tax_id": {
+       "value": "GB284719306",
+       "evidence": "GB284719306",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom",
+       "evidence": "Unit 4, Fallowfield Trading Estate\nLeeds LS11 5QR\nUnited Kingdom",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "po_date": {
+      "value": "2026-08-18",
+      "evidence": "18 Aug 2026",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "ship_to": {
+      "value": "Silverbirch Academy Trust, Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+      "evidence": "Silverbirch Academy Trust, Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "currency": {
+      "value": "GBP",
+      "evidence": "GBP",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "subtotal": {
+      "value": 4722.08,
+      "evidence": "4,722.08",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "po_number": {
+      "value": "PO-85044",
+      "evidence": "PO-85044",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "line_items": [
+      {
+       "sku": {
+        "value": "PAP-LTR-20-5K",
+        "evidence": "PAP-LTR-20-5K",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "quantity": {
+        "value": 24.0,
+        "evidence": "24",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 985.68,
+        "evidence": "985.68",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 41.07,
+        "evidence": "41.07",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Letter copy paper, 20 lb, case of 10 reams",
+        "evidence": "Letter copy paper, 20 lb, case of 10 reams",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": "WBD-120-90",
+        "evidence": "WBD-120-90",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "quantity": {
+        "value": 40.0,
+        "evidence": "40",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 3736.4,
+        "evidence": "3,736.40",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 93.41,
+        "evidence": "93.41",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Magnetic whiteboard, 120 x 90 cm",
+        "evidence": "Magnetic whiteboard, 120 x 90 cm",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      }
+     ],
+     "tax_amount": {
+      "value": 944.42,
+      "evidence": "944.42",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "payment_terms": {
+      "value": "Net 15",
+      "evidence": "Net 15",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "requested_delivery_date": {
+      "value": "2026-08-29",
+      "evidence": "29 Aug 2026",
+      "confidence": 1.0,
+      "source_page": 1
+     }
+    },
+    "doc_type": "purchase_order"
+   }
+  },
+  {
+   "offset_ms": 6860,
+   "node": "extract",
+   "kind": "node_end",
+   "tool": "extract_fields",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1946,
+   "tokens_out": 1490,
+   "latency_ms": 4973,
+   "cost_usd": "0.004309",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 6886,
+   "node": "validate",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 6914,
+   "node": "validate",
+   "kind": "tool_end",
+   "tool": "validate_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 5,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "valid": true,
+    "issues": []
+   }
+  },
+  {
+   "offset_ms": 6942,
+   "node": "validate",
+   "kind": "tool_end",
+   "tool": "lookup_vendor",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 7,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "found": true,
+    "vendor": {
+     "tax_id": "GB284719306",
+     "country": "GB",
+     "vendor_id": "V-009",
+     "legal_name": "Brightledger Stationers Ltd",
+     "payment_terms": "Net 30",
+     "default_currency": "GBP"
+    },
+    "matched_on": "tax_id",
+    "name_score": 100.0,
+    "tax_id_matches": true
+   }
+  },
+  {
+   "offset_ms": 6960,
+   "node": "validate",
+   "kind": "node_end",
+   "tool": "validate_record,lookup_vendor",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 51,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 6982,
+   "node": "save",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7048,
+   "node": "save",
+   "kind": "tool_end",
+   "tool": "save_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 50,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "record_id": "2e813e18-8e57-4337-81a9-8cdd4f1ea0c9"
+   }
+  },
+  {
+   "offset_ms": 7066,
+   "node": "save",
+   "kind": "node_end",
+   "tool": "save_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 67,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7088,
+   "node": "summarize",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7121,
+   "node": "summarize",
+   "kind": "node_end",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 15,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  }
+ ],
+ "result": {
+  "notes": [],
+  "issues": [],
+  "record": {
+   "buyer": {
+    "name": "LAURA JONES-MILLER",
+    "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+   },
+   "total": "5666.50",
+   "vendor": {
+    "name": "Brightledger Stationers Ltd",
+    "tax_id": "GB284719306",
+    "address": "Unit 4, Fallowfield Trading Estate, Leeds LS11 5QR, United Kingdom"
+   },
+   "po_date": "2026-08-18",
+   "ship_to": "Silverbirch Academy Trust, Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+   "currency": "GBP",
+   "subtotal": "4722.08",
+   "po_number": "PO-85044",
+   "line_items": [
+    {
+     "sku": "PAP-LTR-20-5K",
+     "quantity": "24",
+     "line_total": "985.68",
+     "unit_price": "41.07",
+     "description": "Letter copy paper, 20 lb, case of 10 reams"
+    },
+    {
+     "sku": "WBD-120-90",
+     "quantity": "40",
+     "line_total": "3736.40",
+     "unit_price": "93.41",
+     "description": "Magnetic whiteboard, 120 x 90 cm"
+    }
+   ],
+   "tax_amount": "944.42",
+   "payment_terms": "Net 15",
+   "requested_delivery_date": "2026-08-29"
+  },
+  "summary": "Purchase order PO-85044 saved: GBP 5666.50. Cost $0.004913 \u00b7 escalated: no.",
+  "cost_usd": "0.004913",
+  "doc_type": "purchase_order",
+  "escalated": false,
+  "record_id": "2e813e18-8e57-4337-81a9-8cdd4f1ea0c9"
+ }
+}

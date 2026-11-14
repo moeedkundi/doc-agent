@@ -1,0 +1,527 @@
+{
+ "sample_id": "po_001",
+ "recorded_at": "2026-11-14T10:52:53.342417+00:00",
+ "source_run_id": "d57eccc3-89c0-4157-98b9-39b6ef606571",
+ "note": "Recorded from a real run; replayed when live processing is off.",
+ "events": [
+  {
+   "offset_ms": 0,
+   "node": "classify",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 2660,
+   "node": "classify",
+   "kind": "tool_end",
+   "tool": "classify_document",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1653,
+   "tokens_out": 60,
+   "latency_ms": 2615,
+   "cost_usd": "0.000646",
+   "error": null,
+   "output": {
+    "usage": {
+     "tier": "default",
+     "calls": 1,
+     "model": "gemini-3.5-flash-lite",
+     "cost_usd": "0.000646",
+     "tokens_in": 1653,
+     "latency_ms": 2357,
+     "tokens_out": 60
+    },
+    "reason": "The document explicitly states 'PURCHASE ORDER' at the top and contains a PO number, vendor details, and a list of requested items.",
+    "doc_type": "purchase_order",
+    "confidence": 1.0
+   }
+  },
+  {
+   "offset_ms": 2681,
+   "node": "classify",
+   "kind": "node_end",
+   "tool": "classify_document",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 1653,
+   "tokens_out": 60,
+   "latency_ms": 2636,
+   "cost_usd": "0.000646",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 2705,
+   "node": "extract",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7888,
+   "node": "extract",
+   "kind": "tool_end",
+   "tool": "extract_fields",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 2010,
+   "tokens_out": 2016,
+   "latency_ms": 5165,
+   "cost_usd": "0.005643",
+   "error": null,
+   "output": {
+    "pages": [
+     1
+    ],
+    "usage": {
+     "tier": "default",
+     "calls": 1,
+     "model": "gemini-3.5-flash-lite",
+     "cost_usd": "0.005643",
+     "tokens_in": 2010,
+     "latency_ms": 4970,
+     "tokens_out": 2016
+    },
+    "record": {
+     "buyer": {
+      "name": {
+       "value": "Ostwind Maschinenbau GmbH",
+       "evidence": "Ostwind Maschinenbau GmbH",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany",
+       "evidence": "Industriestra\u00dfe 72\n70565 Stuttgart\nGermany",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "total": {
+      "value": 7712.68,
+      "evidence": "EUR 7,712.68",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "vendor": {
+      "name": {
+       "value": "Rotkehlchen B\u00fcrobedarf GmbH",
+       "evidence": "Rotkehlchen B\u00fcrobedarf GmbH",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "tax_id": {
+       "value": "DE274915038",
+       "evidence": "DE274915038",
+       "confidence": 1.0,
+       "source_page": 1
+      },
+      "address": {
+       "value": "Am Kornspeicher 9, 28195 Bremen, Germany",
+       "evidence": "Am Kornspeicher 9\n28195 Bremen\nGermany",
+       "confidence": 1.0,
+       "source_page": 1
+      }
+     },
+     "po_date": {
+      "value": "2026-06-09",
+      "evidence": "09.06.2026",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "ship_to": {
+      "value": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany",
+      "evidence": "Industriestra\u00dfe 72\n70565 Stuttgart\nGermany",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "currency": {
+      "value": "EUR",
+      "evidence": "EUR",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "subtotal": {
+      "value": 6481.24,
+      "evidence": "EUR 6,481.24",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "po_number": {
+      "value": "PO-27656",
+      "evidence": "PO-27656",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "line_items": [
+      {
+       "sku": {
+        "value": "PWR-6W-SURGE",
+        "evidence": "PWR-6W-SURGE",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "quantity": {
+        "value": 1.0,
+        "evidence": "1",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 20.04,
+        "evidence": "20.04",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 20.04,
+        "evidence": "20.04",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Power strip, 6-way, surge protected",
+        "evidence": "Power strip, 6-way, surge protected",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": "CAM-1080",
+        "evidence": "CAM-1080",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "quantity": {
+        "value": 20.0,
+        "evidence": "20",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 961.8,
+        "evidence": "961.80",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 48.09,
+        "evidence": "48.09",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Webcam, 1080p, with privacy shutter",
+        "evidence": "Webcam, 1080p, with privacy shutter",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": "CHR-TASK-MESH",
+        "evidence": "CHR-TASK-MESH",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "quantity": {
+        "value": 30.0,
+        "evidence": "30",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 5362.5,
+        "evidence": "5,362.50",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 178.75,
+        "evidence": "178.75",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Task chair, mesh back, adjustable arms",
+        "evidence": "Task chair, mesh back, adjustable arms",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      },
+      {
+       "sku": {
+        "value": "FIL-LAF-10",
+        "evidence": "FIL-LAF-10",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "quantity": {
+        "value": 5.0,
+        "evidence": "5",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "line_total": {
+        "value": 136.9,
+        "evidence": "136.90",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "unit_price": {
+        "value": 27.38,
+        "evidence": "27.38",
+        "confidence": 1.0,
+        "source_page": 1
+       },
+       "description": {
+        "value": "Lever arch files, A4, pack of 10",
+        "evidence": "Lever arch files, A4, pack of 10",
+        "confidence": 1.0,
+        "source_page": 1
+       }
+      }
+     ],
+     "tax_amount": {
+      "value": 1231.44,
+      "evidence": "EUR 1,231.44",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "payment_terms": {
+      "value": "Net 60",
+      "evidence": "Net 60",
+      "confidence": 1.0,
+      "source_page": 1
+     },
+     "requested_delivery_date": {
+      "value": "2026-06-24",
+      "evidence": "24.06.2026",
+      "confidence": 1.0,
+      "source_page": 1
+     }
+    },
+    "doc_type": "purchase_order"
+   }
+  },
+  {
+   "offset_ms": 7920,
+   "node": "extract",
+   "kind": "node_end",
+   "tool": "extract_fields",
+   "model": "gemini-3.5-flash-lite",
+   "tokens_in": 2010,
+   "tokens_out": 2016,
+   "latency_ms": 5197,
+   "cost_usd": "0.005643",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7946,
+   "node": "validate",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 7986,
+   "node": "validate",
+   "kind": "tool_end",
+   "tool": "validate_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 16,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "valid": true,
+    "issues": []
+   }
+  },
+  {
+   "offset_ms": 8045,
+   "node": "validate",
+   "kind": "tool_end",
+   "tool": "lookup_vendor",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 18,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "found": true,
+    "vendor": {
+     "tax_id": "DE274915038",
+     "country": "DE",
+     "vendor_id": "V-015",
+     "legal_name": "Rotkehlchen B\u00fcrobedarf GmbH",
+     "payment_terms": "Net 60",
+     "default_currency": "EUR"
+    },
+    "matched_on": "tax_id",
+    "name_score": 100.0,
+    "tax_id_matches": true
+   }
+  },
+  {
+   "offset_ms": 8064,
+   "node": "validate",
+   "kind": "node_end",
+   "tool": "validate_record,lookup_vendor",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 94,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 8086,
+   "node": "save",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 8175,
+   "node": "save",
+   "kind": "tool_end",
+   "tool": "save_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 71,
+   "cost_usd": null,
+   "error": null,
+   "output": {
+    "record_id": "0271cc80-b094-43b1-a923-c15c08a740cf"
+   }
+  },
+  {
+   "offset_ms": 8194,
+   "node": "save",
+   "kind": "node_end",
+   "tool": "save_record",
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 90,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 8218,
+   "node": "summarize",
+   "kind": "node_start",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": null,
+   "cost_usd": null,
+   "error": null,
+   "output": null
+  },
+  {
+   "offset_ms": 8257,
+   "node": "summarize",
+   "kind": "node_end",
+   "tool": null,
+   "model": null,
+   "tokens_in": null,
+   "tokens_out": null,
+   "latency_ms": 18,
+   "cost_usd": "0.000000",
+   "error": null,
+   "output": null
+  }
+ ],
+ "result": {
+  "notes": [],
+  "issues": [],
+  "record": {
+   "buyer": {
+    "name": "Ostwind Maschinenbau GmbH",
+    "address": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany"
+   },
+   "total": "7712.68",
+   "vendor": {
+    "name": "Rotkehlchen B\u00fcrobedarf GmbH",
+    "tax_id": "DE274915038",
+    "address": "Am Kornspeicher 9, 28195 Bremen, Germany"
+   },
+   "po_date": "2026-06-09",
+   "ship_to": "Industriestra\u00dfe 72, 70565 Stuttgart, Germany",
+   "currency": "EUR",
+   "subtotal": "6481.24",
+   "po_number": "PO-27656",
+   "line_items": [
+    {
+     "sku": "PWR-6W-SURGE",
+     "quantity": "1",
+     "line_total": "20.04",
+     "unit_price": "20.04",
+     "description": "Power strip, 6-way, surge protected"
+    },
+    {
+     "sku": "CAM-1080",
+     "quantity": "20",
+     "line_total": "961.80",
+     "unit_price": "48.09",
+     "description": "Webcam, 1080p, with privacy shutter"
+    },
+    {
+     "sku": "CHR-TASK-MESH",
+     "quantity": "30",
+     "line_total": "5362.50",
+     "unit_price": "178.75",
+     "description": "Task chair, mesh back, adjustable arms"
+    },
+    {
+     "sku": "FIL-LAF-10",
+     "quantity": "5",
+     "line_total": "136.90",
+     "unit_price": "27.38",
+     "description": "Lever arch files, A4, pack of 10"
+    }
+   ],
+   "tax_amount": "1231.44",
+   "payment_terms": "Net 60",
+   "requested_delivery_date": "2026-06-24"
+  },
+  "summary": "Purchase order PO-27656 saved: EUR 7712.68. Cost $0.006289 \u00b7 escalated: no.",
+  "cost_usd": "0.006289",
+  "doc_type": "purchase_order",
+  "escalated": false,
+  "record_id": "0271cc80-b094-43b1-a923-c15c08a740cf"
+ }
+}
