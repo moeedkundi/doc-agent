@@ -416,9 +416,8 @@ statement, non-allowlisted tables; the MCP Inspector lists all tools for each se
 **Done when:** a CLI command runs a sample doc to completion; a doc with an injected arithmetic
 error pauses for review and resumes correctly; ingesting a PO then its invoice yields `matched`,
 and the mismatch sample yields `mismatch` with the right issue; 5 canned questions return
-correct answers. (`scripts/phase4_done_when.py`; 2026-11-14: checks 1, 3a, 3b pass; 2 and 4
-blocked by the free-tier daily quota (20 requests/day on the default model). Re-run once the
-quota resets or billing is enabled.)
+correct answers. (`scripts/phase4_done_when.py`; 2026-11-14: all 9 checks pass on gemini-3.5-flash-lite,
+session spend $0.067; 4.2 needed the "doesn't match = mismatch or po_not_found" prompt rule.)
 
 ### Phase 5 — API
 - [ ] Endpoints in §9, SSE streaming, sessions via cookie
@@ -556,3 +555,5 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | `invoice_po_matches.status` description now explains that matched/partial agree and mismatch/po_not_found don't | A live run listed a `partial` invoice as "not matching" |
 | 2026-11-14 | `call_reserve_usd` 0.05 → 0.01 (approved) | A $0.05 reserve against a $0.10 session cap left only half the cap usable; note: a strong-tier call can overshoot the cap by more than the reserve |
 | 2026-11-14 | Free tier limits the default model to 20 requests/day; beyond that every call falls back to the strong tier | Observed live; the demo needs a paid key (or a cheaper fallback) to be usable |
+| 2026-11-14 | Default tier → `gemini-3.5-flash-lite` ($0.30/$2.50 per 1M, pricing page checked 2026-11-14) | Free-tier quotas are per model; 3.6-flash's 20 requests/day ran out and 3.8-flash still returns 503. Lite is cheaper; accuracy verified by the Phase 4 checks |
+| 2026-11-14 | Ask prompt: "doesn't match its PO" = status mismatch OR po_not_found | The lite model filtered only on `mismatch`; an invoice citing a missing PO is a matching failure in AP |

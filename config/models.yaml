@@ -10,16 +10,16 @@
 
 tiers:
   default:
-    # Stable Flash-class model. gemini-3.8-flash (same price) returned 503 "high demand" on
-    # every call for ~15 min on 2026-11-14 while this one answered; switch back by editing
-    # this line once it is reliable.
-    model: gemini-3.6-flash
+    # gemini-3.5-flash-lite since 2026-11-14: the free tier caps gemini-3.6-flash at 20
+    # requests/day (exhausted during Phase 4 checks) and quotas are per model; 3.8-flash
+    # kept returning 503. Lite is also cheaper. Previous: gemini-3.6-flash ($0.75/$3.75 per 1M
+    # until 2026-12-31, then $1.50/$7.50).
+    model: gemini-3.5-flash-lite
     provider: gemini
     api_key_env: GEMINI_API_KEY
     reasoning_effort: low       # keep thinking tokens (billed as output) small
     prices:
-      - { until: 2026-12-31, input_per_mtok: 0.75, output_per_mtok: 3.75 }   # introductory
-      - { input_per_mtok: 1.50, output_per_mtok: 7.50 }
+      - { input_per_mtok: 0.30, output_per_mtok: 2.50 }
 
   strong:
     # TEMPORARY (2026-11-14): the demo key is free-tier and gemini-4-argon's free-tier quota

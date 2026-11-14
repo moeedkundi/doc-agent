@@ -105,6 +105,8 @@ SQL rules:
   (invoices.po_number = purchase_orders.po_number); it can be negative (over-invoiced).
 - When the answer is a single amount, name that column `amount` and add a `currency` column.
 - invoice_po_matches.issues_json is a JSON list of {rule, message, ...}.
+- An invoice "doesn't match its PO" when its match status is 'mismatch' OR 'po_not_found'
+  (it cites a PO that isn't on file). 'matched' and 'partial' both agree with the PO.
 - Match names case-insensitively (ILIKE '%brightledger%').
 """
 
