@@ -356,7 +356,7 @@ demo always works. Label it clearly: "Replaying a recorded run".
 | POST | `/api/samples/{id}/document` | copy a sample into the session → `document_id` |
 | GET | `/api/documents/{id}/file` | the uploaded file (for the viewer) |
 | GET | `/api/documents/{id}` | document metadata (filename, pages, type, sample) |
-| GET | `/api/documents/{id}/pages/{n}` | page *n* (1-based) as PNG for the viewer |
+| GET | `/api/documents/{id}/pages/{n}` | page *n* (1-based) as an image for the viewer (WebP for PDF pages) |
 | GET | `/api/limits` | upload limits and run rate limit shown before upload |
 | POST | `/api/documents` | upload file → `document_id` |
 | POST | `/api/runs` | start ingest run `{document_id, replay?}` → `run_id` (402 `budget_exceeded` / 503 `replay_only` carry `replay_available`) |
@@ -450,15 +450,16 @@ with LLM calls disabled.
 - [x] Run view: document viewer (left), live trace timeline (right) with expandable tool calls,
       running cost/tokens counter
 - [x] Review form with flagged fields highlighted, reason, edit/approve
-- [ ] Ask chat with SQL + result table
-- [ ] Evals tab (charts) and Architecture tab
-- [ ] Mobile-friendly; dark/light; replay-mode banner
+- [x] Ask chat with SQL + result table
+- [x] Evals tab (charts) and Architecture tab
+- [x] Mobile-friendly; dark/light; replay-mode banner
 **Done when:** full flow works against local backend; Lighthouse ≥ 90 performance/accessibility.
 
 ### Phase 8 — Deploy & polish
 - [ ] Dockerfiles; deploy backend (API + agent + 4 MCP servers on private network) and Postgres
 - [ ] Web on Vercel at `demo.meetmoeed.com`; CORS + cookies configured
-- [ ] Session cleanup cron; uptime check on `/api/health`
+- [ ] Session cleanup cron (rows + upload files, incl. cached page images `<doc_id>.p<n>.webp`);
+      uptime check on `/api/health`
 - [ ] Public `README.md`: problem, demo GIF, architecture diagram, eval table, design decisions,
       "what I'd do in production" section (on-prem VLM, SSO, audit log, PII redaction)
 - [ ] Link from meetmoeed.com Projects + replace old chatbot page
@@ -584,6 +585,11 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | shadcn/ui-style components written in-repo (cva, clsx, tailwind-merge, lucide-react); no Radix, no next-themes (a 1-line pre-paint theme script does the same job) | Fewer dependencies; only shadcn's own building blocks |
 | 2026-11-14 | Web calls the API directly (`NEXT_PUBLIC_API_URL`, `credentials: include`); web and API must be same-site (localhost:3000 + localhost:8000 locally, meetmoeed.com subdomains in prod) | The session cookie is SameSite=Lax |
 | 2026-11-14 | SSE events carry `args` (tool input, minus `session_id`/`run_id`); replay fixtures backfilled with recorded inputs from their source runs | The trace view shows each tool's args; internal ids are not shown to the browser |
-| 2026-11-14 | Viewer gets page PNGs rendered server-side (pypdfium2, ~108 dpi) instead of embedding the PDF | Inline PDF viewers don't work on most mobile browsers |
+| 2026-11-14 | Viewer gets page images rendered server-side (pypdfium2, ~108 dpi, WebP q80, cached next to the upload) instead of embedding the PDF | Inline PDF viewers don't work on most mobile browsers; WebP is ~3x smaller than PNG (Lighthouse LCP) |
 | 2026-11-14 | PO-vs-invoice diff is shown after `po_match`, not inside the review form; the PO side comes from the `get_purchase_order` result in the trace | Review happens before save and matching, so no match exists while paused |
 | 2026-11-14 | Budget exhausted (402) or replay-only (503) on a sample → the UI starts its recorded run automatically and shows "Replaying a recorded run"; uploads get the error message | The demo keeps working when live processing is off (§8.3) |
+| 2026-11-14 | Ask tab streams `POST /api/ask` SSE over `fetch` (EventSource is GET-only); SQL highlighting and eval charts are small in-repo components, no highlighter/chart libraries | No new dependencies |
+| 2026-11-14 | Run view gets `?doc=<document_id>` from the page that starts the run, so the page image is in the server-rendered HTML; SSE trace events are rendered in 40 ms batches; API JSON is gzipped (SSE excluded by Starlette) | Lighthouse: LCP image was discovered late, a finished run's event burst caused ~20 re-renders |
+| 2026-11-14 | `human_review` sets `awaiting_review` only when `interrupt()` actually pauses; the API reports a paused run as `running` until its interrupt is checkpointed, and SSE announces `review_required` only with a payload | LangGraph re-runs the node on resume: the status flipped back to `awaiting_review` and accepted a second resume; a review could be announced as null (both found by an intermittent API test) |
+| 2026-11-14 | Eval reports record `ci_run_url` when run in GitHub Actions; the Evals tab links to it, or to the workflow when the report was produced locally | "Date of the last run with a link to the CI run" |
+| 2026-11-14 | Phase 7 Lighthouse (local `next start`, Lighthouse 12.8): landing 96/100 mobile, 100/100 desktop; run view 94/100 mobile, 100/100 desktop (performance/accessibility) | Done-when: ≥ 90 |

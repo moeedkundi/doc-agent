@@ -33,6 +33,7 @@ from typing import Any, Literal, TypedDict, cast
 from uuid import UUID
 
 from langgraph.checkpoint.base import BaseCheckpointSaver
+from langgraph.errors import GraphInterrupt
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import interrupt
@@ -306,17 +307,23 @@ def build_ingest_graph(
     async def human_review(state: IngestState) -> IngestState:
         run_id, sid = _ids(state)
         async with tracer.node("human_review", run_id, sid):
-            await tracer.sink.set_run(run_id, sid, status="awaiting_review")
-            decision = interrupt(
-                {
-                    "run_id": state["run_id"],
-                    "doc_type": state["doc_type"],
-                    "record": state["record"],
-                    "issues": blocking(state["issues"]),
-                    "notes": state.get("notes", []),
-                },
-                response_schema=ReviewDecision,
-            )
+            # LangGraph re-runs this node from the top on resume, and interrupt() then returns
+            # the decision. Mark the run paused only when it really pauses, so a resume never
+            # flips the status back to awaiting_review (which would accept a second resume).
+            try:
+                decision = interrupt(
+                    {
+                        "run_id": state["run_id"],
+                        "doc_type": state["doc_type"],
+                        "record": state["record"],
+                        "issues": blocking(state["issues"]),
+                        "notes": state.get("notes", []),
+                    },
+                    response_schema=ReviewDecision,
+                )
+            except GraphInterrupt:
+                await tracer.sink.set_run(run_id, sid, status="awaiting_review")
+                raise
             await tracer.sink.set_run(run_id, sid, status="running")
             record = state["record"]
             actions: list[ReviewAction] = []

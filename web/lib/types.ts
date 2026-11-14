@@ -166,3 +166,67 @@ export interface EndEvent {
   error_code: string | null
   result: IngestResult | null
 }
+
+export interface AskPlan {
+  action: 'query' | 'followup' | 'refuse'
+  reason: string
+  sql: string | null
+  convert_to: string | null
+}
+
+export interface AskResult {
+  question: string
+  answer: string
+  plan: AskPlan
+  sql: string | null
+  columns: string[] | null
+  rows: unknown[][] | null
+  truncated: boolean | null
+  sql_error: { code: string; message: string } | null
+  conversion: Record<string, unknown> | null
+  figure_amount: string | null
+  figure_currency: string | null
+  cost_usd: string
+}
+
+export interface EvalDocument {
+  doc_id: string
+  doc_type: DocType
+  scanned: boolean
+  status: string
+  field_accuracy: number | null
+  cost_usd: string
+  latency_s: number
+  escalated: boolean
+  reviewed: boolean
+}
+
+export interface EvalMetrics {
+  documents: number
+  failed_runs: number
+  field_accuracy: number | null
+  classification_accuracy: number | null
+  by_doc_type: Record<string, { documents: number; field_accuracy: number | null; f1: number }>
+  clean_vs_scanned: {
+    clean: { documents: number; field_accuracy: number | null }
+    scanned: { documents: number; field_accuracy: number | null }
+    paired: { pairs: number; clean_twins: number | null; scanned_variants: number | null }
+  }
+  match_status_accuracy: number | null
+  mismatch_recall: number | null
+  mismatch_recall_by_kind: Record<string, number | null>
+  escalation_rate: number | null
+  review_rate: number | null
+  cost_per_doc_usd: { avg: number | null; max: number | null; total: number }
+  latency_s: { p50: number | null; p95: number | null }
+  per_field_accuracy: Record<string, number>
+}
+
+export interface EvalReport {
+  suite: string
+  finished_at: string
+  models: Record<string, string>
+  ci_run_url?: string | null
+  metrics: EvalMetrics
+  documents: EvalDocument[]
+}

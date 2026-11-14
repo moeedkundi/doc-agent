@@ -18,7 +18,16 @@ import { buildSteps, confidences, runTotals } from '@/lib/trace'
 import type { PlainRecord, RunStatus, TraceEvent } from '@/lib/types'
 import { useRun } from '@/lib/use-run'
 
-export function RunView({ id, fallback }: { id: string; fallback: string | null }) {
+export function RunView({
+  id,
+  fallback,
+  documentHint,
+}: {
+  id: string
+  fallback: string | null
+  /** The document id from the URL: lets the page image load before the run does (LCP). */
+  documentHint: string | null
+}) {
   const state = useRun(id)
   const { run, events, status, review, result, errorCode, connection, loadError } = state
   const steps = useMemo(() => buildSteps(events), [events])
@@ -40,20 +49,14 @@ export function RunView({ id, fallback }: { id: string; fallback: string | null 
       </div>
     )
   }
-  if (!run) {
-    return (
-      <div className="container flex items-center gap-2 py-16 text-sm text-muted-foreground" role="status">
-        <Loader2 className="size-4 animate-spin" /> Loading run…
-      </div>
-    )
-  }
+  const documentId = run?.document_id ?? documentHint
 
   const docType = result?.doc_type ?? review?.doc_type ?? docTypeFromTrace(events)
   const record = result?.record
   const shown = record ?? review?.record
   return (
     <>
-      {run.replay && <ReplayBanner reason={fallback} />}
+      {(run?.replay || fallback) && <ReplayBanner reason={fallback} />}
       <div className="border-b py-3">
         <div className="container flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
@@ -63,7 +66,13 @@ export function RunView({ id, fallback }: { id: string; fallback: string | null 
             {docType && docType !== 'unknown' && (
               <Badge variant={docType === 'invoice' ? 'invoice' : 'po'}>{docTypeLabel(docType)}</Badge>
             )}
-            <StatusBadge status={status} />
+            {run ? (
+              <StatusBadge status={status} />
+            ) : (
+              <span role="status" className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Loader2 className="size-3.5 animate-spin" aria-hidden /> Loading run…
+              </span>
+            )}
             {escalated && (
               <Badge variant="strong">
                 <Triangle /> Escalated to strong tier
@@ -76,7 +85,7 @@ export function RunView({ id, fallback }: { id: string; fallback: string | null 
             )}
           </div>
           <div className="flex gap-1.5 max-sm:w-full" aria-label="Run totals">
-            <Meter label={run.replay ? 'Recorded cost' : 'Cost'} value={usd(totals.cost)} />
+            <Meter label={run?.replay ? 'Recorded cost' : 'Cost'} value={usd(totals.cost)} />
             <Meter label="Tokens" value={int(totals.tokens)} />
             <Meter label="Time" value={elapsed} />
           </div>
@@ -86,7 +95,7 @@ export function RunView({ id, fallback }: { id: string; fallback: string | null 
       <div className="container pb-10">
         <div className="grid gap-5 pt-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
           <div className="min-w-0">
-            {run.document_id && <DocumentViewer documentId={run.document_id} />}
+            {documentId && <DocumentViewer documentId={documentId} />}
           </div>
           <div className="min-w-0 space-y-4">
             {connection === 'lost' && (
@@ -122,7 +131,7 @@ export function RunView({ id, fallback }: { id: string; fallback: string | null 
                 <Timeline steps={steps} />
               )}
             </section>
-            <Outcome status={status} errorCode={errorCode} message={run.error?.message ?? null} summary={result?.summary} documentId={run.document_id} replayable={run.error?.replay_available ?? false} />
+            <Outcome status={status} errorCode={errorCode} message={run?.error?.message ?? null} summary={result?.summary} documentId={run?.document_id ?? null} replayable={run?.error?.replay_available ?? false} />
           </div>
         </div>
 
@@ -207,7 +216,7 @@ function Outcome({
     if (!documentId) return
     try {
       const r = await api.startRun(documentId, true)
-      router.push(`/runs/${r.run_id}?fallback=${errorCode ?? 'budget_exceeded'}`)
+      router.push(`/runs/${r.run_id}?fallback=${errorCode ?? 'budget_exceeded'}&doc=${documentId}`)
     } catch (e) {
       if (e instanceof ApiError && e.code === 'rate_limited') setRetryAt(Date.now() + (e.retryAfterSeconds ?? 60) * 1000)
       else setError(e instanceof ApiError && e.code === 'no_recording' ? 'Only the sample documents have recordings.' : String(e instanceof Error ? e.message : e))

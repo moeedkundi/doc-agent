@@ -65,7 +65,11 @@ export function DocumentViewer({ documentId, label }: { documentId: string; labe
             key={page}
             src={api.pageUrl(documentId, page)}
             alt={`Page ${page} of ${meta?.filename ?? 'the document'}`}
-            className="block w-full"
+            width={893}
+            height={1263}
+            fetchPriority="high"
+            decoding="async"
+            className="block h-auto w-full"
             onLoad={() => setLoaded(page)}
             onError={() => setFailed(true)}
           />

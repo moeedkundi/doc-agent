@@ -33,8 +33,9 @@ export function StartPanel() {
       try {
         const doc = await getDocument()
         const run = await startRunWithFallback(doc.document_id)
-        const query = run.fallback ? `?fallback=${run.fallback}` : ''
-        router.push(`/runs/${run.run_id}${query}`)
+        const query = new URLSearchParams({ doc: doc.document_id })
+        if (run.fallback) query.set('fallback', run.fallback)
+        router.push(`/runs/${run.run_id}?${query}`)
       } catch (e) {
         const err = e instanceof ApiError ? e : new ApiError(0, 'unknown', String(e))
         if (err.code === 'rate_limited') setRetryAt(Date.now() + (err.retryAfterSeconds ?? 60) * 1000)
@@ -115,7 +116,7 @@ function SampleCard({
       type="button"
       onClick={onStart}
       disabled={disabled}
-      aria-label={`Process ${label}`}
+      title={`Process ${label}`}
       className={cn(
         'group block w-full overflow-hidden rounded-lg border bg-card text-left transition-colors hover:border-primary focus-visible:border-primary disabled:cursor-not-allowed',
         mismatch && 'border-destructive/60',

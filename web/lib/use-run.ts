@@ -34,6 +34,9 @@ export function useRun(id: string) {
     connection: 'connecting',
   })
   const seen = useRef(new Set<number>())
+  // A finished run replays ~20 events at once: render them in batches, not one by one.
+  const queue = useRef<TraceEvent[]>([])
+  const flushTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     let source: EventSource | null = null
@@ -65,7 +68,13 @@ export function useRun(id: string) {
             const event = JSON.parse((msg as MessageEvent<string>).data) as TraceEvent
             if (seen.current.has(event.seq)) return
             seen.current.add(event.seq)
-            setState((s) => ({ ...s, events: [...s.events, event] }))
+            queue.current.push(event)
+            flushTimer.current ??= setTimeout(() => {
+              flushTimer.current = null
+              const batch = queue.current
+              queue.current = []
+              setState((s) => ({ ...s, events: [...s.events, ...batch] }))
+            }, 40)
           })
         }
         source.addEventListener('status', (msg) => {
@@ -104,6 +113,9 @@ export function useRun(id: string) {
     return () => {
       cancelled = true
       source?.close()
+      if (flushTimer.current) clearTimeout(flushTimer.current)
+      flushTimer.current = null
+      queue.current = []
     }
   }, [id])
 

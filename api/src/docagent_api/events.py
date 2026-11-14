@@ -83,9 +83,14 @@ async def stream_run(
             status = str(run["status"])
             yield ServerSentEvent(data=json.dumps({"status": status}), event="status")
         if status == "awaiting_review" and not announced_review:
+            # The status is set just before the graph's interrupt is checkpointed: until the
+            # payload is readable, keep polling rather than announce an empty review.
             payload = await review_payload(run_id)
-            yield ServerSentEvent(data=json.dumps(payload, default=str), event="review_required")
-            announced_review = True
+            if payload is not None:
+                yield ServerSentEvent(
+                    data=json.dumps(payload, default=str), event="review_required"
+                )
+                announced_review = True
         elif status != "awaiting_review":
             announced_review = False
         if status in TERMINAL:

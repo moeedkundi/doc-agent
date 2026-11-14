@@ -19,6 +19,7 @@ from uuid import UUID, uuid4
 import psycopg
 from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from pydantic import BaseModel, Field
@@ -29,7 +30,7 @@ from docagent_agent.runtime import AgentConfig, Runtime, build_runtime
 from docagent_agent.tools import McpHub, Server
 from docagent_agent.trace import PgTraceSink
 from docagent_api.db import Db
-from docagent_api.documents import mime_of, render_page_png
+from docagent_api.documents import mime_of, page_image
 from docagent_api.events import stream_run
 from docagent_api.guards import ApiError, RateLimiter, check_upload, hash_ip, parse_rate
 from docagent_api.runs import ReplayFixtures, RunService
@@ -123,6 +124,8 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
             allow_methods=["GET", "POST"],
             allow_headers=["Content-Type", "Last-Event-ID"],
         )
+    # JSON is compressed; Starlette leaves text/event-stream alone, so SSE still streams.
+    app.add_middleware(GZipMiddleware, minimum_size=1024)
 
     def svc(request: Request) -> Services:
         return request.app.state.services
@@ -294,7 +297,7 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
 
     @app.get("/api/documents/{document_id}/pages/{page}")
     async def document_page(document_id: UUID, page: int, request: Request) -> Response:
-        """One page as PNG for the viewer (PDFs are rendered; images are served as they are)."""
+        """One page as an image for the viewer (PDF pages as WebP; images served as they are)."""
         doc = await _document(request, document_id)
         if not 1 <= page <= int(doc["pages"] or 1):
             raise ApiError(404, "page_not_found", "No such page.")
@@ -302,8 +305,8 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
         headers = {"Cache-Control": "private, max-age=86400"}
         if mime_of(doc["storage_path"]) != "application/pdf":
             return FileResponse(path, media_type=mime_of(doc["storage_path"]), headers=headers)
-        png = await asyncio.to_thread(render_page_png, path, page)
-        return Response(png, media_type="image/png", headers=headers)
+        image = await asyncio.to_thread(page_image, path, page)
+        return FileResponse(image, media_type="image/webp", headers=headers)
 
     # -- runs ---------------------------------------------------------------------------------
     @app.post("/api/runs", status_code=202)
@@ -343,11 +346,14 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
         run = await asyncio.to_thread(s.db.get_run, sid, run_id)
         if run is None:
             raise ApiError(404, "run_not_found", "No such run in this session.")
-        review = await s.runs.review_payload(run_id) if run["status"] == "awaiting_review" else None
+        status = run["status"]
+        review = await s.runs.review_payload(run_id) if status == "awaiting_review" else None
+        if status == "awaiting_review" and review is None:
+            status = "running"  # paused, but the interrupt isn't checkpointed yet
         return {
             "id": str(run["id"]),
             "kind": run["kind"],
-            "status": run["status"],
+            "status": status,
             "replay": run["replay"],
             "document_id": run["document_id"] and str(run["document_id"]),
             "question": run["question"],

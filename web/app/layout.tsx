@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google'
 
 import { SiteHeader } from '@/components/site-header'
 import { themeScript } from '@/components/theme-toggle'
+import { API_URL } from '@/lib/api'
 
 import './globals.css'
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${mono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <link rel="preconnect" href={API_URL} crossOrigin="use-credentials" />
       </head>
       <body className="min-h-screen font-sans antialiased">
         <div className="flex min-h-screen flex-col">

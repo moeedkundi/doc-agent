@@ -17,6 +17,7 @@ import json
 import os
 import sys
 import time
+from collections.abc import Mapping
 from dataclasses import asdict
 from decimal import Decimal
 from pathlib import Path
@@ -250,6 +251,7 @@ async def main(args: argparse.Namespace) -> int:
         "finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "session_id": str(sid),
         "models": {name: t.model for name, t in tiers.items()},
+        "ci_run_url": ci_run_url(os.environ),
         "metrics": metrics,
         "documents": [
             {
@@ -280,6 +282,15 @@ async def main(args: argparse.Namespace) -> int:
         f"{_pct(metrics['mismatch_recall'])} · wrote {out_dir / stem}.json/.md"
     )
     return gate(metrics, args.baseline, args.max_drop)
+
+
+def ci_run_url(env: Mapping[str, str]) -> str | None:
+    """Link to the GitHub Actions run that produced the report (None when run locally)."""
+    keys = ("GITHUB_SERVER_URL", "GITHUB_REPOSITORY", "GITHUB_RUN_ID")
+    if not all(env.get(k) for k in keys):
+        return None
+    server, repo, run = (env[k] for k in keys)
+    return f"{server}/{repo}/actions/runs/{run}"
 
 
 def write_reports(out_dir: Path, stem: str, rep: dict[str, Any]) -> None:

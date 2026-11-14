@@ -113,8 +113,10 @@ async def test_full_flow_upload_run_review_resume_mismatch_ask(stack_factory: Bu
     meta = (await c.get(f"/api/documents/{po_doc}")).json()
     assert meta["type"] == "application/pdf" and meta["pages"] == 1
     page = await c.get(f"/api/documents/{po_doc}/pages/1")
-    assert page.status_code == 200 and page.headers["content-type"] == "image/png"
-    assert page.content[1:4] == b"PNG"
+    assert page.status_code == 200 and page.headers["content-type"] == "image/webp"
+    assert page.content[:4] == b"RIFF" and page.content[8:12] == b"WEBP"
+    cached = await c.get(f"/api/documents/{po_doc}/pages/1")  # second request: from disk
+    assert cached.content == page.content
     assert (await c.get(f"/api/documents/{po_doc}/pages/2")).status_code == 404
 
     # Reconnect partway: Last-Event-ID resumes after that seq.
@@ -391,3 +393,16 @@ async def test_limits_come_from_config(stack_factory: Build) -> None:
     body = (await s.client.get("/api/limits")).json()
     assert body["max_pages"] == s.settings.max_pages
     assert body["runs_per_window"] >= 1 and body["window_minutes"] >= 1
+
+
+async def test_json_is_gzipped_but_sse_is_not(stack_factory: Build) -> None:
+    s: Stack = await stack_factory()
+    r = await s.client.get("/api/samples", headers={"Accept-Encoding": "gzip"})
+    assert r.headers.get("content-encoding") == "gzip"
+    doc = (await s.client.post("/api/samples/po_001/document")).json()["document_id"]
+    sid_run = await s.client.post("/api/runs", json={"document_id": doc})
+    run_id = sid_run.json()["run_id"]
+    await wait_for(s.client, run_id, {"completed", "failed"})
+    ev = await s.client.get(f"/api/runs/{run_id}/events", headers={"Accept-Encoding": "gzip"})
+    assert ev.headers["content-type"].startswith("text/event-stream")
+    assert "content-encoding" not in ev.headers

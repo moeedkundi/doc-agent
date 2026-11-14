@@ -34,6 +34,11 @@ export function buildSteps(events: TraceEvent[]): Step[] {
   const open = new Map<string, Step>()
   for (const e of events) {
     let step = open.get(e.node)
+    if (e.kind === 'node_start' && step?.status === 'paused') {
+      // A resumed node (human review) starts again: continue its row instead of adding one.
+      step.status = 'running'
+      continue
+    }
     if (e.kind === 'node_start' || !step) {
       step = {
         key: `${e.node}-${e.seq}`,

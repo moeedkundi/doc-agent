@@ -352,3 +352,23 @@ async def test_interrupt_is_traced_and_resume_continues_the_same_run() -> None:
     after = [(e.node, e.kind) for e in rig.sink.events if e.run_id == UUID(run_id)]
     assert after[-1] == ("summarize", "node_end")
     assert ("human_review", "node_end") in after
+
+
+async def test_resume_never_flips_the_run_back_to_awaiting_review() -> None:
+    # LangGraph re-runs human_review from the top on resume; the status must not go back to
+    # awaiting_review, or the API would accept a second resume of the same run.
+    rig = make_rig(bad=Doc("invoice", broken_total("inv_003")))
+    statuses: list[str] = []
+    original = rig.sink.set_run
+
+    async def recording(run_id: UUID, session_id: UUID, **fields: Any) -> None:
+        if "status" in fields:
+            statuses.append(fields["status"])
+        await original(run_id, session_id, **fields)
+
+    rig.sink.set_run = recording  # type: ignore[method-assign]
+    run_id, _ = await rig.run("bad")
+    assert statuses[-1] == "awaiting_review"
+    statuses.clear()
+    await rig.run("bad", resume={"action": "approve"}, run_id=run_id)
+    assert "awaiting_review" not in statuses and statuses[-1] == "completed"

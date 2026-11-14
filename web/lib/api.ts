@@ -1,7 +1,7 @@
 // Client for the DocAgent API. Every call sends the session cookie (SameSite=Lax: the web
 // app and the API must be on the same site, e.g. localhost:3000 + localhost:8000).
 
-import type { DocumentMeta, Run, Sample } from './types'
+import type { DocumentMeta, EvalReport, Run, Sample } from './types'
 
 export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/$/, '')
 
@@ -17,14 +17,22 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+async function send(path: string, init?: RequestInit): Promise<Response> {
   let res: Response
   try {
     res = await fetch(`${API_URL}${path}`, { credentials: 'include', ...init })
   } catch {
     throw new ApiError(0, 'network', "Can't reach the DocAgent API. Is it running?")
   }
-  if (res.ok) return (await res.json()) as T
+  if (!res.ok) throw await toError(res)
+  return res
+}
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  return (await (await send(path, init)).json()) as T
+}
+
+async function toError(res: Response): Promise<ApiError> {
   let body: Record<string, unknown> = {}
   try {
     body = (await res.json()) as Record<string, unknown>
@@ -38,7 +46,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       : Number.isFinite(header) && header > 0
         ? header
         : null
-  throw new ApiError(
+  return new ApiError(
     res.status,
     typeof body.error === 'string' ? body.error : `http_${res.status}`,
     typeof body.message === 'string' ? body.message : `Request failed (${res.status}).`,
@@ -84,6 +92,9 @@ export const api = {
     request<StartedRun>('/api/runs', json({ document_id: documentId, replay })),
   run: (id: string) => request<Run>(`/api/runs/${id}`),
   eventsUrl: (id: string) => `${API_URL}/api/runs/${id}/events`,
+  /** Streams the ask run's events (SSE over a POST response). */
+  ask: (question: string) => send('/api/ask', json({ question })),
+  evals: () => request<EvalReport>('/api/evals/latest'),
   resume: (id: string, decision: { action: 'approve' | 'edit'; record?: unknown }) =>
     request<{ run_id: string; status: string }>(`/api/runs/${id}/resume`, json(decision)),
 }

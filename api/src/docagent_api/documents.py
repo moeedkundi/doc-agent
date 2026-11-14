@@ -18,14 +18,20 @@ def mime_of(storage_path: str) -> str:
     return _MIME_BY_EXT.get(Path(storage_path).suffix.lower(), "application/octet-stream")
 
 
-def render_page_png(path: Path, page: int) -> bytes:
-    """Render 1-based `page` of a PDF to PNG bytes."""
+def page_image(path: Path, page: int) -> Path:
+    """1-based `page` of a PDF as WebP, rendered once and cached next to the upload."""
+    out = path.with_name(f"{path.stem}.p{page}.webp")
+    if out.is_file():
+        return out
     pdf = pdfium.PdfDocument(path)
     try:
         bitmap = pdf[page - 1].render(scale=VIEW_DPI / 72)  # pyright: ignore[reportArgumentType]
         image = cast(Image.Image, bitmap.to_pil())
-        buf = io.BytesIO()
-        image.save(buf, format="PNG", optimize=True)
-        return buf.getvalue()
     finally:
         pdf.close()
+    buf = io.BytesIO()
+    image.save(buf, format="WEBP", quality=80, method=2)
+    tmp = out.with_suffix(".tmp")
+    tmp.write_bytes(buf.getvalue())
+    tmp.replace(out)  # atomic: a concurrent request never serves a half-written file
+    return out
