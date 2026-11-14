@@ -18,7 +18,7 @@ import subprocess
 import sys
 from decimal import Decimal
 from pathlib import Path
-from typing import Any
+from typing import Any, LiteralString
 
 import psycopg
 
@@ -55,7 +55,7 @@ def run_id_of(output: str) -> str:
 def main() -> int:
     db = psycopg.connect(os.environ["DATABASE_URL"], autocommit=True)
 
-    def one(sql: str, *params: Any) -> Any:
+    def one(sql: LiteralString, *params: Any) -> Any:
         row = db.execute(sql, params).fetchone()
         return row[0] if row else None
 
@@ -118,16 +118,20 @@ def main() -> int:
         return cli("ask", q, "--session", session)
 
     out = ask("What's the total value of invoices from Brightledger in GBP?")
-    check("4.1 Brightledger total in GBP = 5890.66", "5890.66" in out.split("Rows")[-1],
-          _answer(out))
+    check(
+        "4.1 Brightledger total in GBP = 5890.66", "5890.66" in out.split("Rows")[-1], _answer(out)
+    )
     out = ask("Which invoices don't match their PO?")
     rows = out.split("Rows")[-1].split("Answer:")[0]
     ok = "BLS-2026-2422" in rows and "GTS-2026-1198" in rows and inv1 not in rows
     check("4.2 non-matching invoices = BLS-2026-2422, GTS-2026-1198", ok, _answer(out))
     out = ask(f"How much is still uninvoiced on {po1['po_number']}?")
     amount = re.search(r"^\s+(-?\d+(?:\.\d+)?)\s+\|", out.split("Rows")[-1], re.M)
-    check(f"4.3 uninvoiced on {po1['po_number']} = 0 (fully invoiced)",
-          bool(amount) and Decimal(amount.group(1)) == 0, _answer(out))  # type: ignore[union-attr]
+    check(
+        f"4.3 uninvoiced on {po1['po_number']} = 0 (fully invoiced)",
+        amount is not None and Decimal(amount.group(1)) == 0,
+        _answer(out),
+    )
     out = ask("How many purchase orders have been uploaded?")
     check("4.4 purchase orders uploaded = 2", bool(re.search(r"\b2\b", _answer(out))),
           _answer(out))  # fmt: skip
