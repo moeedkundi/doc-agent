@@ -25,8 +25,11 @@ from uuid import UUID
 import psycopg
 from langgraph.errors import GraphInterrupt
 from psycopg import sql
+from pydantic import BaseModel
 
 from docagent_agent.tools import NodeTools, ToolCaller
+from docagent_gateway import Gateway
+from docagent_schemas import ModelTier
 
 EventKind = Literal["node_start", "tool_end", "node_end", "error", "interrupt"]
 RunStatus = Literal["queued", "running", "awaiting_review", "completed", "failed", "rejected"]
@@ -181,7 +184,7 @@ class PgTraceSink:
 
 @dataclass
 class NodeContext:
-    """What a node gets: its tools, plus bookkeeping of what those calls cost."""
+    """What a node gets: its tools, the LLM (via the gateway), and what those calls cost."""
 
     tools: NodeTools
     tracer: "Tracer"
@@ -224,11 +227,45 @@ class NodeContext:
         )
         return cast(Any, out)
 
+    async def llm[T: BaseModel](
+        self,
+        purpose: str,
+        messages: list[dict[str, Any]],
+        schema: type[T],
+        tier: ModelTier = "default",
+    ) -> T:
+        """A structured LLM call through the gateway (budget, ledger), traced like a tool."""
+        gateway = self.tracer.gateway
+        if gateway is None:
+            raise RuntimeError("this tracer has no gateway configured")
+        out = await gateway.complete(
+            messages, tier=tier, response_schema=schema, run_id=self.run_id,
+            session_id=self.session_id,
+        )  # fmt: skip
+        self.called.append(f"llm:{purpose}")
+        self.cost += out.cost_usd
+        self.tokens_in += out.tokens_in
+        self.tokens_out += out.tokens_out
+        self.models.append(out.model)
+        await self.tracer.emit(
+            TraceEvent(
+                run_id=self.run_id, session_id=self.session_id, node=self.tools.node,
+                kind="tool_end", tool=f"llm:{purpose}", model=out.model,
+                tokens_in=out.tokens_in, tokens_out=out.tokens_out, latency_ms=out.latency_ms,
+                cost_usd=out.cost_usd, output=out.parsed.model_dump(mode="json")
+                if out.parsed is not None else None,
+            )
+        )  # fmt: skip
+        if out.parsed is None:
+            raise RuntimeError("gateway returned no parsed output")
+        return out.parsed
+
 
 class Tracer:
-    def __init__(self, sink: TraceSink, caller: ToolCaller) -> None:
+    def __init__(self, sink: TraceSink, caller: ToolCaller, gateway: Gateway | None = None) -> None:
         self.sink = sink
         self._caller = caller
+        self.gateway = gateway
         self._listeners: list[Listener] = []
 
     def listen(self, listener: Listener) -> None:

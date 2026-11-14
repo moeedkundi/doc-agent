@@ -46,6 +46,13 @@ NODE_TOOLS: dict[str, frozenset[str]] = {
     "po_match": frozenset({"get_purchase_order", "match_invoice_to_po", "save_match_result"}),
     "summarize": frozenset(),
     "reject_unknown": frozenset(),
+    # ask graph (§7.2): the model plans/writes SQL and phrases answers via the gateway; the
+    # only tools are the read-only schema, the guarded SELECT and the static FX table.
+    "ask_plan": frozenset({"get_schema"}),
+    "ask_sql": frozenset(),
+    "ask_run": frozenset({"run_select"}),
+    "ask_convert": frozenset({"convert_currency"}),
+    "ask_answer": frozenset(),
 }
 """The only tools each node may call. Tested: classify/extract can't reach sqlstore."""
 

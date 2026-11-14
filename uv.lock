@@ -345,6 +345,7 @@ name = "docagent-agent"
 version = "0.1.0"
 source = { editable = "agent" }
 dependencies = [
+    { name = "docagent-gateway" },
     { name = "docagent-schemas" },
     { name = "langgraph" },
     { name = "langgraph-checkpoint-postgres" },
@@ -355,6 +356,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "docagent-gateway", editable = "packages/gateway" },
     { name = "docagent-schemas", editable = "packages/schemas" },
     { name = "langgraph", specifier = ">=1.2.22" },
     { name = "langgraph-checkpoint-postgres", specifier = ">=3.2.1" },

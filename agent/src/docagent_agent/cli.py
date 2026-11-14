@@ -3,6 +3,7 @@
     uv run python -m agent.cli session new
     uv run python -m agent.cli ingest <file> [--session <uuid>]
     uv run python -m agent.cli resume <run_id> [--approve | --set PATH=VALUE ...]
+    uv run python -m agent.cli ask "<question>" --session <uuid> [--trace]
 
 `ingest` prints every trace event as it is written. When the graph pauses for human review
 it shows the flagged fields and asks you to approve or edit them, then resumes. If there is
@@ -29,6 +30,7 @@ from docagent_agent.ingest import ReviewDecision, flatten, get_path, set_path
 from docagent_agent.runtime import (
     AgentConfig,
     Runtime,
+    create_ask_run,
     create_run,
     create_session,
     open_runtime,
@@ -242,6 +244,74 @@ async def _resume(args: argparse.Namespace) -> int:
         return await _drive(rt, run_id, Command(resume=decision.model_dump()), interactive=True)
 
 
+def _table(columns: list[str], rows: list[list[Any]], limit: int = 20) -> str:
+    cells = [[("" if v is None else str(v)) for v in row] for row in rows[:limit]]
+    widths = [min(48, max([len(c), *(len(r[i]) for r in cells)])) for i, c in enumerate(columns)]
+
+    def fmt(vals: list[str]) -> str:
+        return " | ".join(v[:48].ljust(w) for v, w in zip(vals, widths, strict=True))
+
+    lines = [fmt(columns), "-+-".join("-" * w for w in widths), *(fmt(r) for r in cells)]
+    if len(rows) > limit:
+        lines.append(f"... {len(rows) - limit} more rows")
+    return "\n".join("    " + line for line in lines)
+
+
+async def _ask_command(args: argparse.Namespace) -> int:
+    cfg = AgentConfig.from_env()
+    session_id = UUID(args.session)
+    if not session_exists(cfg, session_id):
+        raise SystemExit(f"session {session_id} does not exist")
+    run_id = create_ask_run(cfg, session_id, args.question)
+    print(f"Q: {args.question}")
+    print(f"   (session {session_id}, run {run_id})")
+    async with open_runtime(cfg) as rt:
+        if args.trace:
+            rt.tracer.listen(_print_event)
+        config: Json = {"configurable": {"thread_id": f"ask:{session_id}"}}
+        try:
+            await rt.ask.ainvoke(  # pyright: ignore[reportUnknownMemberType]
+                {"run_id": str(run_id), "session_id": str(session_id), "question": args.question},
+                config,  # pyright: ignore[reportArgumentType]
+                durability="sync",
+            )
+        except Exception as exc:
+            await rt.tracer.sink.set_run(run_id, session_id, status="failed")
+            print(f"Ask failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+            return 1
+        snapshot = await rt.ask.aget_state(config)  # pyright: ignore[reportArgumentType, reportUnknownMemberType]
+        state: Json = dict(snapshot.values)  # pyright: ignore[reportUnknownArgumentType, reportUnknownMemberType]
+    plan = state["plan"]
+    print()
+    print(f"Plan: {plan['action']} - {plan['reason']}")
+    result = state.get("result")
+    print()
+    if result:
+        print("SQL (as executed):")
+        print(f"    {result['sql']}")
+        print()
+        print(f"Rows ({result['row_count']}{', truncated' if result['truncated'] else ''}):")
+        print(_table(result["columns"], result["rows"]))
+    elif state.get("sql"):
+        err: Json = state.get("sql_error") or {}
+        print("SQL (rejected by the safety pipeline):")
+        print(f"    {state['sql']}")
+        print(f"    -> {err.get('code')}: {err.get('message')}")
+    else:
+        print("SQL: none")
+    conv = state.get("conversion")
+    if conv and "error" not in conv:
+        print()
+        print(
+            f"Conversion: {conv['from_currency']} {conv['amount_in']} -> "
+            f"{conv['to_currency']} {conv['amount']} (rate {conv['rate']}, {conv['rate_date']})"
+        )
+    print()
+    print(f"Answer: {state['answer']}")
+    print(f"(cost ${Decimal(state.get('cost_usd', '0'))})")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     stdout: Any = sys.stdout
     if isinstance(stdout, io.TextIOWrapper):
@@ -260,6 +330,10 @@ def main(argv: list[str] | None = None) -> int:
     res.add_argument("--approve", action="store_true", help="approve the record as extracted")
     res.add_argument("--set", action="append", metavar="PATH=VALUE",
                      help="edit a field, e.g. --set total=1234.50 (repeatable)")  # fmt: skip
+    ask = sub.add_parser("ask", help="ask a question about the session's saved documents")
+    ask.add_argument("question")
+    ask.add_argument("--session", required=True, help="session id")
+    ask.add_argument("--trace", action="store_true", help="print trace events live")
     args = parser.parse_args(argv)
     try:
         if args.command == "session":
@@ -267,6 +341,8 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "ingest":
             return run_async(_ingest(args))
+        if args.command == "ask":
+            return run_async(_ask_command(args))
         return run_async(_resume(args))
     except LookupError as exc:
         print(f"config error: {exc}", file=sys.stderr)

@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "LangGraph ingest and ask graphs."
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "docagent-gateway",
     "docagent-schemas",
     "langgraph>=1.2.22",
     "langgraph-checkpoint-postgres>=3.2.1",
@@ -18,3 +19,4 @@ build-backend = "uv_build"
 
 [tool.uv.sources]
 docagent-schemas = { workspace = true }
+docagent-gateway = { workspace = true }

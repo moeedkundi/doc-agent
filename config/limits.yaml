@@ -37,4 +37,4 @@ llm:
   backoff_base_s: 1.0         # exponential: base * 2^attempt, with jitter
   backoff_max_s: 20.0
   max_output_tokens: 16384    # hard cap per call (bounds worst-case cost)
-  call_reserve_usd: 0.05      # a call is refused unless this much budget is still left
+  call_reserve_usd: 0.01      # a call is refused unless this much budget is still left (~2-3x a typical call)

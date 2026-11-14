@@ -410,13 +410,15 @@ statement, non-allowlisted tables; the MCP Inspector lists all tools for each se
 
 ### Phase 4 — Agent graphs
 - [x] Ingest graph (§7.1) with escalation, interrupt/resume, Postgres checkpointer
-- [ ] Ask graph (§7.2) with SQL retry
+- [x] Ask graph (§7.2) with SQL retry
 - [x] PO ↔ invoice matching node
-- [x] Trace event emission from every node (ingest graph; ask graph in part B)
+- [x] Trace event emission from every node
 **Done when:** a CLI command runs a sample doc to completion; a doc with an injected arithmetic
 error pauses for review and resumes correctly; ingesting a PO then its invoice yields `matched`,
 and the mismatch sample yields `mismatch` with the right issue; 5 canned questions return
-correct answers.
+correct answers. (`scripts/phase4_done_when.py`; 2026-11-14: checks 1, 3a, 3b pass; 2 and 4
+blocked by the free-tier daily quota (20 requests/day on the default model). Re-run once the
+quota resets or billing is enabled.)
 
 ### Phase 5 — API
 - [ ] Endpoints in §9, SSE streaming, sessions via cookie
@@ -548,3 +550,9 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | Checkpointer uses the owner DSN (`DATABASE_URL`) to create/use its tables | `setup()` needs CREATE; revisit with a dedicated role when the API lands (Phase 5) |
 | 2026-11-14 | Local `.env` MCP URLs use 127.0.0.1; compose sets service hostnames | The agent runs on the host in dev; compose overrides per container |
 | 2026-11-14 | CLI: `agent.cli session new`, `ingest <file> [--session] [--no-input]`, `resume <run_id> [--approve \| --set PATH=VALUE]` | Interactive review in a terminal; flags for non-TTY shells; resume works from another process via the checkpointer |
+| 2026-11-14 | Migration 004: `runs.kind` ('ingest'\|'ask'), `runs.question`, `document_id` nullable for asks | Ask turns need a run row: trace events and ledger rows reference runs |
+| 2026-11-14 | Ask graph: one LLM call plans + writes SQL; one phrases the answer; follow-up conversions and refusals are templated; conversation history in the checkpointer (thread `ask:<session>`) | §7.2 shape with fewer paid calls; "convert that" needs the previous answer |
+| 2026-11-14 | Ask prompt rules: de-duplicate invoices on (seller_name, invoice_number); never add across currencies; `amount`/`currency` columns for single figures | A re-submitted invoice exists twice; single-figure convention drives conversion |
+| 2026-11-14 | `invoice_po_matches.status` description now explains that matched/partial agree and mismatch/po_not_found don't | A live run listed a `partial` invoice as "not matching" |
+| 2026-11-14 | `call_reserve_usd` 0.05 → 0.01 (approved) | A $0.05 reserve against a $0.10 session cap left only half the cap usable; note: a strong-tier call can overshoot the cap by more than the reserve |
+| 2026-11-14 | Free tier limits the default model to 20 requests/day; beyond that every call falls back to the strong tier | Observed live; the demo needs a paid key (or a cheaper fallback) to be usable |

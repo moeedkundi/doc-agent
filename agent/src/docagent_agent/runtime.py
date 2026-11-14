@@ -23,9 +23,11 @@ import yaml
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from langgraph.graph.state import CompiledStateGraph
 
+from docagent_agent.ask import AskState, build_ask_graph
 from docagent_agent.ingest import IngestSettings, IngestState, build_ingest_graph
 from docagent_agent.tools import McpHub, Server
 from docagent_agent.trace import PgTraceSink, Tracer
+from docagent_gateway import Gateway, PostgresLedger, load_config
 
 _MAGIC = ((b"%PDF-", ".pdf"), (b"\x89PNG\r\n\x1a\n", ".png"), (b"\xff\xd8\xff", ".jpg"))
 
@@ -115,6 +117,18 @@ def create_run(cfg: AgentConfig, session_id: UUID, document_id: UUID) -> UUID:
     return run_id
 
 
+def create_ask_run(cfg: AgentConfig, session_id: UUID, question: str) -> UUID:
+    run_id = uuid4()
+    with _scoped(cfg.app_dsn, session_id) as conn, conn.transaction():
+        conn.execute("SELECT set_config('app.session_id', %s, true)", (str(session_id),))
+        conn.execute(
+            "INSERT INTO runs (id, session_id, kind, question, status) "
+            "VALUES (%s, %s, 'ask', %s, 'queued')",
+            (run_id, session_id, question),
+        )
+    return run_id
+
+
 def session_exists(cfg: AgentConfig, session_id: UUID) -> bool:
     with _scoped(cfg.app_dsn, session_id) as conn, conn.transaction():
         conn.execute("SELECT set_config('app.session_id', %s, true)", (str(session_id),))
@@ -130,6 +144,7 @@ def session_exists(cfg: AgentConfig, session_id: UUID) -> bool:
 @dataclass(frozen=True)
 class Runtime:
     graph: CompiledStateGraph[IngestState, None, IngestState, IngestState]
+    ask: CompiledStateGraph[AskState, None, AskState, AskState]
     tracer: Tracer
     config: AgentConfig
 
@@ -141,9 +156,11 @@ async def open_runtime(cfg: AgentConfig) -> AsyncGenerator[Runtime]:
         McpHub(cfg.mcp_urls, cfg.mcp_secret) as hub,
     ):
         await checkpointer.setup()
-        tracer = Tracer(PgTraceSink(cfg.app_dsn), hub)
+        # All LLM calls go through the gateway (budget caps + ledger), never a provider SDK.
+        gateway = Gateway(load_config(), PostgresLedger(cfg.app_dsn))
+        tracer = Tracer(PgTraceSink(cfg.app_dsn), hub, gateway)
         graph = build_ingest_graph(tracer, checkpointer, IngestSettings(cfg.max_reextract_attempts))
-        yield Runtime(graph, tracer, cfg)
+        yield Runtime(graph, build_ask_graph(tracer, checkpointer), tracer, cfg)
 
 
 def run_async(coro: Coroutine[Any, Any, int]) -> int:

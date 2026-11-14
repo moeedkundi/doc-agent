@@ -27,7 +27,9 @@ COLUMNS: dict[str, dict[str, str]] = {
     "invoice_lines": {"line_no": "1-based position on the invoice", "sku": "may be null"},
     "po_lines": {"line_no": "1-based position on the PO"},
     "invoice_po_matches": {
-        "status": "matched | partial | mismatch | po_not_found",
+        "status": "matched | partial | mismatch | po_not_found. matched and partial both "
+        "mean the invoice AGREES with its PO (partial = the PO still has open quantity); "
+        "mismatch = it disagrees (see issues_json); po_not_found = its PO is not on file",
         "issues_json": "list of {rule, message, invoice_line, po_line}",
         "po_id": "null when status = po_not_found",
     },
