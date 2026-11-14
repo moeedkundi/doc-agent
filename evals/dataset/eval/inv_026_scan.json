@@ -1,0 +1,67 @@
+{
+  "doc_id": "inv_026_scan",
+  "doc_type": "invoice",
+  "file": "eval/inv_026_scan.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "invoice_number": "INV006100",
+    "invoice_date": "2026-04-02",
+    "due_date": "2026-05-17",
+    "currency": "USD",
+    "po_number": "PO-44289",
+    "seller": {
+      "name": "Bluecairn Networks Inc.",
+      "address": "1905 Tamarind Drive, Boise, ID 83702, USA",
+      "tax_id": "82-1167045"
+    },
+    "buyer": {
+      "name": "Meadowbrook Dental Group PC",
+      "address": "140 Sycamore Plaza, Asheville, NC 28801, USA"
+    },
+    "line_items": [
+      {
+        "sku": "HUB-USBC-7",
+        "description": "7-in-1 USB-C hub",
+        "quantity": "2",
+        "unit_price": "44.53",
+        "line_total": "89.06"
+      },
+      {
+        "sku": "NTE-76-12",
+        "description": "Self-stick notes 3x3in, 12 pads",
+        "quantity": "5",
+        "unit_price": "8.91",
+        "line_total": "44.55"
+      },
+      {
+        "sku": "NSW-8G",
+        "description": "8-port Gigabit switch",
+        "quantity": "5",
+        "unit_price": "29.73",
+        "line_total": "148.65"
+      }
+    ],
+    "subtotal": "282.26",
+    "tax_amount": "20.46",
+    "total": "302.72"
+  },
+  "references_po": "po_026",
+  "variant_of": "inv_026",
+  "injected": [
+    {
+      "kind": "price_drift",
+      "detail": "unit price 42.65 -> 44.53 (+4.4%, tolerance 2.0%)",
+      "line": 0
+    }
+  ],
+  "expected_match": {
+    "status": "mismatch",
+    "rules": [
+      "unit_price_out_of_tolerance",
+      "total_exceeds_remaining"
+    ]
+  }
+}

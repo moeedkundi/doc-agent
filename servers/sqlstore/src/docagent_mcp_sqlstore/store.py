@@ -286,10 +286,16 @@ class SqlStore:
             ).fetchall()
             prior: list[PriorInvoice] = []
             duplicates: list[UUID] = []
+            seen_numbers: set[str] = set()
             for inv in invoices:
-                if exclude_invoice_number and inv["invoice_number"] == exclude_invoice_number:
+                number = inv["invoice_number"]
+                if exclude_invoice_number and number == exclude_invoice_number:
                     duplicates.append(inv["id"])
                     continue
+                if number is not None and number in seen_numbers:
+                    continue  # a re-submitted copy of an earlier invoice: count it once
+                if number is not None:
+                    seen_numbers.add(number)
                 lines = cur.execute(
                     "SELECT * FROM invoice_lines WHERE invoice_id = %s ORDER BY line_no",
                     (inv["id"],),

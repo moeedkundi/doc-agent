@@ -76,6 +76,9 @@ class LlmLimits(_Strict):
 class Budgets(_Strict):
     daily_usd: Decimal = Field(ge=0)
     session_usd: Decimal = Field(ge=0)
+    eval_usd: Decimal = Field(default=Decimal(0), ge=0)
+    """Daily cap for eval sessions (EVAL_BUDGET_USD); 0 = evals disabled. Separate from the
+    demo's daily cap, which never counts eval spend."""
 
 
 class GatewayConfig(_Strict):
@@ -118,6 +121,7 @@ def load_config(
     budgets = Budgets(
         daily_usd=_required_decimal(env, "DAILY_BUDGET_USD"),
         session_usd=_required_decimal(env, "SESSION_BUDGET_USD"),
+        eval_usd=Decimal(env.get("EVAL_BUDGET_USD") or "0"),
     )
     key_names = {t.api_key_env for t in models.tiers.values()}
     api_keys = {name: SecretStr(env[name]) for name in key_names if env.get(name)}

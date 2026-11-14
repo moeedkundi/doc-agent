@@ -268,3 +268,47 @@ async def test_retries_recheck_the_budget(harness: Callable[..., Harness]) -> No
     h.gateway._sleep = sleep_and_overspend  # pyright: ignore[reportPrivateUsage]
     with pytest.raises(BudgetExceeded):
         await h.gateway.complete(MSGS, tier="default")
+
+
+async def test_eval_sessions_use_their_own_budget(harness: Callable[..., Harness]) -> None:
+    ledger = MemoryLedger()
+    evaluator = uuid4()
+    ledger.eval_sessions.add(evaluator)
+    _spent(ledger, "0.995")  # the demo's daily budget is all but gone
+    config = make_config()
+    config = config.model_copy(
+        update={"budgets": config.budgets.model_copy(update={"eval_usd": Decimal("3.00")})}
+    )
+    h = harness(config, ledger, flash_model=[response("ok", 4000, 1000)] * 2)
+    out = await h.gateway.complete(MSGS, tier="default", session_id=evaluator)
+    assert out.text == "ok"
+    assert h.ledger.entries[-1].pool == "eval"
+    assert ledger.spent_since(NOW - timedelta(hours=1), "demo") == Decimal("0.995")  # untouched
+    with pytest.raises(BudgetExceeded) as exc:  # a visitor still hits the demo cap
+        await h.gateway.complete(MSGS, tier="default", session_id=uuid4())
+    assert exc.value.scope == "daily"
+
+
+async def test_eval_budget_has_its_own_cap(harness: Callable[..., Harness]) -> None:
+    ledger = MemoryLedger()
+    evaluator = uuid4()
+    ledger.eval_sessions.add(evaluator)
+    ledger.record(
+        LedgerEntry(
+            ts=NOW,
+            model="m",
+            tokens_in=0,
+            tokens_out=0,
+            cost_usd=Decimal("2.995"),
+            session_id=evaluator,
+            pool="eval",
+        )
+    )
+    config = make_config()
+    config = config.model_copy(
+        update={"budgets": config.budgets.model_copy(update={"eval_usd": Decimal("3.00")})}
+    )
+    h = harness(config, ledger, flash_model=[response("never")])
+    with pytest.raises(BudgetExceeded) as exc:
+        await h.gateway.complete(MSGS, tier="default", session_id=evaluator)
+    assert exc.value.scope == "eval" and h.provider.calls == []

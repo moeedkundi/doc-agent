@@ -1,0 +1,49 @@
+{
+  "doc_id": "po_019_scan",
+  "doc_type": "purchase_order",
+  "file": "eval/po_019_scan.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-35196",
+    "po_date": "2026-08-27",
+    "currency": "USD",
+    "payment_terms": "Net 30",
+    "buyer": {
+      "name": "Larkspur Logistics Inc.",
+      "address": "5500 Wrenfield Road, Columbus, OH 43215, USA"
+    },
+    "vendor": {
+      "name": "Pinewick Data Accessories Inc.",
+      "address": "3125 Ledgerock Parkway, Madison, WI 53703, USA",
+      "tax_id": "39-2058816"
+    },
+    "ship_to": "5500 Wrenfield Road, Columbus, OH 43215, USA",
+    "requested_delivery_date": "2026-09-26",
+    "line_items": [
+      {
+        "sku": "SHR-CC-P4",
+        "description": "Cross-cut shredder, P-4, 12 sheet",
+        "quantity": "8",
+        "unit_price": "161.70",
+        "line_total": "1293.60"
+      },
+      {
+        "sku": "PEN-GEL-BLK-12",
+        "description": "Gel pens, black, pack of 12",
+        "quantity": "1",
+        "unit_price": "9.02",
+        "line_total": "9.02"
+      }
+    ],
+    "subtotal": "1302.62",
+    "tax_amount": "94.44",
+    "total": "1397.06"
+  },
+  "references_po": null,
+  "variant_of": "po_019",
+  "injected": [],
+  "expected_match": null
+}

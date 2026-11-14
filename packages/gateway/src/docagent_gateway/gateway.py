@@ -32,7 +32,7 @@ from pydantic import BaseModel, ValidationError
 
 from docagent_gateway.config import GatewayConfig, TierConfig
 from docagent_gateway.errors import BudgetExceeded, OutputParseError, ProviderError, redact
-from docagent_gateway.ledger import Ledger, LedgerEntry, start_of_utc_day
+from docagent_gateway.ledger import Ledger, LedgerEntry, Pool, start_of_utc_day
 
 log = logging.getLogger("docagent.gateway")
 
@@ -271,18 +271,29 @@ class Gateway:
     async def spent_today(self) -> Decimal:
         return await asyncio.to_thread(self._ledger.spent_since, start_of_utc_day(self._now()))
 
-    async def _check_budget(self, session_id: UUID | None) -> None:
+    async def _check_budget(self, session_id: UUID | None) -> Pool:
+        """Raise BudgetExceeded if the next call would break a cap; return the pool to charge.
+
+        Eval sessions are capped only by the eval budget (no per-session cap); everything
+        else by the demo's daily cap and the per-session cap.
+        """
         reserve = self._config.limits.call_reserve_usd
         budgets = self._config.budgets
-        spent_today = await asyncio.to_thread(
-            self._ledger.spent_since, start_of_utc_day(self._now())
-        )
+        midnight = start_of_utc_day(self._now())
+        pool = await asyncio.to_thread(self._ledger.pool_of, session_id)
+        if pool == "eval":
+            spent_eval = await asyncio.to_thread(self._ledger.spent_since, midnight, "eval")
+            if spent_eval + reserve > budgets.eval_usd:
+                raise BudgetExceeded("eval", spent_eval, budgets.eval_usd)
+            return pool
+        spent_today = await asyncio.to_thread(self._ledger.spent_since, midnight, "demo")
         if spent_today + reserve > budgets.daily_usd:
             raise BudgetExceeded("daily", spent_today, budgets.daily_usd)
         if session_id is not None:
             spent_session = await asyncio.to_thread(self._ledger.spent_by_session, session_id)
             if spent_session + reserve > budgets.session_usd:
                 raise BudgetExceeded("session", spent_session, budgets.session_usd)
+        return pool
 
     async def _call_with_retries(
         self,
@@ -309,7 +320,7 @@ class Gateway:
 
         attempt = 0
         while True:
-            await self._check_budget(session_id)
+            pool = await self._check_budget(session_id)
             started = time.perf_counter()
             try:
                 response = await self._completion_fn(**kwargs)
@@ -351,6 +362,7 @@ class Gateway:
                 cost_usd=result.cost_usd,
                 run_id=run_id,
                 session_id=session_id,
+                pool=pool,
             )
             await asyncio.to_thread(self._ledger.record, entry)
             log.info(

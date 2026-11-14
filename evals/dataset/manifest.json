@@ -84,10 +84,23 @@
       "file": "eval/po_007.pdf",
       "ground_truth": "eval/po_007.json",
       "template": "classic",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": null
+    },
+    {
+      "doc_id": "po_007_scan",
+      "doc_type": "purchase_order",
+      "split": "eval",
+      "file": "eval/po_007_scan.pdf",
+      "ground_truth": "eval/po_007_scan.json",
+      "template": "classic",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": null,
+      "variant_of": "po_007"
     },
     {
       "doc_id": "po_008",
@@ -96,10 +109,23 @@
       "file": "eval/po_008.pdf",
       "ground_truth": "eval/po_008.json",
       "template": "modern",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": null
+    },
+    {
+      "doc_id": "po_008_scan",
+      "doc_type": "purchase_order",
+      "split": "eval",
+      "file": "eval/po_008_scan.pdf",
+      "ground_truth": "eval/po_008_scan.json",
+      "template": "modern",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": null,
+      "variant_of": "po_008"
     },
     {
       "doc_id": "po_009",
@@ -168,10 +194,23 @@
       "file": "eval/po_014.pdf",
       "ground_truth": "eval/po_014.json",
       "template": "modern",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": null
+    },
+    {
+      "doc_id": "po_014_scan",
+      "doc_type": "purchase_order",
+      "split": "eval",
+      "file": "eval/po_014_scan.pdf",
+      "ground_truth": "eval/po_014_scan.json",
+      "template": "modern",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": null,
+      "variant_of": "po_014"
     },
     {
       "doc_id": "po_015",
@@ -228,10 +267,23 @@
       "file": "eval/po_019.pdf",
       "ground_truth": "eval/po_019.json",
       "template": "modern",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": null
+    },
+    {
+      "doc_id": "po_019_scan",
+      "doc_type": "purchase_order",
+      "split": "eval",
+      "file": "eval/po_019_scan.pdf",
+      "ground_truth": "eval/po_019_scan.json",
+      "template": "modern",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": null,
+      "variant_of": "po_019"
     },
     {
       "doc_id": "po_020",
@@ -348,10 +400,23 @@
       "file": "eval/po_029.pdf",
       "ground_truth": "eval/po_029.json",
       "template": "classic",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": null
+    },
+    {
+      "doc_id": "po_029_scan",
+      "doc_type": "purchase_order",
+      "split": "eval",
+      "file": "eval/po_029_scan.pdf",
+      "ground_truth": "eval/po_029_scan.json",
+      "template": "classic",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": null,
+      "variant_of": "po_029"
     },
     {
       "doc_id": "po_030",
@@ -500,10 +565,23 @@
       "file": "eval/inv_011.pdf",
       "ground_truth": "eval/inv_011.json",
       "template": "classic",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": "partial"
+    },
+    {
+      "doc_id": "inv_011_scan",
+      "doc_type": "invoice",
+      "split": "eval",
+      "file": "eval/inv_011_scan.pdf",
+      "ground_truth": "eval/inv_011_scan.json",
+      "template": "classic",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": "partial",
+      "variant_of": "inv_011"
     },
     {
       "doc_id": "inv_012",
@@ -586,12 +664,27 @@
       "file": "eval/inv_018.pdf",
       "ground_truth": "eval/inv_018.json",
       "template": "compact",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [
         "missing_po"
       ],
       "expected_match": "po_not_found"
+    },
+    {
+      "doc_id": "inv_018_scan",
+      "doc_type": "invoice",
+      "split": "eval",
+      "file": "eval/inv_018_scan.pdf",
+      "ground_truth": "eval/inv_018_scan.json",
+      "template": "compact",
+      "scanned": true,
+      "pages": 1,
+      "injected": [
+        "missing_po"
+      ],
+      "expected_match": "po_not_found",
+      "variant_of": "inv_018"
     },
     {
       "doc_id": "inv_019",
@@ -612,10 +705,23 @@
       "file": "eval/inv_020.pdf",
       "ground_truth": "eval/inv_020.json",
       "template": "modern",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": "partial"
+    },
+    {
+      "doc_id": "inv_020_scan",
+      "doc_type": "invoice",
+      "split": "eval",
+      "file": "eval/inv_020_scan.pdf",
+      "ground_truth": "eval/inv_020_scan.json",
+      "template": "modern",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": "partial",
+      "variant_of": "inv_020"
     },
     {
       "doc_id": "inv_021",
@@ -662,10 +768,23 @@
       "file": "eval/inv_024.pdf",
       "ground_truth": "eval/inv_024.json",
       "template": "classic",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": "matched"
+    },
+    {
+      "doc_id": "inv_024_scan",
+      "doc_type": "invoice",
+      "split": "eval",
+      "file": "eval/inv_024_scan.pdf",
+      "ground_truth": "eval/inv_024_scan.json",
+      "template": "classic",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": "matched",
+      "variant_of": "inv_024"
     },
     {
       "doc_id": "inv_025",
@@ -688,12 +807,27 @@
       "file": "eval/inv_026.pdf",
       "ground_truth": "eval/inv_026.json",
       "template": "compact",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [
         "price_drift"
       ],
       "expected_match": "mismatch"
+    },
+    {
+      "doc_id": "inv_026_scan",
+      "doc_type": "invoice",
+      "split": "eval",
+      "file": "eval/inv_026_scan.pdf",
+      "ground_truth": "eval/inv_026_scan.json",
+      "template": "compact",
+      "scanned": true,
+      "pages": 1,
+      "injected": [
+        "price_drift"
+      ],
+      "expected_match": "mismatch",
+      "variant_of": "inv_026"
     },
     {
       "doc_id": "inv_027",
@@ -730,10 +864,23 @@
       "file": "eval/inv_029.pdf",
       "ground_truth": "eval/inv_029.json",
       "template": "modern",
-      "scanned": true,
+      "scanned": false,
       "pages": 1,
       "injected": [],
       "expected_match": "matched"
+    },
+    {
+      "doc_id": "inv_029_scan",
+      "doc_type": "invoice",
+      "split": "eval",
+      "file": "eval/inv_029_scan.pdf",
+      "ground_truth": "eval/inv_029_scan.json",
+      "template": "modern",
+      "scanned": true,
+      "pages": 1,
+      "injected": [],
+      "expected_match": "matched",
+      "variant_of": "inv_029"
     },
     {
       "doc_id": "inv_030",

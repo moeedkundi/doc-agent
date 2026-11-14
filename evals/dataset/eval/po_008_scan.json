@@ -1,0 +1,63 @@
+{
+  "doc_id": "po_008_scan",
+  "doc_type": "purchase_order",
+  "file": "eval/po_008_scan.pdf",
+  "split": "eval",
+  "template": "modern",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-12326",
+    "po_date": "2026-04-27",
+    "currency": "USD",
+    "payment_terms": "Net 15",
+    "buyer": {
+      "name": "Larkspur Logistics Inc.",
+      "address": "5500 Wrenfield Road, Columbus, OH 43215, USA"
+    },
+    "vendor": {
+      "name": "Tallowmere IT Distribution Inc.",
+      "address": "2210 Bramble Court, Suite 300, Raleigh, NC 27601, USA",
+      "tax_id": "56-2093318"
+    },
+    "ship_to": "5500 Wrenfield Road, Columbus, OH 43215, USA",
+    "requested_delivery_date": "2026-05-23",
+    "line_items": [
+      {
+        "sku": "SSD-EXT-1T",
+        "description": "External SSD, 1 TB, USB-C",
+        "quantity": "40",
+        "unit_price": "92.20",
+        "line_total": "3688.00"
+      },
+      {
+        "sku": "PEN-GEL-BLK-12",
+        "description": "Gel pens, black, pack of 12",
+        "quantity": "24",
+        "unit_price": "10.28",
+        "line_total": "246.72"
+      },
+      {
+        "sku": "ARM-MON-DUAL",
+        "description": "Dual monitor arm, desk clamp",
+        "quantity": "20",
+        "unit_price": "94.18",
+        "line_total": "1883.60"
+      },
+      {
+        "sku": "PEN-BP-BLU-50",
+        "description": "Ballpoint pens, blue, box of 50",
+        "quantity": "50",
+        "unit_price": "11.32",
+        "line_total": "566.00"
+      }
+    ],
+    "subtotal": "6384.32",
+    "tax_amount": "462.86",
+    "total": "6847.18"
+  },
+  "references_po": null,
+  "variant_of": "po_008",
+  "injected": [],
+  "expected_match": null
+}

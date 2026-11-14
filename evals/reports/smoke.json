@@ -1,0 +1,262 @@
+{
+  "suite": "smoke",
+  "finished_at": "2026-11-14T11:18:33Z",
+  "session_id": "9950177f-5e5f-4c12-9097-57255be3fc51",
+  "models": {
+    "default": "gemini-3.5-flash-lite",
+    "strong": "gemini-4-hydrogen"
+  },
+  "metrics": {
+    "documents": 6,
+    "failed_runs": 0,
+    "field_accuracy": 0.9807692307692307,
+    "classification_accuracy": 1.0,
+    "by_doc_type": {
+      "invoice": {
+        "documents": 3,
+        "field_accuracy": 0.972972972972973,
+        "precision": 0.9705882352941176,
+        "recall": 0.9705882352941176,
+        "f1": 0.9705882352941176
+      },
+      "purchase_order": {
+        "documents": 3,
+        "field_accuracy": 0.9878048780487805,
+        "precision": 0.9878048780487805,
+        "recall": 0.9878048780487805,
+        "f1": 0.9878048780487805
+      }
+    },
+    "clean_vs_scanned": {
+      "clean": {
+        "documents": 5,
+        "field_accuracy": 0.9927536231884058
+      },
+      "scanned": {
+        "documents": 1,
+        "field_accuracy": 0.8888888888888888
+      },
+      "paired": {
+        "pairs": 0,
+        "clean_twins": null,
+        "scanned_variants": null
+      }
+    },
+    "match_status_accuracy": 0.6666666666666666,
+    "mismatch_recall": 1.0,
+    "mismatch_recall_by_kind": {
+      "price_drift": 1.0,
+      "over_billed_qty": null,
+      "wrong_vendor": null
+    },
+    "mismatch_rules_exact": 1.0,
+    "escalation_rate": 0.0,
+    "review_rate": 0.16666666666666666,
+    "cost_per_doc_usd": {
+      "avg": 0.005032,
+      "max": 0.006322,
+      "total": 0.030192
+    },
+    "latency_s": {
+      "p50": 8.772,
+      "p95": 9.61175
+    },
+    "by_model": [
+      {
+        "model": "gemini-3.5-flash-lite",
+        "calls": 12,
+        "tokens_in": 20457,
+        "tokens_out": 9621,
+        "cost_usd": "0.030192"
+      }
+    ],
+    "per_field_accuracy": {
+      "invoice.buyer.address": 1.0,
+      "invoice.buyer.name": 1.0,
+      "invoice.currency": 1.0,
+      "invoice.due_date": 1.0,
+      "invoice.invoice_date": 1.0,
+      "invoice.invoice_number": 0.6666666666666666,
+      "invoice.line_items[].description": 1.0,
+      "invoice.line_items[].line_total": 1.0,
+      "invoice.line_items[].quantity": 1.0,
+      "invoice.line_items[].sku": 1.0,
+      "invoice.line_items[].unit_price": 1.0,
+      "invoice.po_number": 1.0,
+      "invoice.seller.address": 1.0,
+      "invoice.seller.name": 1.0,
+      "invoice.seller.tax_id": 0.6666666666666666,
+      "invoice.subtotal": 1.0,
+      "invoice.tax_amount": 1.0,
+      "invoice.total": 1.0,
+      "purchase_order.buyer.address": 1.0,
+      "purchase_order.buyer.name": 1.0,
+      "purchase_order.currency": 1.0,
+      "purchase_order.line_items[].description": 1.0,
+      "purchase_order.line_items[].line_total": 1.0,
+      "purchase_order.line_items[].quantity": 1.0,
+      "purchase_order.line_items[].sku": 1.0,
+      "purchase_order.line_items[].unit_price": 1.0,
+      "purchase_order.payment_terms": 1.0,
+      "purchase_order.po_date": 1.0,
+      "purchase_order.po_number": 1.0,
+      "purchase_order.requested_delivery_date": 1.0,
+      "purchase_order.ship_to": 0.6666666666666666,
+      "purchase_order.subtotal": 1.0,
+      "purchase_order.tax_amount": 1.0,
+      "purchase_order.total": 1.0,
+      "purchase_order.vendor.address": 1.0,
+      "purchase_order.vendor.name": 1.0,
+      "purchase_order.vendor.tax_id": 1.0
+    }
+  },
+  "documents": [
+    {
+      "doc_id": "po_001",
+      "doc_type": "purchase_order",
+      "scanned": false,
+      "variant_of": null,
+      "status": "completed",
+      "predicted_doc_type": "purchase_order",
+      "expected_match": null,
+      "expected_rules": [],
+      "predicted_match": null,
+      "predicted_rules": [],
+      "injected": [],
+      "escalated": false,
+      "reviewed": false,
+      "cost_usd": "0.006322",
+      "latency_s": 9.254,
+      "error_code": null,
+      "field_accuracy": 1.0,
+      "wrong_fields": []
+    },
+    {
+      "doc_id": "po_002",
+      "doc_type": "purchase_order",
+      "scanned": false,
+      "variant_of": null,
+      "status": "completed",
+      "predicted_doc_type": "purchase_order",
+      "expected_match": null,
+      "expected_rules": [],
+      "predicted_match": null,
+      "predicted_rules": [],
+      "injected": [],
+      "escalated": false,
+      "reviewed": false,
+      "cost_usd": "0.004790",
+      "latency_s": 6.805,
+      "error_code": null,
+      "field_accuracy": 1.0,
+      "wrong_fields": []
+    },
+    {
+      "doc_id": "po_003",
+      "doc_type": "purchase_order",
+      "scanned": false,
+      "variant_of": null,
+      "status": "completed",
+      "predicted_doc_type": "purchase_order",
+      "expected_match": null,
+      "expected_rules": [],
+      "predicted_match": null,
+      "predicted_rules": [],
+      "injected": [],
+      "escalated": false,
+      "reviewed": false,
+      "cost_usd": "0.004941",
+      "latency_s": 8.724,
+      "error_code": null,
+      "field_accuracy": 0.9583333333333334,
+      "wrong_fields": [
+        {
+          "path": "ship_to",
+          "expected": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom",
+          "predicted": "Silverbirch Academy Trust, Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+        }
+      ]
+    },
+    {
+      "doc_id": "inv_001",
+      "doc_type": "invoice",
+      "scanned": false,
+      "variant_of": null,
+      "status": "completed",
+      "predicted_doc_type": "invoice",
+      "expected_match": "matched",
+      "expected_rules": [],
+      "predicted_match": "matched",
+      "predicted_rules": [],
+      "injected": [],
+      "escalated": false,
+      "reviewed": false,
+      "cost_usd": "0.005920",
+      "latency_s": 8.036,
+      "error_code": null,
+      "field_accuracy": 1.0,
+      "wrong_fields": []
+    },
+    {
+      "doc_id": "inv_002",
+      "doc_type": "invoice",
+      "scanned": true,
+      "variant_of": null,
+      "status": "completed",
+      "predicted_doc_type": "invoice",
+      "expected_match": "partial",
+      "expected_rules": [],
+      "predicted_match": "mismatch",
+      "predicted_rules": [
+        "vendor_mismatch"
+      ],
+      "injected": [],
+      "escalated": false,
+      "reviewed": true,
+      "cost_usd": "0.003738",
+      "latency_s": 8.82,
+      "error_code": null,
+      "field_accuracy": 0.8888888888888888,
+      "wrong_fields": [
+        {
+          "path": "invoice_number",
+          "expected": "INV004677",
+          "predicted": "INVQ04677"
+        },
+        {
+          "path": "seller.tax_id",
+          "expected": "39-2058816",
+          "predicted": "39-2058616"
+        }
+      ]
+    },
+    {
+      "doc_id": "inv_003",
+      "doc_type": "invoice",
+      "scanned": false,
+      "variant_of": null,
+      "status": "completed",
+      "predicted_doc_type": "invoice",
+      "expected_match": "mismatch",
+      "expected_rules": [
+        "unit_price_out_of_tolerance",
+        "total_exceeds_remaining"
+      ],
+      "predicted_match": "mismatch",
+      "predicted_rules": [
+        "unit_price_out_of_tolerance",
+        "total_exceeds_remaining"
+      ],
+      "injected": [
+        "price_drift"
+      ],
+      "escalated": false,
+      "reviewed": false,
+      "cost_usd": "0.004481",
+      "latency_s": 9.731,
+      "error_code": null,
+      "field_accuracy": 1.0,
+      "wrong_fields": []
+    }
+  ]
+}

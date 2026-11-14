@@ -1,0 +1,49 @@
+{
+  "doc_id": "po_007_scan",
+  "doc_type": "purchase_order",
+  "file": "eval/po_007_scan.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "po_number": "PO-1027",
+    "po_date": "2026-04-19",
+    "currency": "EUR",
+    "payment_terms": "2/10 Net 30",
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "vendor": {
+      "name": "Heidekamp Digitaltechnik GmbH",
+      "address": "Ostring 117, 44787 Bochum, Germany",
+      "tax_id": "DE196530427"
+    },
+    "ship_to": "Industriestraße 72, 70565 Stuttgart, Germany",
+    "requested_delivery_date": "2026-05-05",
+    "line_items": [
+      {
+        "sku": "LBL-A4-21-100",
+        "description": "Address labels, 21 per sheet, 100 sheets",
+        "quantity": "3",
+        "unit_price": "15.67",
+        "line_total": "47.01"
+      },
+      {
+        "sku": "KBD-WL-FS",
+        "description": "Wireless keyboard, full size",
+        "quantity": "24",
+        "unit_price": "39.37",
+        "line_total": "944.88"
+      }
+    ],
+    "subtotal": "991.89",
+    "tax_amount": "188.46",
+    "total": "1180.35"
+  },
+  "references_po": null,
+  "variant_of": "po_007",
+  "injected": [],
+  "expected_match": null
+}

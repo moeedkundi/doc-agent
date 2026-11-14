@@ -28,7 +28,9 @@ class GatewayError(Exception):
 
 
 class BudgetExceeded(GatewayError):
-    def __init__(self, scope: Literal["daily", "session"], spent: Decimal, cap: Decimal) -> None:
+    def __init__(
+        self, scope: Literal["daily", "session", "eval"], spent: Decimal, cap: Decimal
+    ) -> None:
         self.scope = scope
         self.spent = spent
         self.cap = cap

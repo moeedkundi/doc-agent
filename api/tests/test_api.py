@@ -346,3 +346,15 @@ async def test_unknown_run_is_404(stack_factory: Build) -> None:
     s: Stack = await stack_factory()
     r = await s.client.get(f"/api/runs/{UUID(int=7)}")
     assert (r.status_code, r.json()["error"]) == (404, "run_not_found")
+
+
+async def test_evals_latest_serves_json_and_markdown(stack_factory: Build) -> None:
+    s: Stack = await stack_factory()
+    report = s.settings.evals_report
+    report.parent.mkdir(parents=True, exist_ok=True)
+    assert (await s.client.get("/api/evals/latest")).status_code == 404
+    report.write_text(json.dumps({"suite": "full", "metrics": {"field_accuracy": 0.9}}))
+    report.with_suffix(".md").write_text("# report", encoding="utf-8")
+    assert (await s.client.get("/api/evals/latest")).json()["metrics"]["field_accuracy"] == 0.9
+    md = await s.client.get("/api/evals/latest?format=md")
+    assert md.headers["content-type"].startswith("text/markdown") and md.text == "# report"

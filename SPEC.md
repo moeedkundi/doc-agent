@@ -65,7 +65,7 @@ Working name: `docagent` (rename freely). Public URL target: `demo.meetmoeed.com
 | Rate limiting | own in-process sliding window (`docagent_api.guards.RateLimiter`), limits.yaml syntax | swap for Redis-backed if multi-instance; slowapi not needed |
 | Frontend | Next.js (App Router), TypeScript, Tailwind, shadcn/ui | |
 | Tests | pytest, pytest-asyncio, respx (HTTP mocks) | |
-| Evals | own runner in `evals/` | JSON report + markdown summary |
+| Evals | own runner in `evals/` | JSON report + markdown summary; separate `EVAL_BUDGET_USD` pool |
 | Synthetic data | `reportlab` + `Faker` + `Pillow` | generates PDFs with ground-truth JSON; Pillow for the scanned-look degradation |
 | CI | GitHub Actions | lint, types, tests, smoke eval |
 | Deploy | Docker; backend on Fly.io / Railway; Postgres on Neon/Supabase; web on Vercel | |
@@ -429,13 +429,17 @@ session spend $0.067; 4.2 needed the "doesn't match = mismatch or po_not_found" 
 with LLM calls disabled.
 
 ### Phase 6 — Evals
-- [ ] `evals/runner.py`: runs the ingest graph (auto-approve review) over the eval set, POs
-      before their invoices
-- [ ] Metrics: per-field exact/normalised match, per-doc-type F1, **match-status accuracy and
+- [x] `evals/runner.py`: runs the ingest graph (auto-approve review) over the eval set, POs
+      before their invoices; fresh `purpose='eval'` session per run
+- [x] Metrics: per-field exact/normalised match, per-doc-type F1, **match-status accuracy and
       mismatch recall** (did it catch every injected mismatch?), escalation rate, review rate,
-      avg/max cost per doc, p50/p95 latency, broken down by model tier
-- [ ] Writes `evals/reports/latest.json` + `latest.md`
-- [ ] CI: smoke eval on 6 docs on every PR (fails if accuracy drops > 5 pts); full eval manual/nightly
+      avg/max cost per doc, p50/p95 latency, broken down by model tier; clean vs scanned
+      (match policy: `evals/README.md`)
+- [x] Writes `evals/reports/latest.json` + `latest.md`
+- [x] CI: smoke eval on 6 docs on every PR when the `GEMINI_API_KEY` secret exists (fails if
+      field accuracy drops > 5 pts vs `evals/reports/smoke_baseline.json`); full eval via
+      workflow_dispatch (`.github/workflows/eval.yml`)
+- [ ] TODO: Before publishing eval numbers: add 2+ templates per document type and review scan noise.
 **Done when:** the report reproduces within noise on two consecutive runs; `/api/evals/latest` serves it.
 
 ### Phase 7 — Frontend
@@ -476,6 +480,7 @@ MCP_SQLSTORE_URL=http://sqlstore:8103/mcp
 MCP_REFERENCE_URL=http://reference:8104/mcp
 DAILY_BUDGET_USD=3.00
 SESSION_BUDGET_USD=0.25
+EVAL_BUDGET_USD=3.00             # separate daily cap for eval sessions
 UPLOAD_DIR=/data/uploads          # compose; data/uploads for local runs
 MCP_BIND_HOST=127.0.0.1          # 0.0.0.0 only on the private compose network
 TURNSTILE_SECRET=                # optional
@@ -567,3 +572,8 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | Replay: `scripts/record_replays.py` → `api/fixtures/replay/*.json` (events with offsets + result); `REPLAY_ONLY=true` needs no key and no MCP servers; `REPLAY_SPEED` scales timing | Demo survives budget exhaustion or provider outage (§8.3) |
 | 2026-11-14 | API runs uvicorn on a selector event loop on Windows | psycopg's async driver (checkpointer) can't use the Proactor loop |
 | 2026-11-14 | The recorded inv_002 (scanned) shows a real misread: `INVQ04677` for `INV004677` | Kept as recorded; Phase 6 evals measure extraction accuracy |
+| 2026-11-14 | Each scanned eval document is now clean, plus a scanned variant `<id>_scan` (`variant_of`, same record); samples unchanged; `variant_of` written only when set | Clean vs scanned accuracy on identical content; keeps every other dataset file byte-identical |
+| 2026-11-14 | `get_purchase_order` counts each earlier invoice number once | A scanned variant (re-submission) would otherwise be billed against its PO twice and turn later partial invoices into mismatches |
+| 2026-11-14 | Migration 006: `sessions.purpose` (demo\|eval), `llm_ledger.pool`; gateway caps eval sessions with `EVAL_BUDGET_USD` (daily), demo with `DAILY_BUDGET_USD` + session cap; demo totals exclude eval spend | Evals must not use up the public demo's budget |
+| 2026-11-14 | Field match policy: exact IDs/dates/currency; Decimal-equal amounts/quantities; normalised or rapidfuzz ≥ 90 for names/addresses/descriptions | As specified; note ≥ 90 accepts one-letter name misreads |
+| 2026-11-14 | CI gate uses field accuracy only (5-point drop vs smoke baseline) | Match status over the 3 smoke invoices moves 33 points per flip: too coarse to gate on |

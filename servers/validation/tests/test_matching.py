@@ -198,12 +198,17 @@ def test_dataset_outcomes_match_ground_truth(
             assert gt.record.po_number not in pos
             continue
         po = pos[gt.record.po_number]
-        result = _match(po, gt.record, settings, prior.get(po.po_number or ""))
-        prior.setdefault(po.po_number or "", []).append(gt.record)
+        # As sqlstore does: earlier copies of the same invoice number count once, and never
+        # against themselves (a scanned variant is a re-submission of its clean twin).
+        earlier = [p for p in prior.get(po.po_number or "", [])
+                   if p.invoice_number != gt.record.invoice_number]  # fmt: skip
+        result = _match(po, gt.record, settings, earlier)
+        if gt.variant_of is None:
+            prior.setdefault(po.po_number or "", []).append(gt.record)
         assert result.status == gt.expected_match.status, gt.doc_id
         assert _rules(result) == sorted(gt.expected_match.rules), gt.doc_id
         checked += 1
-    assert checked == 26
+    assert checked == 26 + 5  # + the scanned variants of invoices that have a PO
 
 
 def test_every_line_pairs_with_the_right_product(
@@ -217,6 +222,8 @@ def test_every_line_pairs_with_the_right_product(
     }
     pairs = 0
     for gt in truths:
+        if gt.variant_of is not None:
+            continue  # same record as its clean twin
         if not isinstance(gt.record, InvoiceRecord) or gt.record.po_number not in pos:
             continue
         po = pos[gt.record.po_number]

@@ -40,7 +40,7 @@ def _files(root: Path) -> dict[str, bytes]:
 def test_same_seed_is_byte_identical(gen_a: tuple[Path, list[GroundTruth]], gen_b: Path) -> None:
     a, b = _files(gen_a[0]), _files(gen_b)
     assert a.keys() == b.keys()
-    assert len([k for k in a if k.endswith(".pdf")]) == 60
+    assert len([k for k in a if k.endswith(".pdf")]) == 71  # 60 documents + 11 scanned variants
     differing = [k for k in a if a[k] != b[k]]
     assert differing == []
 
@@ -60,7 +60,8 @@ def test_committed_dataset_matches_generator(gen_a: tuple[Path, list[GroundTruth
 
 
 def test_composition(gen_a: tuple[Path, list[GroundTruth]]) -> None:
-    truths = gen_a[1]
+    variants = [t for t in gen_a[1] if t.variant_of is not None]
+    truths = [t for t in gen_a[1] if t.variant_of is None]
     assert Counter((t.split, t.doc_type) for t in truths) == {
         ("sample", "purchase_order"): 3,
         ("sample", "invoice"): 3,
@@ -86,7 +87,16 @@ def test_composition(gen_a: tuple[Path, list[GroundTruth]]) -> None:
         templates = Counter(t.template for t in truths if t.doc_type == doc_type)
         assert set(templates) == {"classic", "modern", "compact"}
         assert min(templates.values()) >= 3
-    assert sum(t.scanned for t in truths) == 12
+    # Scanning: 11 eval documents have a scanned variant; the sample inv_002 is scanned itself.
+    assert [t.doc_id for t in truths if t.scanned] == ["inv_002"]
+    assert Counter(v.doc_type for v in variants) == {"purchase_order": 5, "invoice": 6}
+    by_id = {t.doc_id: t for t in truths}
+    for v in variants:
+        twin = by_id[v.variant_of or ""]
+        assert v.scanned and not twin.scanned and v.split == twin.split == "eval"
+        assert v.record == twin.record and v.injected == twin.injected
+        assert v.expected_match == twin.expected_match
+        assert v.doc_id == f"{twin.doc_id}_scan"
     assert any(t.pages > 1 for t in truths)
     assert all(t.pages <= 5 for t in truths)
 
@@ -152,7 +162,11 @@ def test_invoices_reference_earlier_pos_in_same_split(
 
 def test_missing_po_cites_unknown_number(gen_a: tuple[Path, list[GroundTruth]]) -> None:
     known = {t.record.po_number for t in gen_a[1] if isinstance(t.record, PurchaseOrderRecord)}
-    missing = [t for t in gen_a[1] if any(i.kind == "missing_po" for i in t.injected)]
+    missing = [
+        t
+        for t in gen_a[1]
+        if t.variant_of is None and any(i.kind == "missing_po" for i in t.injected)
+    ]
     assert len(missing) == 2
     for t in missing:
         assert isinstance(t.record, InvoiceRecord)

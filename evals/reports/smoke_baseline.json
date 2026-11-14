@@ -1,0 +1,9 @@
+{
+  "field_accuracy": 0.9807692307692307,
+  "match_status_accuracy": 0.6666666666666666,
+  "source": "smoke run 2026-11-14T11:18:33Z, session 9950177f-5e5f-4c12-9097-57255be3fc51",
+  "models": {
+    "default": "gemini-3.5-flash-lite",
+    "strong": "gemini-4-hydrogen"
+  }
+}

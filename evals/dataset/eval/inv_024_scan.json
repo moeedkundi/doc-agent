@@ -1,0 +1,86 @@
+{
+  "doc_id": "inv_024_scan",
+  "doc_type": "invoice",
+  "file": "eval/inv_024_scan.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "invoice_number": "QOS-2026-3728",
+    "invoice_date": "2026-08-05",
+    "due_date": "2026-08-20",
+    "currency": "USD",
+    "po_number": "PO-27249",
+    "seller": {
+      "name": "Quillfeather Office Supply Co.",
+      "address": "418 Corliss Avenue, Dayton, OH 45402, USA",
+      "tax_id": "31-4825097"
+    },
+    "buyer": {
+      "name": "Meadowbrook Dental Group PC",
+      "address": "140 Sycamore Plaza, Asheville, NC 28801, USA"
+    },
+    "line_items": [
+      {
+        "sku": null,
+        "description": "Dry-wipe markers asst x4",
+        "quantity": "15",
+        "unit_price": "4.82",
+        "line_total": "72.30"
+      },
+      {
+        "sku": null,
+        "description": "Self-stick notes 3x3in, 12 pads",
+        "quantity": "40",
+        "unit_price": "9.44",
+        "line_total": "377.60"
+      },
+      {
+        "sku": null,
+        "description": "Mesh task chair w/ adj. arms",
+        "quantity": "6",
+        "unit_price": "194.86",
+        "line_total": "1169.16"
+      },
+      {
+        "sku": null,
+        "description": "Labels 21/sheet, 100 sheets",
+        "quantity": "4",
+        "unit_price": "17.18",
+        "line_total": "68.72"
+      },
+      {
+        "sku": null,
+        "description": "Copy paper A4 80g (500 sh)",
+        "quantity": "20",
+        "unit_price": "6.54",
+        "line_total": "130.80"
+      },
+      {
+        "sku": null,
+        "description": "AA alkaline battery 24-pk",
+        "quantity": "40",
+        "unit_price": "13.80",
+        "line_total": "552.00"
+      },
+      {
+        "sku": null,
+        "description": "DL window envelopes (500)",
+        "quantity": "3",
+        "unit_price": "18.89",
+        "line_total": "56.67"
+      }
+    ],
+    "subtotal": "2427.25",
+    "tax_amount": "175.98",
+    "total": "2603.23"
+  },
+  "references_po": "po_023",
+  "variant_of": "inv_024",
+  "injected": [],
+  "expected_match": {
+    "status": "matched",
+    "rules": []
+  }
+}

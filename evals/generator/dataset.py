@@ -701,6 +701,31 @@ def _doc_rng(seed: int, doc_id: str) -> random.Random:
     return random.Random(f"{seed}:{doc_id}")
 
 
+def _write(out_dir: Path, seed: int, gt: GroundTruth, pdf: bytes, scanned: bool, title: str
+           ) -> list[GroundTruth]:  # fmt: skip
+    """Write a document; return its ground truth (+ a scanned variant's, if any).
+
+    Eval documents picked for scanning keep a clean copy under their own id and get a
+    scanned variant `<id>_scan` with the same record, so clean vs scanned accuracy can be
+    compared on identical content. The public samples are unchanged (inv_002 stays the
+    scanned sample, with no clean twin).
+    """
+    rng_key = gt.doc_id
+    if scanned and gt.split == "sample":
+        (out_dir / gt.file).write_bytes(scanify(pdf, _doc_rng(seed, rng_key), f"{title} {rng_key}"))
+        return [gt]
+    (out_dir / gt.file).write_bytes(pdf)
+    if not scanned:
+        return [gt]
+    variant = gt.model_copy(update={
+        "doc_id": f"{gt.doc_id}_scan", "file": gt.file.replace(".pdf", "_scan.pdf"),
+        "scanned": True, "variant_of": gt.doc_id,
+    })  # fmt: skip
+    scan = scanify(pdf, _doc_rng(seed, rng_key), f"{title} {rng_key}")
+    (out_dir / variant.file).write_bytes(scan)
+    return [gt, variant]
+
+
 def render(ds: Dataset, out_dir: Path) -> list[GroundTruth]:
     """Write PDFs + ground-truth JSON + manifest; return ground truth in ingest order."""
     for sub in ("samples", "eval"):
@@ -725,22 +750,18 @@ def render(ds: Dataset, out_dir: Path) -> list[GroundTruth]:
                 company_style(job.ctx.buyer),
             )
         )
-        if job.scanned:
-            pdf = scanify(pdf, _doc_rng(ds.seed, job.doc_id), f"Purchase Order {job.doc_id}")
-        (out_dir / rel).write_bytes(pdf)
-        truths.append(
-            GroundTruth(
-                doc_id=job.doc_id,
-                doc_type="purchase_order",
-                file=rel,
-                split=job.split,
-                template=job.template.NAME,
-                scanned=job.scanned,
-                pages=pages,
-                record=job.ctx.record,
-                injected=job.injected,
-            )
+        clean = GroundTruth(
+            doc_id=job.doc_id,
+            doc_type="purchase_order",
+            file=rel,
+            split=job.split,
+            template=job.template.NAME,
+            scanned=job.scanned and job.split == "sample",
+            pages=pages,
+            record=job.ctx.record,
+            injected=job.injected,
         )
+        truths += _write(out_dir, ds.seed, clean, pdf, job.scanned, "Purchase Order")
     for job in ds.invoices:
         rel = f"{folder(job.split)}/{job.doc_id}.pdf"
         pdf, pages = job.template.render_invoice(
@@ -753,28 +774,27 @@ def render(ds: Dataset, out_dir: Path) -> list[GroundTruth]:
                 company_style(job.seller),
             )
         )
-        if job.scanned:
-            pdf = scanify(pdf, _doc_rng(ds.seed, job.doc_id), f"Invoice {job.doc_id}")
-        (out_dir / rel).write_bytes(pdf)
-        truths.append(
-            GroundTruth(
-                doc_id=job.doc_id,
-                doc_type="invoice",
-                file=rel,
-                split=job.split,
-                template=job.template.NAME,
-                scanned=job.scanned,
-                pages=pages,
-                record=job.record,
-                references_po=job.references_po,
-                injected=job.injected,
-                expected_match=job.expected,
-            )
+        clean = GroundTruth(
+            doc_id=job.doc_id,
+            doc_type="invoice",
+            file=rel,
+            split=job.split,
+            template=job.template.NAME,
+            scanned=job.scanned and job.split == "sample",
+            pages=pages,
+            record=job.record,
+            references_po=job.references_po,
+            injected=job.injected,
+            expected_match=job.expected,
         )
+        truths += _write(out_dir, ds.seed, clean, pdf, job.scanned, "Invoice")
 
     for gt in truths:
         path = out_dir / gt.file.replace(".pdf", ".json")
-        path.write_text(gt.model_dump_json(indent=2) + "\n", encoding="utf-8", newline="\n")
+        # `variant_of` is written only for variants, so every other file stays as it was.
+        exclude = None if gt.variant_of else {"variant_of"}
+        text = gt.model_dump_json(indent=2, exclude=exclude)
+        path.write_text(text + "\n", encoding="utf-8", newline="\n")
 
     manifest = {
         "generator_version": GENERATOR_VERSION,
@@ -793,6 +813,7 @@ def render(ds: Dataset, out_dir: Path) -> list[GroundTruth]:
                 "pages": gt.pages,
                 "injected": [i.kind for i in gt.injected],
                 "expected_match": gt.expected_match.status if gt.expected_match else None,
+                **({"variant_of": gt.variant_of} if gt.variant_of else {}),
             }
             for gt in truths
         ],

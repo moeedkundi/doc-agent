@@ -113,6 +113,8 @@ class Db:
         # llm_ledger is not under RLS (the daily cap spans sessions); reading it needs no scope.
         with self._connect() as conn:
             row = conn.execute(
-                "SELECT coalesce(sum(cost_usd), 0) FROM llm_ledger WHERE ts >= %s", (since,)
+                "SELECT coalesce(sum(cost_usd), 0) FROM llm_ledger "
+                "WHERE ts >= %s AND pool = 'demo'",
+                (since,),
             ).fetchone()
         return Decimal(row[0]) if row else Decimal(0)

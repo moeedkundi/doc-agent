@@ -1,0 +1,59 @@
+{
+  "doc_id": "inv_018_scan",
+  "doc_type": "invoice",
+  "file": "eval/inv_018_scan.pdf",
+  "split": "eval",
+  "template": "compact",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "invoice_number": "2602010",
+    "invoice_date": "2026-09-08",
+    "due_date": "2026-09-23",
+    "currency": "GBP",
+    "po_number": "PO-93741",
+    "seller": {
+      "name": "Oakhaven Workplace Supplies Ltd",
+      "address": "85 Tanners Row, Leicester LE1 4PW, United Kingdom",
+      "tax_id": "GB739160524"
+    },
+    "buyer": {
+      "name": "Silverbirch Academy Trust",
+      "address": "Birchfield Campus, Mill Road, Reading RG1 8HX, United Kingdom"
+    },
+    "line_items": [
+      {
+        "sku": "USB-64G",
+        "description": "64GB USB 3.2 flash drive",
+        "quantity": "25",
+        "unit_price": "7.81",
+        "line_total": "195.25"
+      },
+      {
+        "sku": "NSW-8G",
+        "description": "8-port Gigabit switch",
+        "quantity": "24",
+        "unit_price": "23.96",
+        "line_total": "575.04"
+      }
+    ],
+    "subtotal": "770.29",
+    "tax_amount": "154.06",
+    "total": "924.35"
+  },
+  "references_po": null,
+  "variant_of": "inv_018",
+  "injected": [
+    {
+      "kind": "missing_po",
+      "detail": "cites PO-93741, which does not exist",
+      "line": null
+    }
+  ],
+  "expected_match": {
+    "status": "po_not_found",
+    "rules": [
+      "po_not_found"
+    ]
+  }
+}

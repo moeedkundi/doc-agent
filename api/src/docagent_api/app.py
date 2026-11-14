@@ -373,10 +373,15 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
 
     # -- evals & health -------------------------------------------------------------------------
     @app.get("/api/evals/latest")
-    async def evals_latest() -> Any:
-        if not settings.evals_report.is_file():
-            raise ApiError(404, "no_report", "No eval report yet (Phase 6).")
-        return json.loads(settings.evals_report.read_text(encoding="utf-8"))
+    async def evals_latest(format: str = "json") -> Any:
+        """The latest full eval report (evals/reports/latest.json, or `?format=md`)."""
+        path = settings.evals_report if format != "md" else settings.evals_report.with_suffix(".md")
+        if not path.is_file():
+            raise ApiError(404, "no_report", "No eval report yet.")
+        text = await asyncio.to_thread(path.read_text, encoding="utf-8")
+        if format == "md":
+            return Response(text, media_type="text/markdown; charset=utf-8")
+        return json.loads(text)
 
     @app.get("/api/health")
     async def health(request: Request) -> JSONResponse:

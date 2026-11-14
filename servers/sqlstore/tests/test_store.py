@@ -254,3 +254,15 @@ def test_resubmitted_invoice_is_reported_not_counted(world: World) -> None:
     found = world.store.get_purchase_order(world.a, "PO-85044", exclude_invoice_number=number)
     assert found.prior_invoices == []
     assert found.duplicate_invoice_ids == [world.records["inv_003"]]
+
+
+def test_resubmitted_earlier_invoice_counts_once(
+    world: World, fresh_session: UUID, new_document: Callable[[UUID, str], UUID]
+) -> None:
+    po_doc = new_document(fresh_session, "po")
+    world.store.save_record(fresh_session, po_doc, sample("po_003"))
+    for name in ("clean", "scan"):  # the same invoice saved twice
+        world.store.save_record(fresh_session, new_document(fresh_session, name),
+                                sample("inv_003"))  # fmt: skip
+    found = world.store.get_purchase_order(fresh_session, "PO-85044")
+    assert len(found.prior_invoices) == 1

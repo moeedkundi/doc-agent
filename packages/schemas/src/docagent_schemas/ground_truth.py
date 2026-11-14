@@ -50,6 +50,8 @@ class GroundTruth(BaseModel):
     record: InvoiceRecord | PurchaseOrderRecord
     references_po: str | None = None
     """doc_id of the PO this invoice was generated against (None if it has no real PO)."""
+    variant_of: str | None = None
+    """For a scanned variant: doc_id of the clean document with the same record."""
     injected: list[Injection] = []
     expected_match: ExpectedMatch | None = None
     """Expected match outcome when ingested in manifest order; None for POs and for

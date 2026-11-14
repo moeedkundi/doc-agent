@@ -1,0 +1,109 @@
+name: Eval
+
+# Smoke eval (6 public samples) on pull requests, only when the GEMINI_API_KEY secret exists;
+# fails if field accuracy drops more than 5 points below evals/reports/smoke_baseline.json.
+# Full eval (65 documents) runs manually via workflow_dispatch.
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Which suite to run
+        type: choice
+        options: [full, smoke]
+        default: full
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: docagent
+          POSTGRES_PASSWORD: docagent
+          POSTGRES_DB: docagent
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U docagent -d docagent"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      SUITE: ${{ github.event_name == 'workflow_dispatch' && inputs.suite || 'smoke' }}
+      DATABASE_URL: postgresql://docagent:docagent@127.0.0.1:5432/docagent
+      DATABASE_APP_URL: postgresql://docagent_app:ci-app-password@127.0.0.1:5432/docagent
+      DATABASE_READER_URL: postgresql://docagent_reader:ci-reader-password@127.0.0.1:5432/docagent
+      MCP_SHARED_SECRET: ci-only-shared-secret-not-used-anywhere-else
+      MCP_EXTRACTION_URL: http://127.0.0.1:8101/mcp
+      MCP_VALIDATION_URL: http://127.0.0.1:8102/mcp
+      MCP_SQLSTORE_URL: http://127.0.0.1:8103/mcp
+      MCP_REFERENCE_URL: http://127.0.0.1:8104/mcp
+      UPLOAD_DIR: /tmp/docagent-uploads
+      DAILY_BUDGET_USD: "1.00"
+      SESSION_BUDGET_USD: "0.10"
+      EVAL_BUDGET_USD: "3.00"
+    steps:
+      - name: Check for the API key
+        id: key
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::GEMINI_API_KEY secret is not set; skipping the eval."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.key.outputs.run == 'true'
+        uses: actions/checkout@v4
+
+      - if: steps.key.outputs.run == 'true'
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install
+        if: steps.key.outputs.run == 'true'
+        run: uv sync --locked
+
+      - name: Migrate (sets the app/reader role passwords from the DSNs)
+        if: steps.key.outputs.run == 'true'
+        run: uv run python -m docagent_db
+
+      - name: Start the MCP servers
+        if: steps.key.outputs.run == 'true'
+        run: |
+          mkdir -p "$UPLOAD_DIR" logs
+          for s in extraction validation sqlstore reference; do
+            nohup uv run python -m servers.$s > logs/$s.log 2>&1 &
+          done
+          for port in 8101 8102 8103 8104; do
+            for i in $(seq 1 60); do
+              code=$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:$port/mcp || true)
+              [ "$code" = "401" ] && break   # up (and rejecting requests without the secret)
+              sleep 1
+            done
+          done
+
+      - name: Smoke eval (gated)
+        if: steps.key.outputs.run == 'true' && env.SUITE == 'smoke'
+        run: >
+          uv run python -m evals.runner --suite smoke --out eval-reports
+          --baseline evals/reports/smoke_baseline.json --max-drop 5
+
+      - name: Full eval
+        if: steps.key.outputs.run == 'true' && env.SUITE == 'full'
+        run: uv run python -m evals.runner --suite full --out eval-reports
+
+      - name: Upload reports and server logs
+        if: always() && steps.key.outputs.run == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-${{ env.SUITE }}
+          path: |
+            eval-reports/
+            logs/

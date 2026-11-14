@@ -1,0 +1,58 @@
+{
+  "doc_id": "inv_011_scan",
+  "doc_type": "invoice",
+  "file": "eval/inv_011_scan.pdf",
+  "split": "eval",
+  "template": "classic",
+  "scanned": true,
+  "pages": 1,
+  "record": {
+    "invoice_number": "2601550",
+    "invoice_date": "2026-07-06",
+    "due_date": "2026-08-05",
+    "currency": "EUR",
+    "po_number": "PO-70443",
+    "seller": {
+      "name": "Sterndorf Kabel & Zubehör GmbH",
+      "address": "Gewerbepark Süd 6, 93053 Regensburg, Germany",
+      "tax_id": "DE342081659"
+    },
+    "buyer": {
+      "name": "Ostwind Maschinenbau GmbH",
+      "address": "Industriestraße 72, 70565 Stuttgart, Germany"
+    },
+    "line_items": [
+      {
+        "sku": "NSW-8G",
+        "description": "8-port Gigabit switch",
+        "quantity": "3",
+        "unit_price": "28.23",
+        "line_total": "84.69"
+      },
+      {
+        "sku": "TNR-CMY-SET",
+        "description": "Colour toner set C/M/Y",
+        "quantity": "7",
+        "unit_price": "189.40",
+        "line_total": "1325.80"
+      },
+      {
+        "sku": "BND-RNG-25",
+        "description": "2-ring binder, box of 25",
+        "quantity": "7",
+        "unit_price": "26.44",
+        "line_total": "185.08"
+      }
+    ],
+    "subtotal": "1595.57",
+    "tax_amount": "303.16",
+    "total": "1898.73"
+  },
+  "references_po": "po_012",
+  "variant_of": "inv_011",
+  "injected": [],
+  "expected_match": {
+    "status": "partial",
+    "rules": []
+  }
+}
