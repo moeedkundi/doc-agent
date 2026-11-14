@@ -102,8 +102,9 @@ def main() -> int:
     status, saved_total = db.execute(
         "SELECT r.status, i.total FROM runs r JOIN invoices i ON i.document_id = r.document_id "
         "WHERE r.id = %s", (run,)).fetchone() or (None, None)  # fmt: skip
-    edit = db.execute("SELECT field_path, old_value, new_value FROM review_actions WHERE run_id = %s",
-                      (run,)).fetchall()  # fmt: skip
+    edit = db.execute(
+        "SELECT field_path, old_value, new_value FROM review_actions WHERE run_id = %s", (run,)
+    ).fetchall()
     check("2. arithmetic error pauses, then resumes after edit",
           paused == "awaiting_review" and escalated and status == "completed"
           and saved_total == Decimal("474.23") and edit == [("total", "464.23", "474.23")],
