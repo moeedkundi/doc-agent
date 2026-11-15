@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 
+import { Analytics } from '@/components/analytics'
 import { SiteHeader } from '@/components/site-header'
 import { themeScript } from '@/components/theme-toggle'
 import { API_URL } from '@/lib/api'
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href={API_URL} crossOrigin="use-credentials" />
       </head>
       <body className="min-h-screen font-sans antialiased">
+        <Analytics />
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">{children}</main>

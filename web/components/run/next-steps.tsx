@@ -9,6 +9,7 @@ import { Notice } from '@/components/notices'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { ApiError, api, startRunWithFallback } from '@/lib/api'
 import type { Sample } from '@/lib/types'
+import { track } from '@/lib/analytics'
 
 /** A floating "results below" button while `targetId` is off screen below the viewport. */
 export function ScrollHint({ targetId, label }: { targetId: string; label: string }) {
@@ -59,6 +60,7 @@ export function PoNextStep({ poNumber }: { poNumber: string | null }) {
     try {
       const doc = await api.sampleDocument(invoice.id)
       const run = await startRunWithFallback(doc.document_id)
+      track('run_started', { source: 'po_next_step', sample_id: invoice.id, replay: run.replay })
       const query = new URLSearchParams({ doc: doc.document_id })
       if (run.fallback) query.set('fallback', run.fallback)
       router.push(`/runs/${run.run_id}?${query}`)

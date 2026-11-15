@@ -9,6 +9,7 @@ import { SqlBlock } from '@/components/sql-block'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { track } from '@/lib/analytics'
 import { ApiError, api } from '@/lib/api'
 import { usd } from '@/lib/format'
 import { readSse } from '@/lib/sse'
@@ -96,7 +97,13 @@ export function AskChat() {
         } else if (msg.event === 'end') {
           const end = JSON.parse(msg.data) as EndEvent
           const result = end.result as unknown as AskResult | null
-          if (end.status === 'completed' && result) update(id, { status: 'done', result, step: null })
+          if (end.status === 'completed' && result) {
+            update(id, { status: 'done', result, step: null })
+            track('question_asked', {
+              suggested: SUGGESTED.includes(q) || q === WRITE_ATTEMPT,
+              refused: result.plan.action === 'refuse',
+            })
+          }
           else update(id, { status: 'failed', step: null, error: `The question failed (${end.error_code ?? end.status}).` })
         }
       }
@@ -111,6 +118,7 @@ export function AskChat() {
       const err = e instanceof ApiError ? e : new ApiError(0, 'unknown', String(e))
       setItems((xs) => xs.filter((x) => x.id !== id))
       setText(q)
+      if (err.code === 'rate_limited') track('rate_limited', { where: 'ask' })
       if (err.code === 'rate_limited') setRetryAt(Date.now() + (err.retryAfterSeconds ?? 60) * 1000)
       else setBlocked(err.message)
     }

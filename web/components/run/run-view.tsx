@@ -3,7 +3,7 @@
 import { ArrowDown, ArrowLeft, CheckCircle2, Loader2, Pause, Triangle, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { Notice, RateLimitNotice, ReplayBanner } from '@/components/notices'
 import { DocumentViewer } from '@/components/run/document-viewer'
@@ -13,6 +13,7 @@ import { ReviewForm } from '@/components/run/review-form'
 import { Timeline } from '@/components/run/timeline'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { track } from '@/lib/analytics'
 import { ApiError, api } from '@/lib/api'
 import { docTypeLabel, int, usd } from '@/lib/format'
 import { buildSteps, confidences, runTotals } from '@/lib/trace'
@@ -37,6 +38,12 @@ export function RunView({
   const escalated = steps.some((s) => s.strong) || result?.escalated === true
   const purchaseOrder = useMemo(() => poFromTrace(events), [events])
   const elapsed = useElapsed(events, status)
+  useRunFinishedEvent(status, status !== 'completed' || !!result, {
+    doc_type: result?.doc_type,
+    match_status: result?.match?.status,
+    escalated: result?.escalated,
+    replay: run?.replay,
+  })
 
   if (loadError) {
     return (
@@ -290,6 +297,30 @@ function Outcome({
       {error && <Notice tone="danger" title="No recording">{error}</Notice>}
     </div>
   )
+}
+
+const TERMINAL: RunStatus[] = ['completed', 'failed', 'rejected']
+
+/** One `run_finished` event when a run the visitor watched live ends (not when an old run
+ * page is reopened: its first status is already final). */
+function useRunFinishedEvent(
+  status: RunStatus | null,
+  ready: boolean,
+  details: { doc_type?: string; match_status?: string; escalated?: boolean; replay?: boolean },
+) {
+  const watchedLive = useRef(false)
+  const sent = useRef(false)
+  useEffect(() => {
+    if (!status) return
+    if (!TERMINAL.includes(status)) {
+      watchedLive.current = true
+      return
+    }
+    if (watchedLive.current && ready && !sent.current) {
+      sent.current = true
+      track('run_finished', { status, ...details })
+    }
+  }, [status, ready, details])
 }
 
 function useElapsed(events: TraceEvent[], status: RunStatus | null): string {

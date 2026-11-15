@@ -11,6 +11,7 @@ import { ApiError, api, startRunWithFallback, type Limits } from '@/lib/api'
 import { amount, docTypeLabel } from '@/lib/format'
 import type { Sample } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { track } from '@/lib/analytics'
 
 export function StartPanel() {
   const router = useRouter()
@@ -43,11 +44,17 @@ export function StartPanel() {
       try {
         const doc = await getDocument()
         const run = await startRunWithFallback(doc.document_id)
+        track('run_started', {
+          source: key === 'upload' ? 'upload' : 'sample',
+          sample_id: key === 'upload' ? undefined : key,
+          replay: run.replay,
+        })
         const query = new URLSearchParams({ doc: doc.document_id })
         if (run.fallback) query.set('fallback', run.fallback)
         router.push(`/runs/${run.run_id}?${query}`)
       } catch (e) {
         const err = e instanceof ApiError ? e : new ApiError(0, 'unknown', String(e))
+        if (err.code === 'rate_limited') track('rate_limited', { where: 'run' })
         if (err.code === 'rate_limited') setRetryAt(Date.now() + (err.retryAfterSeconds ?? 60) * 1000)
         else setError(err)
         setBusy(null)

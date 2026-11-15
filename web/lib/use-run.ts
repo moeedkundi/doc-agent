@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { track } from './analytics'
 import { ApiError, api } from './api'
 import type { EndEvent, IngestResult, ReviewPayload, Run, RunStatus, TraceEvent } from './types'
 
@@ -122,6 +123,7 @@ export function useRun(id: string) {
   const submitReview = useCallback(
     async (decision: { action: 'approve' | 'edit'; record?: unknown }) => {
       await api.resume(id, decision)
+      track('review_submitted', { action: decision.action })
       setState((s) => ({ ...s, review: null, status: 'running' }))
     },
     [id],
