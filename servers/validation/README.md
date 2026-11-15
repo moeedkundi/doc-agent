@@ -45,7 +45,7 @@ issue is `error` or `review`. `warning` never blocks.
 | `due_date_not_before_invoice_date` | invoice | error | due ≥ invoice date |
 | `invoice_po_reference_format` | invoice | warning | PO reference looks like a PO number |
 | `delivery_date_not_before_po_date` | PO | error | requested delivery ≥ PO date |
-| `po_number_format` | PO | error | matches `po_number_pattern` |
+| `po_number_format` | PO | warning | looks like a document number (`po_number_pattern`) |
 | `payment_terms_parseable` | PO | review | Net N, N days, 2/10 Net 30, due on receipt… |
 | `no_duplicate_skus` | PO | error | each SKU on one line only |
 | `low_confidence` | both | review | every extracted field ≥ review threshold (extraction output only) |

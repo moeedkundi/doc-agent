@@ -15,7 +15,7 @@ class ValidationSettings(BaseModel):
 
     review_confidence_threshold: float = Field(default=0.80, ge=0, le=1)
     amount_tolerance: Decimal = Decimal("0.01")
-    po_number_pattern: str = r"^PO-\d{4,6}$"
+    po_number_pattern: str = r"^[A-Za-z0-9][A-Za-z0-9 ./_#-]{1,39}$"
     match: MatchTolerances = MatchTolerances()
 
     @property

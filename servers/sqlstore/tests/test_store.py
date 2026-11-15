@@ -183,6 +183,13 @@ def test_get_purchase_order_can_exclude_the_invoice_being_matched(world: World) 
     assert found.prior_invoices == []
 
 
+@pytest.mark.parametrize("typed", ["po-85044", "PO 85044", "PO85044", " PO-85044 "])
+def test_get_purchase_order_ignores_case_spaces_and_punctuation(world: World, typed: str) -> None:
+    found = world.store.get_purchase_order(world.a, typed)
+    assert found.found and found.po_id == world.records["po_003"]
+    assert [p.invoice_id for p in found.prior_invoices] == [world.records["inv_003"]]
+
+
 def test_get_purchase_order_is_session_scoped(world: World) -> None:
     assert not world.store.get_purchase_order(world.a, "PO-1042").found  # B's PO
     assert world.store.get_purchase_order(world.b, "PO-1042").found

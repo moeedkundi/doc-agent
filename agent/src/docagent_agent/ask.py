@@ -101,8 +101,10 @@ SQL rules:
   or summing invoices, de-duplicate on (seller_name, invoice_number), e.g. with
   SELECT DISTINCT ON (seller_name, invoice_number) ... in a CTE.
 - Amounts are in each row's own currency. Never add amounts across currencies.
+- Link an invoice to its PO through invoice_po_matches (invoice_id -> po_id), not by comparing
+  po_number text: the two documents may write the number differently (PO-1042 vs po 1042).
 - "Still uninvoiced on a PO" = the PO's total minus the totals of its de-duplicated invoices
-  (invoices.po_number = purchase_orders.po_number); it can be negative (over-invoiced).
+  (linked as above); it can be negative (over-invoiced).
 - When the answer is a single amount, name that column `amount` and add a `currency` column.
 - invoice_po_matches.issues_json is a JSON list of {rule, message, ...}.
 - An invoice "doesn't match its PO" when its match status is 'mismatch' OR 'po_not_found'

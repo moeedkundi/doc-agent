@@ -107,7 +107,7 @@ def test_invoice_po_reference_format_is_a_warning(
     drift_pair: Pair, settings: ValidationSettings
 ) -> None:
     _, inv = drift_pair
-    result = validate("invoice", inv.model_copy(update={"po_number": "85044"}), settings)
+    result = validate("invoice", inv.model_copy(update={"po_number": "PO@85044"}), settings)
     assert [(i.rule, i.severity) for i in result.issues] == [
         ("invoice_po_reference_format", "warning")
     ]
@@ -122,10 +122,24 @@ def test_delivery_date_not_before_po_date(drift_pair: Pair, settings: Validation
     }
 
 
-@pytest.mark.parametrize("number", ["85044", "PO 85044", "PO-12", "PO-1234567"])
-def test_po_number_format(number: str, drift_pair: Pair, settings: ValidationSettings) -> None:
+@pytest.mark.parametrize("number", ["X", "PO@85044", "-85044", "PO 85044!", "A" * 41])
+def test_po_number_format_flags_implausible_numbers(
+    number: str, drift_pair: Pair, settings: ValidationSettings
+) -> None:
     po, _ = drift_pair
-    assert "po_number_format" in rules_hit(
+    result = validate("purchase_order", po.model_copy(update={"po_number": number}), settings)
+    assert [(i.rule, i.severity) for i in result.issues] == [("po_number_format", "warning")]
+    assert result.valid  # a warning: never blocks, never escalates
+
+
+@pytest.mark.parametrize(
+    "number", ["PO-85044", "XY-211304", "4500012345", "PO 85044", "INV/2026/17", "AB_12.3#4"]
+)
+def test_po_number_format_accepts_real_world_formats(
+    number: str, drift_pair: Pair, settings: ValidationSettings
+) -> None:
+    po, _ = drift_pair
+    assert "po_number_format" not in rules_hit(
         "purchase_order", po.model_copy(update={"po_number": number}), settings
     )
 

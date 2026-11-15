@@ -174,7 +174,7 @@ def _po_number_format(s: Subject, cfg: ValidationSettings) -> Iterator[tuple[str
         and r.po_number
         and not cfg.po_number_re.match(r.po_number)
     ):
-        yield "po_number", f"{r.po_number!r} does not match {cfg.po_number_pattern}"
+        yield "po_number", f"{r.po_number!r} does not look like a PO number"
 
 
 def _invoice_po_ref_format(s: Subject, cfg: ValidationSettings) -> Iterator[tuple[str, str]]:
@@ -256,8 +256,8 @@ RULES: tuple[Rule, ...] = (
     Rule(
         "po_number_format",
         PO,
-        "error",
-        "The PO number matches the configured pattern.",
+        "warning",
+        "The PO number looks like a document number (validation.po_number_pattern).",
         _po_number_format,
     ),
     Rule(

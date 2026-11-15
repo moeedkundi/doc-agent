@@ -269,8 +269,12 @@ class SqlStore:
         with self._connect_app() as conn, conn.transaction():
             _scope(conn, session_id)
             cur = conn.cursor(row_factory=dict_row)
+            # PO numbers are compared normalised (case, spaces and punctuation ignored), so
+            # "XY-211304", "xy 211304" and "XY211304" all find the same PO.
             po = cur.execute(
-                "SELECT * FROM purchase_orders WHERE po_number = %s "
+                "SELECT * FROM purchase_orders "
+                "WHERE regexp_replace(upper(po_number), '[^A-Z0-9]', '', 'g') "
+                "    = regexp_replace(upper(%s), '[^A-Z0-9]', '', 'g') "
                 "ORDER BY (session_id = %s) DESC, created_at DESC, id LIMIT 1",
                 (po_number, session_id),
             ).fetchone()
@@ -280,8 +284,10 @@ class SqlStore:
                 "SELECT * FROM po_lines WHERE po_id = %s ORDER BY line_no", (po["id"],)
             ).fetchall()
             invoices = cur.execute(
-                "SELECT * FROM invoices WHERE po_number = %s AND id IS DISTINCT FROM %s "
-                "ORDER BY created_at, id",
+                "SELECT * FROM invoices "
+                "WHERE regexp_replace(upper(po_number), '[^A-Z0-9]', '', 'g') "
+                "    = regexp_replace(upper(%s), '[^A-Z0-9]', '', 'g') "
+                "AND id IS DISTINCT FROM %s ORDER BY created_at, id",
                 (po_number, exclude_invoice_id),
             ).fetchall()
             prior: list[PriorInvoice] = []

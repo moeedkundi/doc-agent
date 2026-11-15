@@ -21,7 +21,9 @@ extraction:
 validation:
   review_confidence_threshold: 0.80
   amount_tolerance: 0.01    # arithmetic checks (currency units)
-  po_number_pattern: '^PO-\d{4,6}$'
+  # Any plausible document number (2-40 chars: letters, digits, space . / _ # -). A warning,
+  # never blocking: real POs use all sorts of formats (XY-211304, 4500012345, ...).
+  po_number_pattern: '^[A-Za-z0-9][A-Za-z0-9 ./_#-]{1,39}$'
 
 po_matching:
   unit_price_tolerance_pct: 2.0
