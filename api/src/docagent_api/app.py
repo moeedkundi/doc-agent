@@ -67,12 +67,12 @@ def _error(e: ApiError, headers: dict[str, str] | None = None) -> JSONResponse:
 
 
 def _budget_error(exc: BudgetExceeded) -> ApiError:
-    scope = "today's demo budget" if exc.scope == "daily" else "this session's budget"
+    daily = exc.scope == "daily"
+    scope = "Today's LLM budget for the demo" if daily else "This session's LLM budget"
     return ApiError(
         402,
         "budget_exceeded",
-        f"The LLM budget for {scope} is used up. You can still watch recorded "
-        "runs of the sample documents.",
+        f"{scope} is used up. You can still watch recorded runs of the sample documents.",
         scope=exc.scope,
         replay_available=True,
         replay_samples=list(SAMPLE_IDS),

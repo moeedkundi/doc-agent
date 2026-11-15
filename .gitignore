@@ -30,3 +30,6 @@ Thumbs.db
 # Production server state (deploy/)
 .image-tag
 .deploy-history
+
+# Vercel CLI link (local only)
+.vercel

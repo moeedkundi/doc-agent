@@ -1,0 +1,7 @@
+# Vercel builds only the web app (project root directory: web/).
+/*
+!/web
+/web/node_modules
+/web/.next
+/web/.env*
+!/web/.env.example

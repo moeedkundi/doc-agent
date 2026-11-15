@@ -457,10 +457,10 @@ with LLM calls disabled.
 
 ### Phase 8 — Deploy & polish
 - [x] Dockerfiles; deploy backend (API + agent + 4 MCP servers on private network) and Postgres
-- [ ] Web on Vercel at `demo.meetmoeed.com`; CORS + cookies configured
+- [x] Web on Vercel at `demo.meetmoeed.com`; CORS + cookies configured
 - [ ] Session cleanup cron (rows + upload files, incl. cached page images `<doc_id>.p<n>.webp`);
       uptime check on `/api/health`
-- [ ] Public `README.md`: problem, demo GIF, architecture diagram, eval table, design decisions,
+- [x] Public `README.md`: problem, demo GIF, architecture diagram, eval table, design decisions,
       "what I'd do in production" section (on-prem VLM, SSO, audit log, PII redaction)
 - [ ] Link from meetmoeed.com Projects + replace old chatbot page
 **Done when:** a fresh visitor can complete upload → review → ask in under 2 minutes, and the
@@ -597,3 +597,7 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-15 | Session cookie `Domain=.meetmoeed.com; Secure; HttpOnly; SameSite=Lax` (`COOKIE_DOMAIN`), CORS `https://demo.meetmoeed.com` only | demo.meetmoeed.com (Vercel) and api.meetmoeed.com are same-site, so the Lax cookie is sent with credentialed fetches |
 | 2026-11-15 | Cleanup: `python -m docagent_api.cleanup` hourly (cron) — expired sessions cascade in SQL, then their upload files, cached page images and LangGraph checkpoints are removed, plus orphan uploads > 24 h; nightly `pg_dump -Fc`, 7 days kept | Sessions live 24 h; checkpoints and files aren't covered by the SQL cascade |
 | 2026-11-15 | Server access: `deploy` user (key only, passwordless sudo), root and password SSH logins disabled; UFW allows 22/80/443 only; unattended security upgrades | Key-only automation user; Docker-published ports bypass UFW, so only Caddy publishes any |
+| 2026-11-15 | Web on Vercel (project `docagent`, root `web/`, Node 22); install/build pinned to `npx pnpm@12.18.0` | Vercel only reads `packageManager` at the repo root, and its bundled pnpm can't parse the pnpm 12 lockfile |
+| 2026-11-15 | `.vercelignore` uploads only `web/` for CLI deploys | Keeps the Python venv, data and eval files out of the upload |
+| 2026-11-15 | Uptime: external monitor on `/api/health` (UptimeRobot, set up by the owner) plus `.github/workflows/uptime.yml` every 15 min (fails if any MCP server is down; GitHub emails scheduled-run failures) | Free, two independent checks |
+| 2026-11-15 | Phase 8 Done-when timing: upload → review → ask took 186 s on the live site; 165 s of it was one strong-tier re-read (timeout, 503, then 62 s). Strong-tier latency so far: 11–88 s, median 37 s | Open: needs a faster strong-tier model and/or an escalation deadline |

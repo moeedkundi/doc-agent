@@ -1,0 +1,32 @@
+name: Uptime
+
+# Backup uptime check for the public demo (the primary is an external monitor, see
+# deploy/README.md). Fails when /api/health isn't ok or any MCP server is down; GitHub emails
+# failures of scheduled workflows to the user who last changed this schedule. GitHub may run
+# schedules late, and pauses them after 60 days without repository activity.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: API health (all MCP servers up)
+        run: |
+          for attempt in 1 2 3; do
+            body="$(curl -fsS --max-time 20 https://api.meetmoeed.com/api/health)" && \
+              echo "$body" | jq -e '.status == "ok" and ([.mcp[]] | all(. == "ok"))' >/dev/null && \
+              { echo "$body"; exit 0; }
+            echo "attempt $attempt failed: ${body:-no response}"; sleep 20
+          done
+          exit 1
+
+      - name: Web app
+        run: curl -fsS --max-time 20 -o /dev/null -w "%{http_code}\n" https://demo.meetmoeed.com/
