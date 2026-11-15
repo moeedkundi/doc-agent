@@ -16,6 +16,7 @@ sessions:
 extraction:
   render_dpi: 150
   max_reextract_attempts: 2
+  reextract_deadline_s: 25  # cap on a strong-tier re-read (all attempts); then human review
 
 validation:
   review_confidence_threshold: 0.80

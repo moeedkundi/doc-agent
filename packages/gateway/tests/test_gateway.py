@@ -25,7 +25,7 @@ from docagent_gateway import (
     ProviderError,
 )
 from docagent_gateway.gateway import retry_hint_seconds
-from docagent_gateway.testing import FAKE_KEY, NOW, Harness, make_config, response
+from docagent_gateway.testing import FAKE_KEY, NOW, Harness, Slow, make_config, response
 
 MSGS = [{"role": "system", "content": "sys"}, {"role": "user", "content": "extract"}]
 
@@ -312,3 +312,34 @@ async def test_eval_budget_has_its_own_cap(harness: Callable[..., Harness]) -> N
     with pytest.raises(BudgetExceeded) as exc:
         await h.gateway.complete(MSGS, tier="default", session_id=evaluator)
     assert exc.value.scope == "eval" and h.provider.calls == []
+
+
+# -- deadline ---------------------------------------------------------------------------------
+
+
+async def test_deadline_shrinks_the_timeout_and_stops_retrying(
+    harness: Callable[..., Harness],
+) -> None:
+    # A slow strong tier: first attempt hits the (shrunken) timeout, and there's no time left
+    # to retry within the 25 s deadline, so the call fails fast instead of taking minutes.
+    h = harness(strong_model=[Slow(90, response("late")), response("never asked")])
+    with pytest.raises(ProviderError) as err:
+        await h.gateway.complete(MSGS, tier="strong", deadline_s=25)
+    assert err.value.kind == "DeadlineExceeded" and not err.value.transient
+    assert h.provider.calls[0]["timeout"] == 25  # min(request timeout 30, 25 left)
+    assert len(h.provider.calls) == 1 and h.ledger.entries == []
+    assert h.provider.clock[0] <= 25
+
+
+async def test_deadline_allows_retries_that_fit(harness: Callable[..., Harness]) -> None:
+    unavailable = ServiceUnavailableError("overloaded", llm_provider="gemini", model="m")
+    h = harness(strong_model=[unavailable, Slow(5, response("ok"))])
+    out = await h.gateway.complete(MSGS, tier="strong", deadline_s=25)
+    assert out.text == "ok" and len(h.sleeps) == 1
+    assert h.provider.calls[1]["timeout"] < 25  # what was left after the first try + backoff
+
+
+async def test_no_deadline_keeps_the_request_timeout(harness: Callable[..., Harness]) -> None:
+    h = harness(strong_model=[Slow(20, response("ok"))])
+    out = await h.gateway.complete(MSGS, tier="strong")
+    assert out.text == "ok" and h.provider.calls[0]["timeout"] == 30

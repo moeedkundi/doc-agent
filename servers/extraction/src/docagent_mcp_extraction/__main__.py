@@ -30,7 +30,9 @@ def main() -> None:
         raise SystemExit(2) from None
     limits = load_limits()
     settings = ExtractionSettings(
-        render_dpi=limits["extraction"]["render_dpi"], max_pages=limits["uploads"]["max_pages"]
+        render_dpi=limits["extraction"]["render_dpi"],
+        max_pages=limits["uploads"]["max_pages"],
+        reextract_deadline_s=limits["extraction"].get("reextract_deadline_s"),
     )
     serve(create_server(gateway, DocumentStore(Path(upload_dir)), settings), "MCP_EXTRACTION_URL")
 

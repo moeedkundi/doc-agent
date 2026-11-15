@@ -133,6 +133,21 @@ def _is_transient(exc: Exception) -> bool:
     return isinstance(status, int) and status in _TRANSIENT_STATUS
 
 
+@dataclass(frozen=True)
+class _Deadline:
+    at: float
+    """time.monotonic() value by which the whole call must finish"""
+    seconds: float
+
+    def exceeded(self, model: str, attempts: int) -> ProviderError:
+        return ProviderError(
+            f"{model}: no answer within the {self.seconds:g}s deadline "
+            f"({attempts} attempt(s) made)",
+            kind="DeadlineExceeded",
+            transient=False,
+        )
+
+
 class Gateway:
     def __init__(
         self,
@@ -143,6 +158,7 @@ class Gateway:
         now: Callable[[], datetime] | None = None,
         sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
         rng: random.Random | None = None,
+        monotonic: Callable[[], float] = time.monotonic,
     ) -> None:
         self._config = config
         self._ledger = ledger
@@ -150,6 +166,7 @@ class Gateway:
         self._now = now or (lambda: datetime.now(UTC))
         self._sleep = sleep
         self._rng = rng or random.Random()  # noqa: S311 - jitter, not crypto
+        self._monotonic = monotonic
 
     @property
     def config(self) -> GatewayConfig:
@@ -166,6 +183,7 @@ class Gateway:
         images: Sequence[ImageInput] | None = None,
         run_id: UUID | None = None,
         session_id: UUID | None = None,
+        deadline_s: float | None = None,
     ) -> Completion[T]: ...
 
     @overload
@@ -178,6 +196,7 @@ class Gateway:
         images: Sequence[ImageInput] | None = None,
         run_id: UUID | None = None,
         session_id: UUID | None = None,
+        deadline_s: float | None = None,
     ) -> Completion[BaseModel]: ...
 
     async def complete(
@@ -189,15 +208,24 @@ class Gateway:
         images: Sequence[ImageInput] | None = None,
         run_id: UUID | None = None,
         session_id: UUID | None = None,
+        deadline_s: float | None = None,
     ) -> Completion[Any]:
+        """`deadline_s` caps the whole call (attempts, backoff, repair, fallback tiers): each
+        attempt's timeout shrinks to the time left, and once it's used up the call fails with
+        a non-transient ProviderError(kind="DeadlineExceeded") instead of retrying."""
         if tier not in self._config.models.tiers:
             raise ValueError(f"unknown tier {tier!r}")
         msgs = _attach_images(list(messages), images or ())
+        deadline = (
+            None if deadline_s is None else _Deadline(self._monotonic() + deadline_s, deadline_s)
+        )
 
         last_error: ProviderError | None = None
         for candidate in self._tier_chain(tier):
             try:
-                return await self._complete_on(candidate, msgs, response_schema, run_id, session_id)
+                return await self._complete_on(
+                    candidate, msgs, response_schema, run_id, session_id, deadline
+                )
             except ProviderError as exc:
                 if not exc.transient:
                     raise
@@ -221,12 +249,15 @@ class Gateway:
         schema: type[BaseModel] | None,
         run_id: UUID | None,
         session_id: UUID | None,
+        deadline: _Deadline | None = None,
     ) -> Completion[Any]:
         tier = self._config.models.tiers[tier_name]
         response_format = _response_format(schema) if schema is not None else None
 
         results: list[_CallResult] = []
-        first = await self._call_with_retries(tier, messages, response_format, run_id, session_id)
+        first = await self._call_with_retries(
+            tier, messages, response_format, run_id, session_id, deadline
+        )
         results.append(first)
         parsed: BaseModel | None = None
         final = first
@@ -241,7 +272,7 @@ class Gateway:
                     {"role": "user", "content": _repair_prompt(err, first.finish_reason)},
                 ]
                 final = await self._call_with_retries(
-                    tier, repair_msgs, response_format, run_id, session_id
+                    tier, repair_msgs, response_format, run_id, session_id, deadline
                 )
                 results.append(final)
                 try:
@@ -302,6 +333,7 @@ class Gateway:
         response_format: dict[str, Any] | None,
         run_id: UUID | None,
         session_id: UUID | None,
+        deadline: _Deadline | None = None,
     ) -> _CallResult:
         limits = self._config.limits
         key = self._config.api_key_for(tier)
@@ -321,6 +353,11 @@ class Gateway:
         attempt = 0
         while True:
             pool = await self._check_budget(session_id)
+            if deadline is not None:
+                left = deadline.at - self._monotonic()
+                if left <= 0:
+                    raise deadline.exceeded(tier.model, attempt)
+                kwargs["timeout"] = min(limits.request_timeout_s, left)
             started = time.perf_counter()
             try:
                 response = await self._completion_fn(**kwargs)
@@ -334,6 +371,8 @@ class Gateway:
                 if transient and worth_retrying and attempt < limits.max_retries:
                     delay = min(limits.backoff_max_s, limits.backoff_base_s * 2**attempt)
                     delay *= 0.5 + self._rng.random()  # jitter 0.5x..1.5x
+                    if deadline is not None and self._monotonic() + delay >= deadline.at:
+                        raise deadline.exceeded(tier.model, attempt + 1) from None
                     log.warning(
                         "%s attempt %d failed (%s); retrying in %.1fs",
                         tier.model,

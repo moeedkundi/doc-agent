@@ -12,7 +12,7 @@ import pytest
 from mcp import Client
 
 from docagent_gateway import LedgerEntry, MemoryLedger
-from docagent_gateway.testing import NOW, Harness, make_config, response
+from docagent_gateway.testing import NOW, Harness, Slow, make_config, response
 from docagent_mcp_extraction.server import ExtractionSettings, create_server
 from docagent_mcp_extraction.store import DocumentStore
 from docagent_schemas import GroundTruth, Invoice
@@ -215,3 +215,16 @@ async def test_source_pages_outside_the_document_are_dropped(
     assert record["invoice_number"]["source_page"] is None
     assert record["total"]["source_page"] == 1  # out-of-bound value forced a repair call
     assert len(h.provider.calls) == 2
+
+
+async def test_slow_strong_tier_hits_the_reextract_deadline(
+    harness: Callable[..., Harness], tmp_path: Path, docs: Callable[[str], UUID]
+) -> None:
+    h = harness(strong_model=[Slow(90, response("{}")), response("{}")])
+    async with Client(_server(h, tmp_path, reextract_deadline_s=25)) as client:
+        res = await client.call_tool("reextract_fields", {
+            "document_id": str(docs("inv_003")), "doc_type": "invoice", "field_paths": ["total"],
+        })  # fmt: skip
+    assert _err_code(res) == "deadline_exceeded"
+    assert len(h.provider.calls) == 1 and h.provider.calls[0]["timeout"] == 25
+    assert h.provider.clock[0] <= 25  # gave up at the deadline, not after 90 s and retries

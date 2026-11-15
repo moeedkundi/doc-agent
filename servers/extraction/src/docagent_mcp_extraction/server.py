@@ -51,6 +51,8 @@ READS_DOCUMENT = ToolAnnotations(read_only_hint=True, idempotent_hint=False, ope
 class ExtractionSettings:
     render_dpi: int = 150
     max_pages: int = 5
+    reextract_deadline_s: float | None = None
+    """Cap on a strong-tier re-read (all attempts); past it the run goes to human review."""
 
 
 class _Classification(BaseModel):
@@ -156,6 +158,7 @@ def create_server(
         tier: ModelTier,
         session_id: UUID | None,
         run_id: UUID | None,
+        deadline_s: float | None = None,
     ) -> Completion[T]:
         try:
             return await gateway.complete(
@@ -165,6 +168,7 @@ def create_server(
                 images=[ImageInput(p.png) for p in images],
                 session_id=session_id,
                 run_id=run_id,
+                deadline_s=deadline_s,
             )
         except BudgetExceeded as exc:
             raise tool_error("budget_exceeded", str(exc)) from None
@@ -172,7 +176,8 @@ def create_server(
             raise tool_error("unparseable_output", str(exc)) from None
         except ProviderError as exc:
             # Message is already redacted by the gateway.
-            raise tool_error("provider_unavailable", str(exc)) from None
+            code = "deadline_exceeded" if exc.kind == "DeadlineExceeded" else "provider_unavailable"
+            raise tool_error(code, str(exc)) from None
 
     @tool(server, READS_DOCUMENT)
     async def classify_document(
@@ -265,6 +270,7 @@ def create_server(
             model_tier,
             session_id,
             run_id,
+            cfg.reextract_deadline_s,
         )
         parsed = _parsed(out)
         answers = {a.path: a for a in parsed.fields}

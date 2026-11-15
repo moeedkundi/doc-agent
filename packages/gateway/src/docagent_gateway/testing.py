@@ -8,6 +8,7 @@ from typing import Any
 
 import litellm
 import pytest
+from litellm.exceptions import Timeout
 from pydantic import SecretStr
 
 from docagent_gateway.config import (
@@ -48,12 +49,23 @@ def response(
 Script = list[litellm.ModelResponse | Exception]
 
 
+@dataclass(frozen=True)
+class Slow:
+    """A scripted reply that takes `seconds` on the harness clock; past the call's
+    `timeout` it raises litellm's Timeout instead, like a real provider call."""
+
+    seconds: float
+    then: Any
+
+
 @dataclass
 class FakeProvider:
     """Stands in for litellm.acompletion: replays a script per model, records every call."""
 
     scripts: dict[str, Script] = field(default_factory=lambda: {})
     calls: list[dict[str, Any]] = field(default_factory=lambda: [])
+    clock: list[float] = field(default_factory=lambda: [0.0])
+    """Fake monotonic time in seconds, shared with the harness's sleep."""
 
     async def __call__(self, **kwargs: Any) -> litellm.ModelResponse:
         self.calls.append(kwargs)
@@ -61,6 +73,12 @@ class FakeProvider:
         if not script:
             raise AssertionError(f"unexpected extra call to {kwargs['model']}")
         item = script.pop(0)
+        if isinstance(item, Slow):
+            timeout = float(kwargs.get("timeout") or item.seconds)
+            self.clock[0] += min(item.seconds, timeout)
+            if item.seconds > timeout:
+                raise Timeout("request timed out", model=kwargs["model"], llm_provider="gemini")
+            item = item.then
         if isinstance(item, Exception):
             raise item
         return item
@@ -134,6 +152,7 @@ def harness() -> Callable[..., Harness]:
 
         async def fake_sleep(s: float) -> None:
             sleeps.append(s)
+            provider.clock[0] += s
 
         led = ledger if ledger is not None else MemoryLedger()
         gw = Gateway(
@@ -142,6 +161,7 @@ def harness() -> Callable[..., Harness]:
             completion_fn=provider,
             now=lambda: NOW,
             sleep=fake_sleep,
+            monotonic=lambda: provider.clock[0],
         )
         return Harness(gw, provider, led, sleeps)
 
