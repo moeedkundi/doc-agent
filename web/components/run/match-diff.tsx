@@ -55,7 +55,7 @@ export function MatchDiff({
 
   const poNumber = match.po_number ?? invoice.po_number ?? '—'
   return (
-    <section aria-labelledby="match-title" className="mt-6">
+    <section aria-labelledby="match-title" className="mt-6 scroll-mt-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="match-title" className="text-lg font-semibold">
           PO match · <span className="font-mono text-[15px]">{poNumber}</span> vs{' '}

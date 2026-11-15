@@ -26,6 +26,16 @@ export function StartPanel() {
     api.limits().then(setLimits, () => setLimits(null))
   }, [])
 
+  // Links like /#upload (from a finished PO run): jump again once the cards have rendered,
+  // since they arrive after the browser's own jump and push the section down.
+  useEffect(() => {
+    if (!samples) return
+    const id = window.location.hash.slice(1)
+    if (id === 'samples' || id === 'upload') {
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: 'start' }))
+    }
+  }, [samples])
+
   const start = useCallback(
     async (key: string, getDocument: () => Promise<{ document_id: string }>) => {
       setBusy(key)
@@ -58,7 +68,7 @@ export function StartPanel() {
         {error && <Notice tone="danger" title="That didn't work">{error.message}</Notice>}
       </div>
 
-      <div className="mb-3 mt-8 flex flex-wrap items-baseline justify-between gap-2">
+      <div id="samples" className="mb-3 mt-8 flex scroll-mt-4 flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg font-semibold">Try a sample</h2>
         <p className="text-[13px] text-muted-foreground">
           Process the POs first so the invoices have something to match against.
@@ -86,7 +96,9 @@ export function StartPanel() {
         </ul>
       )}
 
-      <h2 className="mb-3 mt-10 text-lg font-semibold">Or upload your own</h2>
+      <h2 id="upload" className="mb-3 mt-10 scroll-mt-4 text-lg font-semibold">
+        Or upload your own
+      </h2>
       <UploadBox
         limits={limits}
         busy={busy === 'upload'}

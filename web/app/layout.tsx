@@ -27,10 +27,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">{children}</main>
-          <footer className="container py-6 text-xs text-muted-foreground">
-            Synthetic data only · LLM spend is capped daily ·{' '}
-            <a className="font-mono underline-offset-2 hover:underline" href="https://meetmoeed.com">
-              meetmoeed.com
+          <footer className="container flex flex-wrap items-center justify-between gap-3 py-6 text-xs text-muted-foreground">
+            <span>Synthetic data only · LLM spend is capped daily</span>
+            <a
+              className="inline-flex items-center gap-1 rounded-md border px-2.5 py-1 font-medium text-foreground hover:bg-accent"
+              href="https://meetmoeed.com"
+            >
+              ← Back to meetmoeed.com
             </a>
           </footer>
         </div>

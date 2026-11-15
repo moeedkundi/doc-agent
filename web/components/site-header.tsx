@@ -1,3 +1,4 @@
+import { ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 
 import { SiteNav } from '@/components/site-nav'
@@ -13,6 +14,12 @@ export function SiteHeader() {
         </Link>
         <nav aria-label="Main" className="flex items-center gap-3.5 text-sm sm:gap-5">
           <SiteNav />
+          <a
+            href="https://meetmoeed.com"
+            className="hidden items-center gap-0.5 border-l pl-4 text-muted-foreground hover:text-foreground md:inline-flex"
+          >
+            meetmoeed.com <ArrowUpRight className="size-3.5" aria-hidden />
+          </a>
           <ThemeToggle />
         </nav>
       </div>

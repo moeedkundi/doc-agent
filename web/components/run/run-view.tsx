@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, CheckCircle2, Loader2, Pause, Triangle, XCircle } from 'lucide-react'
+import { ArrowDown, ArrowLeft, CheckCircle2, Loader2, Pause, Triangle, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Notice, RateLimitNotice, ReplayBanner } from '@/components/notices'
 import { DocumentViewer } from '@/components/run/document-viewer'
 import { MatchDiff } from '@/components/run/match-diff'
+import { PoNextStep, ScrollHint } from '@/components/run/next-steps'
 import { ReviewForm } from '@/components/run/review-form'
 import { Timeline } from '@/components/run/timeline'
 import { Badge } from '@/components/ui/badge'
@@ -131,12 +132,25 @@ export function RunView({
                 <Timeline steps={steps} />
               )}
             </section>
-            <Outcome status={status} errorCode={errorCode} message={run?.error?.message ?? null} summary={result?.summary} documentId={run?.document_id ?? null} replayable={run?.error?.replay_available ?? false} />
+            <Outcome
+              status={status}
+              errorCode={errorCode}
+              message={run?.error?.message ?? null}
+              summary={result?.summary}
+              documentId={run?.document_id ?? null}
+              replayable={run?.error?.replay_available ?? false}
+              docType={docType}
+              poNumber={shown?.po_number ?? null}
+              hasMatch={!!result?.match && docType === 'invoice'}
+            />
           </div>
         </div>
 
         {result?.match && record && docType === 'invoice' && (
-          <MatchDiff match={result.match} invoice={record} po={purchaseOrder} />
+          <>
+            <MatchDiff match={result.match} invoice={record} po={purchaseOrder} />
+            <ScrollHint targetId="match-title" label="PO match results below" />
+          </>
         )}
       </div>
     </>
@@ -201,6 +215,9 @@ function Outcome({
   summary,
   documentId,
   replayable,
+  docType,
+  poNumber,
+  hasMatch,
 }: {
   status: RunStatus | null
   errorCode: string | null
@@ -208,6 +225,9 @@ function Outcome({
   summary: string | undefined
   documentId: string | null
   replayable: boolean
+  docType: string | null
+  poNumber: string | null
+  hasMatch: boolean
 }) {
   const router = useRouter()
   const [retryAt, setRetryAt] = useState<number | null>(null)
@@ -224,7 +244,27 @@ function Outcome({
   }
 
   if (status === 'completed' && summary) {
-    return <Notice tone="info" title="Done">{summary}</Notice>
+    return (
+      <div className="space-y-3">
+        <Notice tone="info" title="Done">
+          {summary}
+          {hasMatch && (
+            <div className="mt-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  document.getElementById('match-title')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }
+              >
+                See the PO match below <ArrowDown />
+              </Button>
+            </div>
+          )}
+        </Notice>
+        {docType === 'purchase_order' && <PoNextStep poNumber={poNumber} />}
+      </div>
+    )
   }
   if (status === 'rejected') {
     return (
