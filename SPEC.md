@@ -456,7 +456,7 @@ with LLM calls disabled.
 **Done when:** full flow works against local backend; Lighthouse ≥ 90 performance/accessibility.
 
 ### Phase 8 — Deploy & polish
-- [ ] Dockerfiles; deploy backend (API + agent + 4 MCP servers on private network) and Postgres
+- [x] Dockerfiles; deploy backend (API + agent + 4 MCP servers on private network) and Postgres
 - [ ] Web on Vercel at `demo.meetmoeed.com`; CORS + cookies configured
 - [ ] Session cleanup cron (rows + upload files, incl. cached page images `<doc_id>.p<n>.webp`);
       uptime check on `/api/health`
@@ -593,3 +593,7 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-14 | `human_review` sets `awaiting_review` only when `interrupt()` actually pauses; the API reports a paused run as `running` until its interrupt is checkpointed, and SSE announces `review_required` only with a payload | LangGraph re-runs the node on resume: the status flipped back to `awaiting_review` and accepted a second resume; a review could be announced as null (both found by an intermittent API test) |
 | 2026-11-14 | Eval reports record `ci_run_url` when run in GitHub Actions; the Evals tab links to it, or to the workflow when the report was produced locally | "Date of the last run with a link to the CI run" |
 | 2026-11-14 | Phase 7 Lighthouse (local `next start`, Lighthouse 12.8): landing 96/100 mobile, 100/100 desktop; run view 94/100 mobile, 100/100 desktop (performance/accessibility) | Done-when: ≥ 90 |
+| 2026-11-15 | Backend on one DigitalOcean droplet (2 GB, Ubuntu 24.04) with `docker-compose.prod.yml`: Caddy is the only service with published ports (80/443, automatic Let's Encrypt for api.meetmoeed.com); API, MCP servers and Postgres on the internal network; memory limits ~1.8 GB total + 2 GB swap; one image for all Python services, tagged by commit SHA (rollback = redeploy an older SHA) | Fits the demo's budget; one box is enough for the traffic; deploy/README.md |
+| 2026-11-15 | Session cookie `Domain=.meetmoeed.com; Secure; HttpOnly; SameSite=Lax` (`COOKIE_DOMAIN`), CORS `https://demo.meetmoeed.com` only | demo.meetmoeed.com (Vercel) and api.meetmoeed.com are same-site, so the Lax cookie is sent with credentialed fetches |
+| 2026-11-15 | Cleanup: `python -m docagent_api.cleanup` hourly (cron) — expired sessions cascade in SQL, then their upload files, cached page images and LangGraph checkpoints are removed, plus orphan uploads > 24 h; nightly `pg_dump -Fc`, 7 days kept | Sessions live 24 h; checkpoints and files aren't covered by the SQL cascade |
+| 2026-11-15 | Server access: `deploy` user (key only, passwordless sudo), root and password SSH logins disabled; UFW allows 22/80/443 only; unattended security upgrades | Key-only automation user; Docker-published ports bypass UFW, so only Caddy publishes any |
