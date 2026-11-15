@@ -458,7 +458,7 @@ with LLM calls disabled.
 ### Phase 8 — Deploy & polish
 - [x] Dockerfiles; deploy backend (API + agent + 4 MCP servers on private network) and Postgres
 - [x] Web on Vercel at `demo.meetmoeed.com`; CORS + cookies configured
-- [ ] Session cleanup cron (rows + upload files, incl. cached page images `<doc_id>.p<n>.webp`);
+- [x] Session cleanup cron (rows + upload files, incl. cached page images `<doc_id>.p<n>.webp`);
       uptime check on `/api/health`
 - [x] Public `README.md`: problem, demo GIF, architecture diagram, eval table, design decisions,
       "what I'd do in production" section (on-prem VLM, SSO, audit log, PII redaction)
@@ -602,3 +602,4 @@ ALLOWED_ORIGINS=https://demo.meetmoeed.com,http://localhost:3000
 | 2026-11-15 | Uptime: external monitor on `/api/health` (UptimeRobot, set up by the owner) plus `.github/workflows/uptime.yml` every 15 min (fails if any MCP server is down; GitHub emails scheduled-run failures) | Free, two independent checks |
 | 2026-11-15 | Phase 8 Done-when timing: upload → review → ask took 186 s on the live site; 165 s of it was one strong-tier re-read (timeout, 503, then 62 s). Strong-tier latency so far: 11–88 s, median 37 s | Open: needs a faster strong-tier model and/or an escalation deadline |
 | 2026-11-15 | Strong-tier re-reads have a 25 s deadline (`extraction.reextract_deadline_s`): `Gateway.complete(deadline_s=)` shrinks each attempt's timeout to the time left and stops retrying when it's used up (`ProviderError(kind="DeadlineExceeded")`, tool error `deadline_exceeded`); the run then goes to human review | Visitors waited ~3 min on a slow strong tier (Done-when: upload → review → ask < 2 min). Trade-off: an abandoned provider call may still be billed and isn't in the ledger |
+| 2026-11-15 | Phase 8 Done-when re-run on the live site after the deadline: fresh visitor upload → review → ask in 47 s (strong tier cut off at 25.4 s → review); budget exhaustion → automatic replay verified | Both Done-when checks pass |
