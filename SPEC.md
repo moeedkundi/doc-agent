@@ -462,7 +462,7 @@ with LLM calls disabled.
       uptime check on `/api/health`
 - [x] Public `README.md`: problem, demo GIF, architecture diagram, eval table, design decisions,
       "what I'd do in production" section (on-prem VLM, SSO, audit log, PII redaction)
-- [ ] Link from meetmoeed.com Projects + replace old chatbot page
+- [x] Link from meetmoeed.com Projects + replace old chatbot page
 **Done when:** a fresh visitor can complete upload → review → ask in under 2 minutes, and the
 demo survives budget exhaustion via replay mode.
 
