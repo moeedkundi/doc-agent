@@ -1,0 +1,8 @@
+# Installed as /etc/cron.d/docagent (see deploy/README.md). Times are UTC.
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Nightly database backup, 7 days kept.
+15 3 * * * deploy /opt/docagent/deploy/backup.sh >> /var/log/docagent/backup.log 2>&1
+# Session cleanup (sessions live 24 h; hourly so they go soon after expiring).
+7 * * * * deploy /opt/docagent/deploy/cleanup.sh >> /var/log/docagent/cleanup.log 2>&1

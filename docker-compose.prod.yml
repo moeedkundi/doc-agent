@@ -1,0 +1,153 @@
+# Production backend on one 2 GB droplet (see deploy/README.md).
+#
+#   docker compose -f docker-compose.prod.yml --env-file .env up -d --build
+#
+# Only Caddy publishes ports (80/443). The API, the four MCP servers and Postgres are on the
+# internal network only: no `ports:` anywhere else. Secrets come from .env on the server
+# (deploy/env.prod.example lists them); nothing secret is baked into the image.
+#
+# Memory limits add up to ~1.8 GB, leaving room for the OS and Docker on a 2 GB box
+# (a 2 GB swap file absorbs spikes). Measured idle use: API ~300 MB, extraction ~270 MB,
+# the other servers ~60 MB each.
+
+name: docagent
+
+x-defaults: &defaults
+  restart: unless-stopped
+  networks: [internal]
+  logging:
+    driver: json-file
+    options: { max-size: "10m", max-file: "3" }
+
+x-app: &app
+  <<: *defaults
+  image: docagent-backend:${IMAGE_TAG:-latest}
+  env_file: ${DOCAGENT_ENV_FILE:-.env}
+  environment: &app-env
+    MCP_BIND_HOST: 0.0.0.0 # reachable on the internal network only
+    MCP_EXTRACTION_URL: http://extraction:8101/mcp
+    MCP_VALIDATION_URL: http://validation:8102/mcp
+    MCP_SQLSTORE_URL: http://sqlstore:8103/mcp
+    MCP_REFERENCE_URL: http://reference:8104/mcp
+    UPLOAD_DIR: /data/uploads
+  depends_on:
+    migrate: { condition: service_completed_successfully }
+
+services:
+  postgres:
+    <<: *defaults
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    # Small-box tuning: a few connections, modest buffers.
+    command: >
+      postgres -c shared_buffers=96MB -c effective_cache_size=256MB -c work_mem=4MB
+      -c maintenance_work_mem=32MB -c max_connections=60
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    deploy:
+      resources: { limits: { memory: 320M } }
+
+  # One-shot: apply migrations and set the app/reader role passwords, then exit.
+  migrate:
+    <<: *defaults
+    image: docagent-backend:${IMAGE_TAG:-latest}
+    build: .
+    env_file: ${DOCAGENT_ENV_FILE:-.env}
+    command: ["python", "-m", "docagent_db"]
+    restart: "no"
+    depends_on:
+      postgres: { condition: service_healthy }
+    deploy:
+      resources: { limits: { memory: 128M } }
+
+  extraction:
+    <<: *app
+    command: ["python", "-m", "servers.extraction"]
+    expose: ["8101"]
+    volumes:
+      - uploads:/data/uploads:ro # reads what the API stored
+    deploy:
+      resources: { limits: { memory: 448M } }
+
+  validation:
+    <<: *app
+    command: ["python", "-m", "servers.validation"]
+    expose: ["8102"]
+    deploy:
+      resources: { limits: { memory: 128M } }
+
+  sqlstore:
+    <<: *app
+    command: ["python", "-m", "servers.sqlstore"]
+    expose: ["8103"]
+    deploy:
+      resources: { limits: { memory: 160M } }
+
+  reference:
+    <<: *app
+    command: ["python", "-m", "servers.reference"]
+    expose: ["8104"]
+    deploy:
+      resources: { limits: { memory: 128M } }
+
+  api:
+    <<: *app
+    command: ["python", "-m", "docagent_api", "--host", "0.0.0.0", "--port", "8000"]
+    expose: ["8000"]
+    environment:
+      <<: *app-env
+      TRUST_PROXY: "true" # Caddy replaces X-Forwarded-For with the real client IP
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      extraction: { condition: service_started }
+      validation: { condition: service_started }
+      sqlstore: { condition: service_started }
+      reference: { condition: service_started }
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=5)"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources: { limits: { memory: 512M } }
+
+  caddy:
+    <<: *defaults
+    image: caddy:2-alpine
+    environment:
+      API_DOMAIN: ${API_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [api]
+    deploy:
+      resources: { limits: { memory: 64M } }
+
+volumes:
+  pgdata:
+  uploads:
+  caddy_data:
+  caddy_config:
+
+networks:
+  internal:

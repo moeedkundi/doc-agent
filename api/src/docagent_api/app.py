@@ -189,6 +189,7 @@ def create_app(settings: ApiSettings, services: Services | None = None) -> FastA
                 httponly=True,
                 samesite="lax",
                 secure=settings.cookie_secure,
+                domain=settings.cookie_domain,
                 path="/",
             )
         return response

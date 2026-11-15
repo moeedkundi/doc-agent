@@ -1,0 +1,21 @@
+# Only what the backend image needs; never secrets.
+.git
+.github
+.env
+.env.*
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.ruff_cache
+**/tests
+web
+data
+deploy
+evals/dataset/eval
+evals/generator
+scripts
+docker-compose*.yml
+*.md
+!evals/reports/latest.md
+!servers/*/README.md

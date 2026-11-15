@@ -1,0 +1,49 @@
+# Public entry point. Caddy gets and renews the TLS certificate for {$API_DOMAIN}
+# automatically (Let's Encrypt) and proxies /api/* to the API on the internal network.
+{
+	servers {
+		timeouts {
+			read_header 15s
+			read_body 60s # uploads are <= 5 MB
+			write 0 # no limit: SSE responses stay open while a run is live or paused for review
+			idle 5m
+		}
+	}
+}
+
+{$API_DOMAIN} {
+	request_body {
+		max_size 6MB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	handle /api/* {
+		reverse_proxy api:8000 {
+			# Stream SSE immediately: never buffer responses (the API gzips JSON itself and
+			# leaves text/event-stream uncompressed, so no `encode` here).
+			flush_interval -1
+			transport http {
+				dial_timeout 5s
+				response_header_timeout 60s
+				read_timeout 1h # SSE: the API sends a ping every 15 s
+				write_timeout 2m
+			}
+			stream_timeout 24h
+		}
+	}
+
+	handle {
+		respond "Not found" 404
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

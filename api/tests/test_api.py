@@ -6,6 +6,7 @@ import io
 import json
 from collections.abc import Callable
 from decimal import Decimal
+from pathlib import Path
 from typing import Any
 from uuid import UUID
 
@@ -406,3 +407,24 @@ async def test_json_is_gzipped_but_sse_is_not(stack_factory: Build) -> None:
     ev = await s.client.get(f"/api/runs/{run_id}/events", headers={"Accept-Encoding": "gzip"})
     assert ev.headers["content-type"].startswith("text/event-stream")
     assert "content-encoding" not in ev.headers
+
+
+async def test_production_cookie_is_secure_and_shared_with_subdomains(stack_factory: Build) -> None:
+    s: Stack = await stack_factory(cookie_secure=True, cookie_domain=".meetmoeed.com")
+    cookie = (await s.client.post("/api/session")).headers["set-cookie"].lower()
+    assert "domain=.meetmoeed.com" in cookie and "secure" in cookie
+    assert "httponly" in cookie and "samesite=lax" in cookie
+
+
+def test_cookie_domain_comes_from_env(tmp_path: Path) -> None:
+    from docagent_api.settings import ApiSettings
+
+    env = {
+        "DATABASE_APP_URL": "postgresql://a@h/d",
+        "DATABASE_URL": "postgresql://o@h/d",
+        "UPLOAD_DIR": str(tmp_path),
+        "DAILY_BUDGET_USD": "3.00",
+        "COOKIE_DOMAIN": ".meetmoeed.com",
+    }
+    assert ApiSettings.from_env(env).cookie_domain == ".meetmoeed.com"
+    assert ApiSettings.from_env({**env, "COOKIE_DOMAIN": ""}).cookie_domain is None

@@ -101,6 +101,7 @@ def make_settings(upload_dir: Path, fixtures_dir: Path, **overrides: Any) -> Api
         replay_only=False,
         replay_speed=200.0,
         cookie_secure=False,
+        cookie_domain=None,
         ip_hash_salt="test",
         trust_proxy=False,
         daily_budget_usd=Decimal("1.00"),
@@ -134,6 +135,7 @@ async def stack_factory(migrated_dsn: str, tmp_path: Path) -> AsyncIterator[Call
         budget: str = "1.00",
         fixtures: dict[str, Any] | None = None,
         run_limit: str = "5/10minutes",
+        **overrides: Any,
     ) -> Stack:
         uploads = tmp_path / "uploads"
         fixtures_dir = tmp_path / "fixtures"
@@ -141,7 +143,7 @@ async def stack_factory(migrated_dsn: str, tmp_path: Path) -> AsyncIterator[Call
         for sample_id, fx in (fixtures or {}).items():
             (fixtures_dir / f"{sample_id}.json").write_text(json.dumps(fx), encoding="utf-8")
         settings = make_settings(
-            uploads, fixtures_dir, replay_only=replay_only, run_limit=run_limit
+            uploads, fixtures_dir, replay_only=replay_only, run_limit=run_limit, **overrides
         )
         app_conn = as_role(migrated_dsn, "docagent_app")
         db = Db(app_conn)

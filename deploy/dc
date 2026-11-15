@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# `deploy/dc <args>` = docker compose for the production stack, pinned to the deployed image.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+IMAGE_TAG="$(cat .image-tag 2>/dev/null || echo latest)"
+export IMAGE_TAG
+exec docker compose -f docker-compose.prod.yml "$@"

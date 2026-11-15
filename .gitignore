@@ -26,3 +26,7 @@ Thumbs.db
 .idea/
 .vscode/
 
+
+# Production server state (deploy/)
+.image-tag
+.deploy-history

@@ -26,6 +26,8 @@ class ApiSettings:
     replay_only: bool
     replay_speed: float
     cookie_secure: bool
+    cookie_domain: str | None
+    """e.g. .meetmoeed.com so demo.* (web) and api.* share the session; None = host-only."""
     ip_hash_salt: str
     trust_proxy: bool
     daily_budget_usd: Decimal
@@ -62,6 +64,7 @@ class ApiSettings:
             replay_only=_flag(env.get("REPLAY_ONLY")),
             replay_speed=float(env.get("REPLAY_SPEED", "1.0")),
             cookie_secure=_flag(env.get("COOKIE_SECURE")),
+            cookie_domain=env.get("COOKIE_DOMAIN") or None,
             ip_hash_salt=env.get("IP_HASH_SALT") or os.urandom(16).hex(),
             trust_proxy=_flag(env.get("TRUST_PROXY")),
             daily_budget_usd=Decimal(env["DAILY_BUDGET_USD"]),
